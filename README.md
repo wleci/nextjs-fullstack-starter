@@ -29,6 +29,7 @@ npm run lint        # lint code
 - TypeScript 5
 - Tailwind CSS 4
 - shadcn/ui
+- t3-env (type-safe env vars)
 - ESLint
 
 ## Project Structure
@@ -47,6 +48,27 @@ Use `@/` for imports:
 ```typescript
 import { Button } from "@/components/Button";
 ```
+
+## Environment Variables
+
+Type-safe environment variables with t3-env. Define variables in `src/lib/env/env.ts`:
+
+```typescript
+export const env = createEnv({
+  server: {
+    DATABASE_URL: z.string().url(),
+  },
+  client: {
+    NEXT_PUBLIC_API_URL: z.string().url(),
+  },
+  runtimeEnv: {
+    DATABASE_URL: process.env.DATABASE_URL,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  },
+});
+```
+
+Import with `import { env } from "@/lib/env"`. Copy `.env.example` to `.env.local` and fill in your values.
 
 ## Deploy
 
