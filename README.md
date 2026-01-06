@@ -5,8 +5,8 @@ Next.js 16 starter with React 19, TypeScript, and Tailwind CSS.
 ## Setup
 
 ```bash
-bun install
-bun run dev
+npm install
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
@@ -14,10 +14,12 @@ Open [http://localhost:3000](http://localhost:3000)
 ## Scripts
 
 ```bash
-bun run dev      # dev server
-bun run build    # production build
-bun run start    # run production
-bun run lint     # lint code
+npm run dev         # dev server
+npm run build       # production build
+npm run build:prod  # build + prepare standalone
+npm run start       # run production
+npm run start:prod  # run standalone
+npm run lint        # lint code
 ```
 
 ## Stack

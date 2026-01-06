@@ -2,10 +2,13 @@
   "name": "nextjs-fullstack-starter",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:prod": "next build && node scripts/build.js",
     "start": "next start",
+    "start:prod": "node .next/standalone/server.js",
     "lint": "eslint"
   },
   "dependencies": {
