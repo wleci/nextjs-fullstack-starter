@@ -26,6 +26,7 @@ bun run lint     # lint code
 - React 19
 - TypeScript 5
 - Tailwind CSS 4
+- shadcn/ui
 - ESLint
 
 ## Project Structure
