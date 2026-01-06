@@ -28,7 +28,7 @@ npm run lint        # lint code
 - React 19
 - TypeScript 5
 - Tailwind CSS 4
-- shadcn/ui
+- shadcn/ui + Aceternity UI
 - t3-env (type-safe env vars)
 - ESLint
 
@@ -51,24 +51,38 @@ import { Button } from "@/components/Button";
 
 ## Environment Variables
 
-Type-safe environment variables with t3-env. Define variables in `src/lib/env/env.ts`:
+Type-safe environment variables with t3-env.
+
+1. Copy `.env.example` to `.env`:
+
+```bash
+cp .env.example .env
+```
+
+2. Fill in your values in `.env`:
+
+```env
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+3. Add new variables in `src/lib/env/env.ts`:
 
 ```typescript
 export const env = createEnv({
   server: {
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.string(),
   },
   client: {
-    NEXT_PUBLIC_API_URL: z.string().url(),
+    NEXT_PUBLIC_APP_URL: z.string(),
   },
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
 });
 ```
 
-Import with `import { env } from "@/lib/env"`. Copy `.env.example` to `.env.local` and fill in your values.
+4. Import with `import { env } from "@/lib/env"` - validated on startup.
 
 ## Deploy
 
