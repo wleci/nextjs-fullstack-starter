@@ -7,10 +7,30 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthLayout } from "@/components/layout";
 import { useTranslation } from "@/lib/i18n";
+import { twoFactorSchema, backupCodeSchema, type TwoFactorInput, type BackupCodeInput } from "@/validation";
 
 export default function TwoFactorPage() {
     const { t } = useTranslation();
     const [useBackup, setUseBackup] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const code = formData.get("code") as string;
+
+        const schema = useBackup ? backupCodeSchema : twoFactorSchema;
+        const result = schema.safeParse({ code });
+
+        if (!result.success) {
+            setError(result.error.issues[0].message);
+            return;
+        }
+
+        setError(null);
+        // TODO: handle 2fa
+        console.log("2FA:", result.data);
+    };
 
     return (
         <AuthLayout>
@@ -27,18 +47,22 @@ export default function TwoFactorPage() {
                     </div>
                 </div>
 
-                <form className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="code">
                             {useBackup ? t("auth.twoFactor.backupCode") : t("auth.twoFactor.code")}
                         </Label>
                         <Input
                             id="code"
+                            name="code"
                             type="text"
                             placeholder={useBackup ? "XXXX-XXXX-XXXX" : "000000"}
                             className="text-center text-lg tracking-widest"
                             maxLength={useBackup ? 14 : 6}
                         />
+                        {error && (
+                            <p className="text-xs text-destructive">{error}</p>
+                        )}
                     </div>
 
                     <Button type="submit" className="w-full">
@@ -49,7 +73,10 @@ export default function TwoFactorPage() {
 
                 <button
                     type="button"
-                    onClick={() => setUseBackup(!useBackup)}
+                    onClick={() => {
+                        setUseBackup(!useBackup);
+                        setError(null);
+                    }}
                     className="w-full text-center text-sm text-muted-foreground hover:text-primary"
                 >
                     {useBackup ? t("auth.twoFactor.code") : t("auth.twoFactor.useBackupCode")}

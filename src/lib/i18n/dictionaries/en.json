@@ -98,6 +98,17 @@
     "footer": {
         "stack": "shadcn/ui • Tailwind • Framer Motion • Drizzle • t3-env • i18n"
     },
+    "dashboard": {
+        "nav": {
+            "home": "Dashboard",
+            "profile": "Profile",
+            "settings": "Settings"
+        },
+        "home": {
+            "title": "Dashboard",
+            "welcome": "Welcome back"
+        }
+    },
     "errors": {
         "lost": "Lost?",
         "notFoundDescription": "The page you're looking for doesn't exist or has been moved.",
