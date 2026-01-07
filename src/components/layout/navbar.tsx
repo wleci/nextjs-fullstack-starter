@@ -5,8 +5,12 @@ import { motion } from "framer-motion";
 import { Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "./theme-switcher";
+import { LanguageSwitcher } from "./language-switcher";
+import { useI18n } from "@/lib/i18n";
 
 export function Navbar() {
+    const { locale } = useI18n();
+
     return (
         <motion.header
             initial={{ y: -20, opacity: 0 }}
@@ -15,14 +19,14 @@ export function Navbar() {
             className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-sm"
         >
             <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-                <Link href="/" className="text-xl font-semibold tracking-tight">
+                <Link href={`/${locale}`} className="text-xl font-semibold tracking-tight">
                     nextjs-starter
                 </Link>
 
                 <div className="flex items-center gap-2">
                     <Button variant="ghost" size="icon" asChild>
                         <a
-                            href="https://github.com"
+                            href="https://github.com/wleci/nextjs-fullstack-starter"
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label="GitHub"
@@ -31,6 +35,7 @@ export function Navbar() {
                         </a>
                     </Button>
 
+                    <LanguageSwitcher />
                     <ThemeSwitcher />
                 </div>
             </nav>

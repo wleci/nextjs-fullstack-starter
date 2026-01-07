@@ -1,0 +1,27 @@
+{
+    "common": {
+        "getStarted": "Get Started",
+        "documentation": "Documentation",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System",
+        "home": "Home",
+        "goBack": "Go back",
+        "tryAgain": "Try again"
+    },
+    "hero": {
+        "badge": "Next.js 16 + React 19 + TypeScript",
+        "title": "Build faster with",
+        "titleHighlight": "modern stack",
+        "description": "Production-ready starter template with Next.js, TypeScript, Tailwind CSS, shadcn/ui, and all the tools you need to ship fast."
+    },
+    "footer": {
+        "stack": "shadcn/ui • Tailwind CSS • Framer Motion • t3-env • i18n"
+    },
+    "errors": {
+        "lost": "Lost?",
+        "notFoundDescription": "The page you're looking for doesn't exist or has been moved.",
+        "serverError": "Something went wrong",
+        "serverErrorDescription": "An unexpected error occurred. Please try again or contact support if the problem persists."
+    }
+}

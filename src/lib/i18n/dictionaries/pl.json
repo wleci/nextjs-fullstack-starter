@@ -1,0 +1,27 @@
+{
+    "common": {
+        "getStarted": "Rozpocznij",
+        "documentation": "Dokumentacja",
+        "light": "Jasny",
+        "dark": "Ciemny",
+        "system": "Systemowy",
+        "home": "Strona główna",
+        "goBack": "Wróć",
+        "tryAgain": "Spróbuj ponownie"
+    },
+    "hero": {
+        "badge": "Next.js 16 + React 19 + TypeScript",
+        "title": "Buduj szybciej z",
+        "titleHighlight": "nowoczesnym stackiem",
+        "description": "Gotowy do produkcji szablon startowy z Next.js, TypeScript, Tailwind CSS, shadcn/ui i wszystkimi narzędziami potrzebnymi do szybkiego wdrożenia."
+    },
+    "footer": {
+        "stack": "shadcn/ui • Tailwind CSS • Framer Motion • t3-env • i18n"
+    },
+    "errors": {
+        "lost": "Zgubiłeś się?",
+        "notFoundDescription": "Strona, której szukasz, nie istnieje lub została przeniesiona.",
+        "serverError": "Coś poszło nie tak",
+        "serverErrorDescription": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie lub skontaktuj się z pomocą techniczną, jeśli problem będzie się powtarzał."
+    }
+}

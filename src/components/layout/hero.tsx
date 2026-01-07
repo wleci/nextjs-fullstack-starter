@@ -3,10 +3,13 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/lib/i18n";
 
 export function Hero() {
+    const { t } = useTranslation();
+
     return (
-        <section className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-16">
+        <section className="relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-6 pt-16 pb-20">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -20,7 +23,7 @@ export function Hero() {
                     className="mb-6 flex items-center gap-2 rounded-full border border-border bg-muted/50 px-4 py-1.5 text-sm text-muted-foreground"
                 >
                     <Sparkles className="h-4 w-4" />
-                    <span>Next.js 16 + React 19 + TypeScript</span>
+                    <span>{t("hero.badge")}</span>
                 </motion.div>
 
                 <motion.h1
@@ -29,9 +32,9 @@ export function Hero() {
                     transition={{ delay: 0.2, duration: 0.5 }}
                     className="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl"
                 >
-                    Build faster with{" "}
+                    {t("hero.title")}{" "}
                     <span className="bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent dark:from-zinc-100 dark:to-zinc-400">
-                        modern stack
+                        {t("hero.titleHighlight")}
                     </span>
                 </motion.h1>
 
@@ -41,8 +44,7 @@ export function Hero() {
                     transition={{ delay: 0.3, duration: 0.5 }}
                     className="mt-6 max-w-xl text-lg text-muted-foreground"
                 >
-                    Production-ready starter template with Next.js, TypeScript, Tailwind CSS,
-                    shadcn/ui, and all the tools you need to ship fast.
+                    {t("hero.description")}
                 </motion.p>
 
                 <motion.div
@@ -52,28 +54,13 @@ export function Hero() {
                     className="mt-8 flex flex-col gap-4 sm:flex-row"
                 >
                     <Button size="lg" className="gap-2">
-                        Get Started
+                        {t("common.getStarted")}
                         <ArrowRight className="h-4 w-4" />
                     </Button>
                     <Button size="lg" variant="outline">
-                        Documentation
+                        {t("common.documentation")}
                     </Button>
                 </motion.div>
-            </motion.div>
-
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.6, duration: 0.8 }}
-                className="absolute bottom-8 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground"
-            >
-                <span>shadcn/ui</span>
-                <span>•</span>
-                <span>Tailwind CSS</span>
-                <span>•</span>
-                <span>Framer Motion</span>
-                <span>•</span>
-                <span>t3-env</span>
             </motion.div>
         </section>
     );

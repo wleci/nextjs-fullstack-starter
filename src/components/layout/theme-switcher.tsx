@@ -9,9 +9,11 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTranslation } from "@/lib/i18n";
 
 export function ThemeSwitcher() {
     const { setTheme } = useTheme();
+    const { t } = useTranslation();
 
     return (
         <DropdownMenu>
@@ -24,15 +26,15 @@ export function ThemeSwitcher() {
             <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setTheme("light")}>
                     <Sun className="mr-2 h-4 w-4" />
-                    Light
+                    {t("common.light")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setTheme("dark")}>
                     <Moon className="mr-2 h-4 w-4" />
-                    Dark
+                    {t("common.dark")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setTheme("system")}>
                     <Monitor className="mr-2 h-4 w-4" />
-                    System
+                    {t("common.system")}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
