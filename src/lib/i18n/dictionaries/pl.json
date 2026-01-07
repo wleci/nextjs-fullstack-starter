@@ -10,7 +10,76 @@
         "tryAgain": "Spróbuj ponownie",
         "privacy": "Polityka prywatności",
         "terms": "Regulamin",
-        "cookies": "Polityka cookies"
+        "cookies": "Polityka cookies",
+        "or": "lub",
+        "loading": "Ładowanie..."
+    },
+    "auth": {
+        "login": {
+            "title": "Witaj ponownie",
+            "description": "Wprowadź dane logowania, aby uzyskać dostęp do konta",
+            "email": "Email",
+            "password": "Hasło",
+            "submit": "Zaloguj się",
+            "forgotPassword": "Zapomniałeś hasła?",
+            "noAccount": "Nie masz konta?",
+            "register": "Zarejestruj się"
+        },
+        "register": {
+            "title": "Utwórz konto",
+            "description": "Wprowadź swoje dane, aby utworzyć nowe konto",
+            "name": "Imię",
+            "email": "Email",
+            "password": "Hasło",
+            "confirmPassword": "Potwierdź hasło",
+            "submit": "Utwórz konto",
+            "hasAccount": "Masz już konto?",
+            "login": "Zaloguj się",
+            "terms": "Tworząc konto, akceptujesz nasz"
+        },
+        "forgotPassword": {
+            "title": "Zapomniałeś hasła",
+            "description": "Wprowadź swój email, a wyślemy Ci link do resetowania",
+            "email": "Email",
+            "submit": "Wyślij link",
+            "backToLogin": "Powrót do logowania",
+            "success": "Sprawdź swoją skrzynkę email"
+        },
+        "resetPassword": {
+            "title": "Zresetuj hasło",
+            "description": "Wprowadź nowe hasło",
+            "password": "Nowe hasło",
+            "confirmPassword": "Potwierdź nowe hasło",
+            "submit": "Zresetuj hasło",
+            "success": "Hasło zostało zresetowane"
+        },
+        "twoFactor": {
+            "title": "Weryfikacja dwuetapowa",
+            "description": "Wprowadź 6-cyfrowy kod z aplikacji uwierzytelniającej",
+            "code": "Kod",
+            "submit": "Zweryfikuj",
+            "useBackupCode": "Użyj kodu zapasowego",
+            "backupCode": "Kod zapasowy",
+            "resend": "Wyślij ponownie"
+        },
+        "verifyEmail": {
+            "title": "Zweryfikuj email",
+            "description": "Wysłaliśmy link weryfikacyjny na Twój adres email",
+            "resend": "Wyślij ponownie",
+            "success": "Email został zweryfikowany",
+            "checking": "Weryfikowanie emaila..."
+        },
+        "banned": {
+            "title": "Konto zawieszone",
+            "description": "Twoje konto zostało zawieszone z powodu naruszenia regulaminu.",
+            "contact": "Jeśli uważasz, że to pomyłka, skontaktuj się z pomocą techniczną.",
+            "support": "Kontakt z pomocą"
+        },
+        "logout": {
+            "title": "Wylogowano",
+            "description": "Zostałeś pomyślnie wylogowany",
+            "login": "Zaloguj się ponownie"
+        }
     },
     "cookies": {
         "title": "Ustawienia cookies",

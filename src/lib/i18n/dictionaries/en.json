@@ -10,7 +10,76 @@
         "tryAgain": "Try again",
         "privacy": "Privacy Policy",
         "terms": "Terms of Service",
-        "cookies": "Cookie Policy"
+        "cookies": "Cookie Policy",
+        "or": "or",
+        "loading": "Loading..."
+    },
+    "auth": {
+        "login": {
+            "title": "Welcome back",
+            "description": "Enter your credentials to access your account",
+            "email": "Email",
+            "password": "Password",
+            "submit": "Sign in",
+            "forgotPassword": "Forgot password?",
+            "noAccount": "Don't have an account?",
+            "register": "Sign up"
+        },
+        "register": {
+            "title": "Create account",
+            "description": "Enter your details to create a new account",
+            "name": "Name",
+            "email": "Email",
+            "password": "Password",
+            "confirmPassword": "Confirm password",
+            "submit": "Create account",
+            "hasAccount": "Already have an account?",
+            "login": "Sign in",
+            "terms": "By creating an account, you agree to our"
+        },
+        "forgotPassword": {
+            "title": "Forgot password",
+            "description": "Enter your email and we'll send you a reset link",
+            "email": "Email",
+            "submit": "Send reset link",
+            "backToLogin": "Back to login",
+            "success": "Check your email for a reset link"
+        },
+        "resetPassword": {
+            "title": "Reset password",
+            "description": "Enter your new password",
+            "password": "New password",
+            "confirmPassword": "Confirm new password",
+            "submit": "Reset password",
+            "success": "Password reset successfully"
+        },
+        "twoFactor": {
+            "title": "Two-factor authentication",
+            "description": "Enter the 6-digit code from your authenticator app",
+            "code": "Code",
+            "submit": "Verify",
+            "useBackupCode": "Use backup code",
+            "backupCode": "Backup code",
+            "resend": "Resend code"
+        },
+        "verifyEmail": {
+            "title": "Verify your email",
+            "description": "We've sent a verification link to your email address",
+            "resend": "Resend verification email",
+            "success": "Email verified successfully",
+            "checking": "Verifying your email..."
+        },
+        "banned": {
+            "title": "Account suspended",
+            "description": "Your account has been suspended due to a violation of our terms of service.",
+            "contact": "If you believe this is a mistake, please contact support.",
+            "support": "Contact support"
+        },
+        "logout": {
+            "title": "Logged out",
+            "description": "You have been successfully logged out",
+            "login": "Sign in again"
+        }
     },
     "cookies": {
         "title": "Cookie Settings",
