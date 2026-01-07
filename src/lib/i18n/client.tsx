@@ -58,6 +58,9 @@ export function I18nProvider({
                     setTranslations(newTranslations.default || newTranslations);
                     setLocaleState(validLocale);
 
+                    // Update html lang attribute
+                    document.documentElement.lang = validLocale;
+
                     const currentPath = window.location.pathname;
                     const pathWithoutLocale =
                         currentPath.replace(/^\/[a-z]{2}(?=\/|$)/, "") || "/";
