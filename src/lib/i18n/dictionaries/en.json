@@ -24,10 +24,10 @@
         "badge": "Next.js 16 + React 19 + TypeScript",
         "title": "Build faster with",
         "titleHighlight": "modern stack",
-        "description": "Production-ready starter template with Next.js, TypeScript, Tailwind CSS, shadcn/ui, and all the tools you need to ship fast."
+        "description": "Production-ready starter with i18n, dark mode, cookie consent, SEO, Drizzle ORM, and everything you need to ship fast."
     },
     "footer": {
-        "stack": "shadcn/ui • Tailwind CSS • Framer Motion • Drizzle ORM • t3-env • i18n"
+        "stack": "shadcn/ui • Tailwind • Framer Motion • Drizzle • t3-env • i18n"
     },
     "errors": {
         "lost": "Lost?",

@@ -43,6 +43,8 @@ npm run db:studio   # open Drizzle Studio
 - **SEO** - Sitemap, robots.txt, metadata optimization
 - **PWA** - Web app manifest ready
 - **Dark Mode** - Theme switcher with system detection
+- **Cookie Consent** - GDPR-ready banner with all/required options
+- **Legal Pages** - Privacy, Terms, Cookies policy pages
 - **Type-safe** - Full TypeScript with t3-env validation
 - **Standalone** - Optimized Docker-ready builds
 - **Database** - Drizzle ORM with SQLite
@@ -71,6 +73,7 @@ src/
 │   ├── layout/          # Layout components
 │   └── ui/              # shadcn/ui components
 ├── lib/
+│   ├── cookies/         # Cookie consent
 │   ├── database/        # Drizzle ORM
 │   ├── env/             # Environment config
 │   ├── i18n/            # Internationalization
