@@ -3,3 +3,4 @@ export { Hero } from "./hero";
 export { ThemeSwitcher } from "./theme-switcher";
 export { LanguageSwitcher } from "./language-switcher";
 export { Footer } from "./footer";
+export { CookieBanner } from "./cookie-banner";

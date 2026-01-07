@@ -7,7 +7,17 @@
         "system": "System",
         "home": "Home",
         "goBack": "Go back",
-        "tryAgain": "Try again"
+        "tryAgain": "Try again",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "cookies": "Cookie Policy"
+    },
+    "cookies": {
+        "title": "Cookie Settings",
+        "banner": "We use cookies to enhance your experience. By continuing to visit this site you agree to our use of cookies.",
+        "learnMore": "Learn more",
+        "accept": "Accept",
+        "decline": "Decline"
     },
     "hero": {
         "badge": "Next.js 16 + React 19 + TypeScript",
@@ -23,5 +33,63 @@
         "notFoundDescription": "The page you're looking for doesn't exist or has been moved.",
         "serverError": "Something went wrong",
         "serverErrorDescription": "An unexpected error occurred. Please try again or contact support if the problem persists."
+    },
+    "legal": {
+        "privacy": {
+            "title": "Privacy Policy",
+            "intro": "Your privacy is important to us. This policy explains how we collect, use, and protect your personal information.",
+            "dataCollection": {
+                "title": "Data Collection",
+                "content": "We collect information you provide directly, such as when you create an account or contact us. We also automatically collect certain information about your device and usage."
+            },
+            "cookies": {
+                "title": "Cookies",
+                "content": "We use cookies and similar technologies to improve your experience, analyze traffic, and personalize content. You can manage your cookie preferences in your browser settings."
+            },
+            "rights": {
+                "title": "Your Rights",
+                "content": "You have the right to access, correct, or delete your personal data. You may also object to processing or request data portability."
+            },
+            "contact": {
+                "title": "Contact Us",
+                "content": "If you have questions about this privacy policy, please contact us through our website."
+            }
+        },
+        "terms": {
+            "title": "Terms of Service",
+            "intro": "By using our service, you agree to these terms. Please read them carefully.",
+            "usage": {
+                "title": "Acceptable Use",
+                "content": "You agree to use our service only for lawful purposes and in accordance with these terms. You must not use the service in any way that could damage or impair it."
+            },
+            "intellectual": {
+                "title": "Intellectual Property",
+                "content": "All content, features, and functionality are owned by us and are protected by copyright, trademark, and other intellectual property laws."
+            },
+            "liability": {
+                "title": "Limitation of Liability",
+                "content": "We shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of the service."
+            },
+            "changes": {
+                "title": "Changes to Terms",
+                "content": "We may revise these terms at any time. By continuing to use the service after changes become effective, you agree to be bound by the revised terms."
+            }
+        },
+        "cookies": {
+            "title": "Cookie Policy",
+            "intro": "This policy explains how we use cookies and similar technologies on our website.",
+            "what": {
+                "title": "What Are Cookies",
+                "content": "Cookies are small text files stored on your device when you visit a website. They help the site remember your preferences and improve your experience."
+            },
+            "types": {
+                "title": "Types of Cookies We Use",
+                "content": "We use essential cookies for site functionality, preference cookies to remember your settings, and analytics cookies to understand how you use our site."
+            },
+            "manage": {
+                "title": "Managing Cookies",
+                "content": "You can control cookies through your browser settings. Note that disabling certain cookies may affect site functionality."
+            }
+        }
     }
 }

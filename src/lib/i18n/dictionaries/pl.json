@@ -7,7 +7,17 @@
         "system": "Systemowy",
         "home": "Strona główna",
         "goBack": "Wróć",
-        "tryAgain": "Spróbuj ponownie"
+        "tryAgain": "Spróbuj ponownie",
+        "privacy": "Polityka prywatności",
+        "terms": "Regulamin",
+        "cookies": "Polityka cookies"
+    },
+    "cookies": {
+        "title": "Ustawienia cookies",
+        "banner": "Używamy plików cookie, aby poprawić Twoje doświadczenia. Kontynuując korzystanie z tej strony, zgadzasz się na używanie plików cookie.",
+        "learnMore": "Dowiedz się więcej",
+        "accept": "Akceptuję",
+        "decline": "Odrzuć"
     },
     "hero": {
         "badge": "Next.js 16 + React 19 + TypeScript",
@@ -23,5 +33,63 @@
         "notFoundDescription": "Strona, której szukasz, nie istnieje lub została przeniesiona.",
         "serverError": "Coś poszło nie tak",
         "serverErrorDescription": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie lub skontaktuj się z pomocą techniczną, jeśli problem będzie się powtarzał."
+    },
+    "legal": {
+        "privacy": {
+            "title": "Polityka prywatności",
+            "intro": "Twoja prywatność jest dla nas ważna. Ta polityka wyjaśnia, jak zbieramy, wykorzystujemy i chronimy Twoje dane osobowe.",
+            "dataCollection": {
+                "title": "Zbieranie danych",
+                "content": "Zbieramy informacje, które nam przekazujesz, np. podczas tworzenia konta lub kontaktu z nami. Automatycznie zbieramy również pewne informacje o Twoim urządzeniu i sposobie korzystania."
+            },
+            "cookies": {
+                "title": "Pliki cookie",
+                "content": "Używamy plików cookie i podobnych technologii, aby poprawić Twoje doświadczenia, analizować ruch i personalizować treści. Możesz zarządzać preferencjami cookie w ustawieniach przeglądarki."
+            },
+            "rights": {
+                "title": "Twoje prawa",
+                "content": "Masz prawo do dostępu, poprawiania lub usunięcia swoich danych osobowych. Możesz również sprzeciwić się przetwarzaniu lub zażądać przeniesienia danych."
+            },
+            "contact": {
+                "title": "Kontakt",
+                "content": "Jeśli masz pytania dotyczące tej polityki prywatności, skontaktuj się z nami przez naszą stronę."
+            }
+        },
+        "terms": {
+            "title": "Regulamin",
+            "intro": "Korzystając z naszego serwisu, akceptujesz niniejszy regulamin. Prosimy o uważne zapoznanie się z jego treścią.",
+            "usage": {
+                "title": "Dopuszczalne użytkowanie",
+                "content": "Zgadzasz się korzystać z naszego serwisu wyłącznie w celach zgodnych z prawem i zgodnie z niniejszym regulaminem. Nie wolno używać serwisu w sposób, który mógłby go uszkodzić lub zakłócić."
+            },
+            "intellectual": {
+                "title": "Własność intelektualna",
+                "content": "Wszystkie treści, funkcje i funkcjonalności są naszą własnością i są chronione prawem autorskim, znakami towarowymi i innymi prawami własności intelektualnej."
+            },
+            "liability": {
+                "title": "Ograniczenie odpowiedzialności",
+                "content": "Nie ponosimy odpowiedzialności za jakiekolwiek pośrednie, przypadkowe, specjalne, wynikowe lub karne szkody wynikające z korzystania z serwisu."
+            },
+            "changes": {
+                "title": "Zmiany regulaminu",
+                "content": "Możemy zmienić niniejszy regulamin w dowolnym momencie. Kontynuując korzystanie z serwisu po wejściu zmian w życie, akceptujesz zmieniony regulamin."
+            }
+        },
+        "cookies": {
+            "title": "Polityka cookies",
+            "intro": "Ta polityka wyjaśnia, jak używamy plików cookie i podobnych technologii na naszej stronie.",
+            "what": {
+                "title": "Czym są pliki cookie",
+                "content": "Pliki cookie to małe pliki tekstowe przechowywane na Twoim urządzeniu podczas odwiedzania strony. Pomagają stronie zapamiętać Twoje preferencje i poprawić doświadczenia."
+            },
+            "types": {
+                "title": "Rodzaje używanych plików cookie",
+                "content": "Używamy niezbędnych plików cookie do funkcjonowania strony, plików preferencji do zapamiętywania ustawień oraz plików analitycznych do zrozumienia, jak korzystasz z naszej strony."
+            },
+            "manage": {
+                "title": "Zarządzanie plikami cookie",
+                "content": "Możesz kontrolować pliki cookie w ustawieniach przeglądarki. Pamiętaj, że wyłączenie niektórych plików cookie może wpłynąć na funkcjonalność strony."
+            }
+        }
     }
 }

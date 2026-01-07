@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { env } from "@/lib/env";
 import { I18nProvider, isValidLocale, supportedLocales } from "@/lib/i18n";
 import { getTranslations } from "@/lib/i18n/server";
+import { CookieBanner } from "@/components/layout";
 
 export async function generateStaticParams() {
     return supportedLocales.map((lang) => ({ lang }));
@@ -51,6 +52,7 @@ export default async function LangLayout({ children, params }: LayoutProps) {
     return (
         <I18nProvider locale={lang} translations={translations}>
             {children}
+            <CookieBanner />
         </I18nProvider>
     );
 }
