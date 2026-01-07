@@ -1,8 +1,20 @@
 # nextjs-fullstack-starter
 
-Next.js 16 starter with React 19, TypeScript, and Tailwind CSS.
+Production-ready Next.js 16 starter with React 19, TypeScript, and modern tooling.
 
-## Setup
+## Stack
+
+- Next.js 16 (App Router)
+- React 19
+- TypeScript 5
+- Tailwind CSS 4
+- shadcn/ui + Aceternity UI
+- Framer Motion
+- next-themes
+- t3-env
+- i18n (en, pl)
+
+## Quick Start
 
 ```bash
 npm install
@@ -16,74 +28,73 @@ Open [http://localhost:3000](http://localhost:3000)
 ```bash
 npm run dev         # dev server
 npm run build       # production build
-npm run build:prod  # build + prepare standalone
-npm run start       # run production
-npm run start:prod  # run standalone
+npm run build:prod  # standalone build
+npm run start       # production server
+npm run start:prod  # standalone server
 npm run lint        # lint code
 ```
 
-## Stack
+## Features
 
-- Next.js 16
-- React 19
-- TypeScript 5
-- Tailwind CSS 4
-- shadcn/ui + Aceternity UI
-- t3-env (type-safe env vars)
-- ESLint
+- **i18n** - Multi-language support with cookie-based detection
+- **SEO** - Sitemap, robots.txt, metadata optimization
+- **PWA** - Web app manifest ready
+- **Dark Mode** - Theme switcher with system detection
+- **Type-safe** - Full TypeScript with t3-env validation
+- **Standalone** - Optimized Docker-ready builds
+
+## Environment
+
+Copy `.env.example` to `.env`:
+
+```env
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_DEFAULT_LOCALE=en
+NEXT_PUBLIC_SUPPORTED_LOCALES=en,pl
+```
 
 ## Project Structure
 
 ```
-src/app/
-├── page.tsx      # home page
-├── layout.tsx    # root layout
-└── globals.css   # global styles
+src/
+├── app/
+│   ├── [lang]/          # Localized routes
+│   ├── api/             # API routes
+│   ├── layout.tsx       # Root layout
+│   └── globals.css      # Global styles
+├── components/
+│   ├── layout/          # Layout components
+│   └── ui/              # shadcn/ui components
+├── lib/
+│   ├── env/             # Environment config
+│   ├── i18n/            # Internationalization
+│   └── theme/           # Theme provider
+└── middleware/          # Proxy middleware
 ```
 
-## Path Aliases
+## i18n
 
-Use `@/` for imports:
+Add translations in `src/lib/i18n/dictionaries/`:
 
 ```typescript
-import { Button } from "@/components/Button";
+// Client
+import { useTranslation } from "@/lib/i18n";
+const { t } = useTranslation();
+
+// Server
+import { getT } from "@/lib/i18n/server";
+const t = await getT(lang);
 ```
-
-## Environment Variables
-
-Type-safe environment variables with t3-env.
-
-1. Copy `.env.example` to `.env`:
-
-```bash
-cp .env.example .env
-```
-
-2. Fill in your values in `.env`:
-
-```env
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-```
-
-3. Add new variables in `src/lib/env/env.ts`:
-
-```typescript
-export const env = createEnv({
-  server: {
-    DATABASE_URL: z.string(),
-  },
-  client: {
-    NEXT_PUBLIC_APP_URL: z.string(),
-  },
-  runtimeEnv: {
-    DATABASE_URL: process.env.DATABASE_URL,
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-  },
-});
-```
-
-4. Import with `import { env } from "@/lib/env"` - validated on startup.
 
 ## Deploy
 
-Push to GitHub and deploy on Vercel, Netlify, or any Node.js host.
+```bash
+npm run build:prod
+npm run start:prod
+```
+
+Compatible with Vercel, Netlify, Docker, and any Node.js host.
+
+## License
+
+MIT
