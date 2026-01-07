@@ -13,6 +13,7 @@ Production-ready Next.js 16 starter with React 19, TypeScript, and modern toolin
 - next-themes
 - t3-env
 - i18n (en, pl)
+- Drizzle ORM + SQLite
 
 ## Quick Start
 
@@ -32,6 +33,8 @@ npm run build:prod  # standalone build
 npm run start       # production server
 npm run start:prod  # standalone server
 npm run lint        # lint code
+npm run db:push     # push schema to db
+npm run db:studio   # open Drizzle Studio
 ```
 
 ## Features
@@ -42,6 +45,7 @@ npm run lint        # lint code
 - **Dark Mode** - Theme switcher with system detection
 - **Type-safe** - Full TypeScript with t3-env validation
 - **Standalone** - Optimized Docker-ready builds
+- **Database** - Drizzle ORM with SQLite
 
 ## Environment
 
@@ -51,6 +55,7 @@ Copy `.env.example` to `.env`:
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 NEXT_PUBLIC_DEFAULT_LOCALE=en
 NEXT_PUBLIC_SUPPORTED_LOCALES=en,pl
+DATABASE_URL=sqlite.db
 ```
 
 ## Project Structure
@@ -66,6 +71,7 @@ src/
 │   ├── layout/          # Layout components
 │   └── ui/              # shadcn/ui components
 ├── lib/
+│   ├── database/        # Drizzle ORM
 │   ├── env/             # Environment config
 │   ├── i18n/            # Internationalization
 │   └── theme/           # Theme provider

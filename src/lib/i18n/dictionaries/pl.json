@@ -16,7 +16,7 @@
         "description": "Gotowy do produkcji szablon startowy z Next.js, TypeScript, Tailwind CSS, shadcn/ui i wszystkimi narzędziami potrzebnymi do szybkiego wdrożenia."
     },
     "footer": {
-        "stack": "shadcn/ui • Tailwind CSS • Framer Motion • t3-env • i18n"
+        "stack": "shadcn/ui • Tailwind CSS • Framer Motion • Drizzle ORM • t3-env • i18n"
     },
     "errors": {
         "lost": "Zgubiłeś się?",
