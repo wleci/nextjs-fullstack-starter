@@ -102,7 +102,8 @@
         "nav": {
             "home": "Dashboard",
             "profile": "Profile",
-            "settings": "Settings"
+            "settings": "Settings",
+            "account": "Account"
         },
         "home": {
             "title": "Dashboard",
