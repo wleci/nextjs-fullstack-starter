@@ -1,4 +1,4 @@
-import { Navbar, Hero, Footer } from "@/components/layout";
+import { Navbar, Hero, Features, Footer } from "@/components/layout";
 import { supportedLocales } from "@/lib/i18n";
 
 export function generateStaticParams() {
@@ -10,6 +10,7 @@ export default function Home() {
         <>
             <Navbar />
             <Hero />
+            <Features />
             <Footer />
         </>
     );

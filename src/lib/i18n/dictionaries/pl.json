@@ -93,7 +93,45 @@
         "badge": "Next.js 16 + React 19 + TypeScript",
         "title": "Buduj szybciej z",
         "titleHighlight": "nowoczesnym stackiem",
-        "description": "Gotowy do produkcji starter z i18n, dark mode, cookie consent, SEO, Drizzle ORM i wszystkim, czego potrzebujesz do szybkiego wdrożenia."
+        "description": "Gotowy do produkcji starter z autentykacją, emailami, dashboardem, i18n, dark mode i wszystkim czego potrzebujesz do szybkiego wdrożenia."
+    },
+    "features": {
+        "badge": "Wszystko czego potrzebujesz",
+        "title": "Wdrażaj szybciej z wbudowanymi funkcjami",
+        "subtitle": "Skup się na produkcie, nie na boilerplate. Wszystko jest gotowe.",
+        "tech": "Next.js 16 • React 19 • TypeScript • Tailwind • shadcn/ui • Drizzle",
+        "auth": {
+            "title": "Autentykacja",
+            "desc": "Kompletny system auth z logowaniem, rejestracją, 2FA, weryfikacją email i odzyskiwaniem hasła."
+        },
+        "email": {
+            "title": "System Email",
+            "desc": "Integracja Nodemailer z pięknymi szablonami React Email gotowymi do użycia."
+        },
+        "dashboard": {
+            "title": "Dashboard",
+            "desc": "Nowoczesny dashboard z nawigacją sidebar, breadcrumbs i zarządzaniem użytkownikami."
+        },
+        "i18n": {
+            "title": "Wielojęzyczność",
+            "desc": "Wsparcie wielu języków z detekcją cookie i SEO-friendly routes."
+        },
+        "ui": {
+            "title": "Piękny UI",
+            "desc": "Komponenty shadcn/ui z dark mode, animacjami i responsywnym designem."
+        },
+        "database": {
+            "title": "Baza danych",
+            "desc": "Drizzle ORM z SQLite, type-safe queries i wizualnym studio."
+        },
+        "security": {
+            "title": "Bezpieczeństwo",
+            "desc": "Security headers, zgoda GDPR na cookies i walidacja z Zod."
+        },
+        "performance": {
+            "title": "Wydajność",
+            "desc": "Zoptymalizowane buildy, wsparcie ISR i standalone mode dla produkcji."
+        }
     },
     "footer": {
         "stack": "shadcn/ui • Tailwind • Framer Motion • Drizzle • t3-env • i18n"

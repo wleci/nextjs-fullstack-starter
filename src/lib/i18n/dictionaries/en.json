@@ -93,7 +93,45 @@
         "badge": "Next.js 16 + React 19 + TypeScript",
         "title": "Build faster with",
         "titleHighlight": "modern stack",
-        "description": "Production-ready starter with i18n, dark mode, cookie consent, SEO, Drizzle ORM, and everything you need to ship fast."
+        "description": "Production-ready starter with authentication, email, dashboard, i18n, dark mode, and everything you need to ship fast."
+    },
+    "features": {
+        "badge": "Everything you need",
+        "title": "Ship faster with built-in features",
+        "subtitle": "Focus on your product, not on boilerplate. Everything is ready to go.",
+        "tech": "Next.js 16 • React 19 • TypeScript • Tailwind • shadcn/ui • Drizzle",
+        "auth": {
+            "title": "Authentication",
+            "desc": "Complete auth system with login, register, 2FA, email verification, and password recovery."
+        },
+        "email": {
+            "title": "Email System",
+            "desc": "Nodemailer integration with beautiful React Email templates ready to use."
+        },
+        "dashboard": {
+            "title": "Dashboard",
+            "desc": "Modern dashboard with sidebar navigation, breadcrumbs, and user management."
+        },
+        "i18n": {
+            "title": "Internationalization",
+            "desc": "Multi-language support with cookie-based detection and SEO-friendly routes."
+        },
+        "ui": {
+            "title": "Beautiful UI",
+            "desc": "shadcn/ui components with dark mode, animations, and responsive design."
+        },
+        "database": {
+            "title": "Database",
+            "desc": "Drizzle ORM with SQLite, type-safe queries, and visual studio."
+        },
+        "security": {
+            "title": "Security",
+            "desc": "Security headers, GDPR cookie consent, and input validation with Zod."
+        },
+        "performance": {
+            "title": "Performance",
+            "desc": "Optimized builds, ISR support, and standalone mode for production."
+        }
     },
     "footer": {
         "stack": "shadcn/ui • Tailwind • Framer Motion • Drizzle • t3-env • i18n"
