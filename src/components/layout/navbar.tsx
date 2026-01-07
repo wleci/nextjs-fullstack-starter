@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Github } from "lucide-react";
+import { Github, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "./theme-switcher";
 import { LanguageSwitcher } from "./language-switcher";
 import { useI18n } from "@/lib/i18n";
 
 export function Navbar() {
-    const { locale } = useI18n();
+    const { locale, t } = useI18n();
 
     return (
         <motion.header
@@ -37,6 +37,13 @@ export function Navbar() {
 
                     <LanguageSwitcher />
                     <ThemeSwitcher />
+
+                    <Button asChild size="sm">
+                        <Link href={`/${locale}/auth/login`}>
+                            <LogIn className="mr-2 h-4 w-4" />
+                            {t("auth.login.submit")}
+                        </Link>
+                    </Button>
                 </div>
             </nav>
         </motion.header>
