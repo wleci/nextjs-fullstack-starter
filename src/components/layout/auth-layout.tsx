@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
 import { ThemeSwitcher } from "./theme-switcher";
 import { LanguageSwitcher } from "./language-switcher";
-import { useLocale } from "@/lib/i18n";
+import { useLocale, useTranslation } from "@/lib/i18n";
 
 interface AuthLayoutProps {
     children: React.ReactNode;
@@ -12,16 +13,21 @@ interface AuthLayoutProps {
 
 export function AuthLayout({ children }: AuthLayoutProps) {
     const { locale } = useLocale();
+    const { t } = useTranslation();
 
     return (
         <div className="grid min-h-screen lg:grid-cols-2">
             {/* Left - Form */}
             <div className="flex flex-col">
-                <div className="flex items-center justify-between p-6 lg:hidden">
-                    <Link href={`/${locale}`} className="text-xl font-bold">
-                        Starter
+                <div className="flex items-center justify-between p-6">
+                    <Link
+                        href={`/${locale}`}
+                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+                    >
+                        <ArrowLeft className="h-4 w-4" />
+                        {t("common.home")}
                     </Link>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 lg:hidden">
                         <LanguageSwitcher />
                         <ThemeSwitcher />
                     </div>

@@ -1,10 +1,6 @@
-import { Navbar, Hero } from "@/components/layout";
+import { redirect } from "next/navigation";
+import { defaultLocale } from "@/lib/i18n";
 
-export default function Home() {
-  return (
-    <>
-      <Navbar />
-      <Hero />
-    </>
-  );
+export default function RootPage() {
+  redirect(`/${defaultLocale}`);
 }
