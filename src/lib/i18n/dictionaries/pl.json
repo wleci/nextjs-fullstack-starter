@@ -14,10 +14,11 @@
     },
     "cookies": {
         "title": "Ustawienia cookies",
-        "banner": "Używamy plików cookie, aby poprawić Twoje doświadczenia. Kontynuując korzystanie z tej strony, zgadzasz się na używanie plików cookie.",
+        "banner": "Używamy plików cookie, aby poprawić Twoje doświadczenia. Niezbędne pliki cookie są wymagane do prawidłowego działania strony. Analityczne pliki cookie pomagają nam ulepszać nasze usługi.",
         "learnMore": "Dowiedz się więcej",
-        "accept": "Akceptuję",
-        "decline": "Odrzuć"
+        "acceptAll": "Akceptuj wszystkie",
+        "requiredOnly": "Tylko wymagane",
+        "close": "Zamknij"
     },
     "hero": {
         "badge": "Next.js 16 + React 19 + TypeScript",

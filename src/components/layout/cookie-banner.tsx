@@ -6,28 +6,27 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Cookie, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
-
-const COOKIE_CONSENT_KEY = "cookie-consent";
+import { getCookieConsent, setCookieConsent } from "@/lib/cookies";
 
 export function CookieBanner() {
     const [show, setShow] = useState(false);
     const { t, locale } = useI18n();
 
     useEffect(() => {
-        const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
+        const consent = getCookieConsent();
         if (!consent) {
             const timer = setTimeout(() => setShow(true), 1000);
             return () => clearTimeout(timer);
         }
     }, []);
 
-    const accept = () => {
-        localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");
+    const acceptAll = () => {
+        setCookieConsent("all");
         setShow(false);
     };
 
-    const decline = () => {
-        localStorage.setItem(COOKIE_CONSENT_KEY, "declined");
+    const acceptRequired = () => {
+        setCookieConsent("required");
         setShow(false);
     };
 
@@ -39,12 +38,13 @@ export function CookieBanner() {
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: 100, opacity: 0 }}
                     transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                    className="fixed bottom-4 left-4 right-4 z-50 sm:bottom-6 sm:left-6 sm:right-auto sm:max-w-md"
+                    className="fixed bottom-4 left-4 right-4 z-50 sm:bottom-6 sm:left-auto sm:right-6 sm:max-w-md"
                 >
                     <div className="relative overflow-hidden rounded-2xl border bg-background/95 p-6 shadow-2xl backdrop-blur-md">
                         <button
-                            onClick={decline}
+                            onClick={acceptRequired}
                             className="absolute right-3 top-3 rounded-full p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+                            aria-label={t("cookies.close")}
                         >
                             <X className="h-4 w-4" />
                         </button>
@@ -66,17 +66,17 @@ export function CookieBanner() {
                             </Link>
                         </p>
 
-                        <div className="flex gap-3">
+                        <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
                             <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={decline}
+                                onClick={acceptRequired}
                                 className="flex-1"
                             >
-                                {t("cookies.decline")}
+                                {t("cookies.requiredOnly")}
                             </Button>
-                            <Button size="sm" onClick={accept} className="flex-1">
-                                {t("cookies.accept")}
+                            <Button size="sm" onClick={acceptAll} className="flex-1">
+                                {t("cookies.acceptAll")}
                             </Button>
                         </div>
                     </div>
