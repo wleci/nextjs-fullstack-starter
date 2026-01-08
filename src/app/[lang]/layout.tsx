@@ -17,6 +17,7 @@ export async function generateMetadata({
     const { lang } = await params;
     const translations = await getTranslations(lang);
     const hero = translations.hero as Record<string, string>;
+    const canonicalUrl = `${env.NEXT_PUBLIC_APP_URL}/${lang}`;
 
     return {
         title: {
@@ -24,10 +25,16 @@ export async function generateMetadata({
             template: "%s | Next.js Starter",
         },
         description: hero?.description || "Production-ready starter template",
+        alternates: {
+            canonical: canonicalUrl,
+            languages: Object.fromEntries(
+                supportedLocales.map((locale) => [locale, `${env.NEXT_PUBLIC_APP_URL}/${locale}`])
+            ),
+        },
         openGraph: {
             type: "website",
             locale: lang,
-            url: env.NEXT_PUBLIC_APP_URL,
+            url: canonicalUrl,
             title: "Next.js Starter",
             description: hero?.description || "Production-ready starter template",
             siteName: "Next.js Starter",
