@@ -104,10 +104,10 @@
         "badge": "Wszystko czego potrzebujesz",
         "title": "Wdrażaj szybciej z wbudowanymi funkcjami",
         "subtitle": "Skup się na produkcie, nie na boilerplate. Wszystko jest gotowe.",
-        "tech": "Next.js 16 • React 19 • TypeScript • Tailwind • shadcn/ui • Drizzle",
+        "tech": "Next.js 16 • React 19 • TypeScript • Tailwind • shadcn/ui • Drizzle • Better Auth",
         "auth": {
             "title": "Autentykacja",
-            "desc": "Kompletny system auth z logowaniem, rejestracją, 2FA, weryfikacją email i odzyskiwaniem hasła."
+            "desc": "Better Auth z logowaniem, rejestracją, 2FA, social login (Google, Discord), weryfikacją email i odzyskiwaniem hasła."
         },
         "email": {
             "title": "System Email",
@@ -131,7 +131,7 @@
         },
         "security": {
             "title": "Bezpieczeństwo",
-            "desc": "Security headers, zgoda GDPR na cookies i walidacja z Zod."
+            "desc": "Security headers, zgoda GDPR na cookies, Cloudflare Turnstile captcha i walidacja z Zod."
         },
         "performance": {
             "title": "Wydajność",
