@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { twoFactor, username } from "better-auth/plugins";
+import { localization } from "better-auth-localization";
 import { validator } from "validation-better-auth";
 import { db } from "@/lib/database";
 import { env } from "@/lib/env";
@@ -16,6 +17,52 @@ import {
     twoFactorVerifySchema,
 } from "@/validation/auth/backend";
 import * as authSchema from "./schema";
+
+/** Supported locales in the app mapped to better-auth-localization codes */
+const LOCALE_MAP = {
+    en: "default",
+    pl: "pl-PL",
+} as const;
+
+type LocalizationLocale = (typeof LOCALE_MAP)[keyof typeof LOCALE_MAP];
+
+/**
+ * Get default locale from env, mapped to localization code
+ */
+function getDefaultLocale(): LocalizationLocale {
+    const defaultLocale = env.NEXT_PUBLIC_DEFAULT_LOCALE as keyof typeof LOCALE_MAP;
+    return LOCALE_MAP[defaultLocale] ?? "default";
+}
+
+/**
+ * Detect locale from request
+ * Checks Accept-Language header and cookie
+ */
+function getLocaleFromRequest(request: Request | undefined): LocalizationLocale {
+    const fallback = getDefaultLocale();
+    if (!request) return fallback;
+
+    // Check cookie first
+    const cookieHeader = request.headers.get("cookie") ?? "";
+    const localeCookie = cookieHeader
+        .split(";")
+        .find((c) => c.trim().startsWith("NEXT_LOCALE="));
+    if (localeCookie) {
+        const locale = localeCookie.split("=")[1]?.trim() as keyof typeof LOCALE_MAP;
+        if (locale && LOCALE_MAP[locale]) {
+            return LOCALE_MAP[locale];
+        }
+    }
+
+    // Check Accept-Language header
+    const acceptLanguage = request.headers.get("accept-language") ?? "";
+    const preferredLocale = acceptLanguage.split(",")[0]?.split("-")[0]?.toLowerCase() as keyof typeof LOCALE_MAP;
+    if (preferredLocale && LOCALE_MAP[preferredLocale]) {
+        return LOCALE_MAP[preferredLocale];
+    }
+
+    return fallback;
+}
 
 /**
  * Build social providers config dynamically
@@ -131,6 +178,17 @@ export const auth = betterAuth({
     },
 
     plugins: [
+        /**
+         * Localization plugin - translates error messages
+         * Detects locale from cookie (NEXT_LOCALE) or Accept-Language header
+         * Falls back to NEXT_PUBLIC_DEFAULT_LOCALE from env
+         */
+        localization({
+            defaultLocale: getDefaultLocale(),
+            fallbackLocale: getDefaultLocale(),
+            getLocale: (request) => getLocaleFromRequest(request),
+        }),
+
         /**
          * Username plugin - allows login with username
          */
