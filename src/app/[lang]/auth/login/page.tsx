@@ -8,7 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthLayout } from "@/components/layout";
 import { useTranslation, useLocale } from "@/lib/i18n";
-import { loginSchema, type LoginInput } from "@/validation";
+import { frontend } from "@/validation/auth";
+
+const { signInEmailSchema: loginSchema } = frontend;
+type LoginInput = frontend.SignInEmailInput;
 
 export default function LoginPage() {
     const { t } = useTranslation();

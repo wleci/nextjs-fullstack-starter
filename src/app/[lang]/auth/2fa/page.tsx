@@ -7,7 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthLayout } from "@/components/layout";
 import { useTranslation } from "@/lib/i18n";
-import { twoFactorSchema, backupCodeSchema, type TwoFactorInput, type BackupCodeInput } from "@/validation";
+import { frontend } from "@/validation/auth";
+
+const { twoFactorVerifySchema: twoFactorSchema, twoFactorBackupCodeSchema: backupCodeSchema } = frontend;
+type TwoFactorInput = frontend.TwoFactorVerifyInput;
+type BackupCodeInput = frontend.TwoFactorBackupCodeInput;
 
 export default function TwoFactorPage() {
     const { t } = useTranslation();

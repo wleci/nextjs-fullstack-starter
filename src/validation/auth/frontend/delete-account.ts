@@ -6,9 +6,11 @@ import { z } from "zod";
  */
 export const deleteAccountSchema = z.object({
     password: z.string().min(1, "Password is required"),
-    confirmation: z.literal("DELETE", {
-        errorMap: () => ({ message: "Please type DELETE to confirm" }),
-    }),
+    confirmation: z
+        .string()
+        .refine((val) => val === "DELETE", {
+            message: "Please type DELETE to confirm",
+        }),
 });
 
 export type DeleteAccountInput = z.infer<typeof deleteAccountSchema>;

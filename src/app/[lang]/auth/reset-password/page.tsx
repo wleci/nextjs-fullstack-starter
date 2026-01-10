@@ -7,7 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthLayout } from "@/components/layout";
 import { useTranslation } from "@/lib/i18n";
-import { resetPasswordSchema, type ResetPasswordInput } from "@/validation";
+import { frontend } from "@/validation/auth";
+
+const { resetPasswordSchema } = frontend;
+type ResetPasswordInput = frontend.ResetPasswordInput;
 
 export default function ResetPasswordPage() {
     const { t } = useTranslation();
@@ -17,7 +20,7 @@ export default function ResetPasswordPage() {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const data = {
-            password: formData.get("password") as string,
+            newPassword: formData.get("password") as string,
             confirmPassword: formData.get("confirmPassword") as string,
         };
 
@@ -60,8 +63,8 @@ export default function ResetPasswordPage() {
                                 className="pl-10"
                             />
                         </div>
-                        {errors.password && (
-                            <p className="text-xs text-destructive">{errors.password}</p>
+                        {errors.newPassword && (
+                            <p className="text-xs text-destructive">{errors.newPassword}</p>
                         )}
                     </div>
 

@@ -8,7 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthLayout } from "@/components/layout";
 import { useTranslation, useLocale } from "@/lib/i18n";
-import { forgotPasswordSchema, type ForgotPasswordInput } from "@/validation";
+import { frontend } from "@/validation/auth";
+
+const { forgotPasswordSchema } = frontend;
+type ForgotPasswordInput = frontend.ForgotPasswordInput;
 
 export default function ForgotPasswordPage() {
     const { t } = useTranslation();
