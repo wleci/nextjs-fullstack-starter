@@ -18,20 +18,63 @@ import {
 } from "@/validation/auth/backend";
 import * as authSchema from "./schema";
 
-/** Supported locales in the app mapped to better-auth-localization codes */
-const LOCALE_MAP = {
-    en: "default",
-    pl: "pl-PL",
-} as const;
+/** Supported locales by better-auth-localization plugin */
+type LocalizationLocale =
+    | "default"
+    | "pl-PL"
+    | "pt-BR"
+    | "pt-PT"
+    | "es-ES"
+    | "de-DE"
+    | "fr-FR"
+    | "it-IT"
+    | "ja-JP"
+    | "ko-KR"
+    | "zh-Hans"
+    | "zh-Hant"
+    | "ru-RU"
+    | "tr-TR"
+    | "nl-NL"
+    | "sv-SE"
+    | "ar-SA"
+    | "ro-RO"
+    | "mr-MR";
 
-type LocalizationLocale = (typeof LOCALE_MAP)[keyof typeof LOCALE_MAP];
+/** Map app locale to better-auth-localization code */
+function mapLocaleToLocalization(locale: string): LocalizationLocale {
+    const map: Record<string, LocalizationLocale> = {
+        en: "default",
+        pl: "pl-PL",
+        pt: "pt-BR",
+        es: "es-ES",
+        de: "de-DE",
+        fr: "fr-FR",
+        it: "it-IT",
+        ja: "ja-JP",
+        ko: "ko-KR",
+        zh: "zh-Hans",
+        ru: "ru-RU",
+        tr: "tr-TR",
+        nl: "nl-NL",
+        sv: "sv-SE",
+        ar: "ar-SA",
+        ro: "ro-RO",
+    };
+    return map[locale] ?? "default";
+}
+
+/**
+ * Get supported locales from env
+ */
+function getSupportedLocales(): string[] {
+    return env.NEXT_PUBLIC_SUPPORTED_LOCALES.split(",").map((l) => l.trim());
+}
 
 /**
  * Get default locale from env, mapped to localization code
  */
 function getDefaultLocale(): LocalizationLocale {
-    const defaultLocale = env.NEXT_PUBLIC_DEFAULT_LOCALE as keyof typeof LOCALE_MAP;
-    return LOCALE_MAP[defaultLocale] ?? "default";
+    return mapLocaleToLocalization(env.NEXT_PUBLIC_DEFAULT_LOCALE);
 }
 
 /**
@@ -39,6 +82,7 @@ function getDefaultLocale(): LocalizationLocale {
  * Checks Accept-Language header and cookie
  */
 function getLocaleFromRequest(request: Request | undefined): LocalizationLocale {
+    const supportedLocales = getSupportedLocales();
     const fallback = getDefaultLocale();
     if (!request) return fallback;
 
@@ -48,17 +92,17 @@ function getLocaleFromRequest(request: Request | undefined): LocalizationLocale 
         .split(";")
         .find((c) => c.trim().startsWith("NEXT_LOCALE="));
     if (localeCookie) {
-        const locale = localeCookie.split("=")[1]?.trim() as keyof typeof LOCALE_MAP;
-        if (locale && LOCALE_MAP[locale]) {
-            return LOCALE_MAP[locale];
+        const locale = localeCookie.split("=")[1]?.trim();
+        if (locale && supportedLocales.includes(locale)) {
+            return mapLocaleToLocalization(locale);
         }
     }
 
     // Check Accept-Language header
     const acceptLanguage = request.headers.get("accept-language") ?? "";
-    const preferredLocale = acceptLanguage.split(",")[0]?.split("-")[0]?.toLowerCase() as keyof typeof LOCALE_MAP;
-    if (preferredLocale && LOCALE_MAP[preferredLocale]) {
-        return LOCALE_MAP[preferredLocale];
+    const preferredLocale = acceptLanguage.split(",")[0]?.split("-")[0]?.toLowerCase();
+    if (preferredLocale && supportedLocales.includes(preferredLocale)) {
+        return mapLocaleToLocalization(preferredLocale);
     }
 
     return fallback;
