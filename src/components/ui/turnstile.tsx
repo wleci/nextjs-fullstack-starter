@@ -13,7 +13,7 @@ interface TurnstileProps {
 
 /**
  * Cloudflare Turnstile captcha component
- * Only renders when NEXT_PUBLIC_TURNSTILE_SITE_KEY is configured
+ * Only renders when captcha is enabled and site key is configured
  */
 export function Turnstile({ onSuccess, onError, onExpire }: TurnstileProps) {
     const { resolvedTheme } = useTheme();
@@ -29,16 +29,14 @@ export function Turnstile({ onSuccess, onError, onExpire }: TurnstileProps) {
         ref.current?.reset();
     }, [onExpire]);
 
-    const siteKey = env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-
-    if (!siteKey) {
+    if (!isTurnstileEnabled()) {
         return null;
     }
 
     return (
         <TurnstileWidget
             ref={ref}
-            siteKey={siteKey}
+            siteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
             onSuccess={onSuccess}
             onError={handleError}
             onExpire={handleExpire}
@@ -51,8 +49,8 @@ export function Turnstile({ onSuccess, onError, onExpire }: TurnstileProps) {
 }
 
 /**
- * Check if Turnstile is enabled
+ * Check if Turnstile is enabled via env flag and site key exists
  */
 export function isTurnstileEnabled(): boolean {
-    return !!env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+    return env.NEXT_PUBLIC_ENABLE_CAPTCHA && !!env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 }

@@ -142,6 +142,10 @@ export const auth = betterAuth({
     baseURL: env.NEXT_PUBLIC_APP_URL,
     secret: env.BETTER_AUTH_SECRET,
 
+    advanced: {
+        cookiePrefix: "auth",
+    },
+
     database: drizzleAdapter(db, {
         provider: "sqlite",
         schema: {

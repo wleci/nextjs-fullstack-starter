@@ -1,6 +1,11 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+const booleanString = z
+    .string()
+    .default("false")
+    .transform((val) => val === "true");
+
 export const env = createEnv({
     server: {
         DATABASE_URL: z.string().default("sqlite.db"),
@@ -31,6 +36,11 @@ export const env = createEnv({
         NEXT_PUBLIC_APP_URL: z.string(),
         NEXT_PUBLIC_DEFAULT_LOCALE: z.string(),
         NEXT_PUBLIC_SUPPORTED_LOCALES: z.string(),
+
+        // Feature flags
+        NEXT_PUBLIC_ENABLE_GOOGLE: booleanString,
+        NEXT_PUBLIC_ENABLE_DISCORD: booleanString,
+        NEXT_PUBLIC_ENABLE_CAPTCHA: booleanString,
         NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
     },
     runtimeEnv: {
@@ -50,6 +60,9 @@ export const env = createEnv({
         NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
         NEXT_PUBLIC_DEFAULT_LOCALE: process.env.NEXT_PUBLIC_DEFAULT_LOCALE,
         NEXT_PUBLIC_SUPPORTED_LOCALES: process.env.NEXT_PUBLIC_SUPPORTED_LOCALES,
+        NEXT_PUBLIC_ENABLE_GOOGLE: process.env.NEXT_PUBLIC_ENABLE_GOOGLE,
+        NEXT_PUBLIC_ENABLE_DISCORD: process.env.NEXT_PUBLIC_ENABLE_DISCORD,
+        NEXT_PUBLIC_ENABLE_CAPTCHA: process.env.NEXT_PUBLIC_ENABLE_CAPTCHA,
         NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
     },
 });
