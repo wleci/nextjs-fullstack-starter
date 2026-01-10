@@ -51,7 +51,11 @@
             "password": "New password",
             "confirmPassword": "Confirm new password",
             "submit": "Reset password",
-            "success": "Password reset successfully"
+            "success": "Password reset successfully",
+            "invalidToken": "Invalid or expired link",
+            "invalidTokenDescription": "This password reset link is invalid or has expired. Please request a new one.",
+            "requestNewLink": "Request new link",
+            "backToLogin": "Back to login"
         },
         "twoFactor": {
             "title": "Two-factor authentication",

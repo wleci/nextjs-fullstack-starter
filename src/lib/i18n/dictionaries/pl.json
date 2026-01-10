@@ -51,7 +51,11 @@
             "password": "Nowe hasło",
             "confirmPassword": "Potwierdź nowe hasło",
             "submit": "Zresetuj hasło",
-            "success": "Hasło zostało zresetowane"
+            "success": "Hasło zostało zresetowane",
+            "invalidToken": "Nieprawidłowy lub wygasły link",
+            "invalidTokenDescription": "Ten link do resetowania hasła jest nieprawidłowy lub wygasł. Poproś o nowy.",
+            "requestNewLink": "Poproś o nowy link",
+            "backToLogin": "Powrót do logowania"
         },
         "twoFactor": {
             "title": "Weryfikacja dwuetapowa",

@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 
 /** Routes that require user to be logged OUT */
-const GUEST_ONLY_ROUTES = ["/auth/login", "/auth/register", "/auth/forgot-password"];
+const GUEST_ONLY_ROUTES = ["/auth/login", "/auth/register", "/auth/forgot-password", "/auth/reset-password"];
 
 /** Routes that require user to be logged IN */
 const PROTECTED_ROUTES = ["/dashboard"];

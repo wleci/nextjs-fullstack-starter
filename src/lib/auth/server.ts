@@ -4,8 +4,10 @@ import { nextCookies } from "better-auth/next-js";
 import { twoFactor, username } from "better-auth/plugins";
 import { localization } from "better-auth-localization";
 import { validator } from "validation-better-auth";
+import { render } from "@react-email/components";
 import { db } from "@/lib/database";
 import { env } from "@/lib/env";
+import { sendEmail, ResetPassword, VerifyEmail } from "@/lib/email";
 import {
     signInEmailSchema,
     signUpSchema,
@@ -160,11 +162,20 @@ export const auth = betterAuth({
 
         /**
          * Send password reset email
-         * @todo Implement email sending with your email service
          */
         sendResetPassword: async ({ user, url }) => {
-            // TODO: Implement email sending
-            console.log(`[Auth] Password reset requested for ${user.email}: ${url}`);
+            const html = await render(
+                ResetPassword({
+                    name: user.name ?? "User",
+                    resetUrl: url,
+                })
+            );
+
+            void sendEmail({
+                to: user.email,
+                subject: "Reset your password",
+                html,
+            });
         },
     },
 
@@ -174,11 +185,20 @@ export const auth = betterAuth({
 
         /**
          * Send email verification
-         * @todo Implement email sending with your email service
          */
         sendVerificationEmail: async ({ user, url }) => {
-            // TODO: Implement email sending
-            console.log(`[Auth] Verification email for ${user.email}: ${url}`);
+            const html = await render(
+                VerifyEmail({
+                    name: user.name ?? "User",
+                    verifyUrl: url,
+                })
+            );
+
+            void sendEmail({
+                to: user.email,
+                subject: "Verify your email",
+                html,
+            });
         },
     },
 
@@ -201,8 +221,18 @@ export const auth = betterAuth({
         changeEmail: {
             enabled: true,
             sendChangeEmailVerification: async ({ user, newEmail, url }) => {
-                // TODO: Implement email sending
-                console.log(`[Auth] Email change verification for ${user.email} -> ${newEmail}: ${url}`);
+                const html = await render(
+                    VerifyEmail({
+                        name: user.name ?? "User",
+                        verifyUrl: url,
+                    })
+                );
+
+                void sendEmail({
+                    to: newEmail,
+                    subject: "Verify your new email",
+                    html,
+                });
             },
         },
     },
