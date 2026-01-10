@@ -1,13 +1,14 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
+import { createAuthMiddleware } from "better-auth/api";
 import { twoFactor, username, captcha } from "better-auth/plugins";
 import { localization } from "better-auth-localization";
 import { validator } from "validation-better-auth";
 import { render } from "@react-email/components";
 import { db } from "@/lib/database";
 import { env } from "@/lib/env";
-import { sendEmail, ResetPassword, VerifyEmail } from "@/lib/email";
+import { sendEmail, ResetPassword, VerifyEmail, LoginNotification } from "@/lib/email";
 import {
     signInEmailSchema,
     signUpSchema,
@@ -161,8 +162,8 @@ export const auth = betterAuth({
         enabled: true,
         minPasswordLength: 8,
         maxPasswordLength: 128,
-        autoSignIn: true,
-        requireEmailVerification: false, // Set to true when email is configured
+        autoSignIn: false, // Don't auto sign in - require email verification first
+        requireEmailVerification: true,
 
         /**
          * Send password reset email
@@ -184,7 +185,8 @@ export const auth = betterAuth({
     },
 
     emailVerification: {
-        sendOnSignUp: false, // Set to true when email is configured
+        sendOnSignUp: false, // User must manually request verification
+        sendOnSignIn: false, // User must manually request verification
         autoSignInAfterVerification: true,
 
         /**
@@ -207,6 +209,43 @@ export const auth = betterAuth({
     },
 
     socialProviders: buildSocialProviders(),
+
+    /**
+     * Auth hooks - send login notification email
+     */
+    hooks: {
+        after: createAuthMiddleware(async (ctx) => {
+            // Send login notification on successful sign-in
+            if (ctx.path.startsWith("/sign-in") && ctx.context.newSession) {
+                const { user } = ctx.context.newSession;
+
+                // Get request info for email
+                const ipAddress = ctx.request?.headers.get("x-forwarded-for")
+                    ?? ctx.request?.headers.get("x-real-ip")
+                    ?? undefined;
+                const userAgent = ctx.request?.headers.get("user-agent") ?? undefined;
+                const timestamp = new Date().toLocaleString("en-US", {
+                    dateStyle: "full",
+                    timeStyle: "short",
+                });
+
+                const html = await render(
+                    LoginNotification({
+                        name: user.name ?? "User",
+                        ipAddress,
+                        userAgent,
+                        timestamp,
+                    })
+                );
+
+                void sendEmail({
+                    to: user.email,
+                    subject: "New login to your account",
+                    html,
+                });
+            }
+        }),
+    },
 
     session: {
         expiresIn: 60 * 60 * 24 * 7, // 7 days

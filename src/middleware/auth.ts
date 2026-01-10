@@ -5,14 +5,16 @@ import { auth } from "@/lib/auth";
 /** Routes that require user to be logged OUT */
 const GUEST_ONLY_ROUTES = ["/auth/login", "/auth/register", "/auth/forgot-password", "/auth/reset-password"];
 
-/** Routes that require user to be logged IN */
+/** Routes that require user to be logged IN and VERIFIED */
 const PROTECTED_ROUTES = ["/dashboard"];
+
+/** Route for email verification - accessible by both logged in (unverified) and guests with pending verification */
+const VERIFY_EMAIL_ROUTE = "/auth/verify-email";
 
 /**
  * Check if pathname matches any of the route patterns
  */
 function matchesRoute(pathname: string, routes: string[]): boolean {
-    // Remove locale prefix (e.g., /en, /pl)
     const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}(?=\/|$)/, "");
 
     return routes.some((route) => {
@@ -25,6 +27,14 @@ function matchesRoute(pathname: string, routes: string[]): boolean {
 }
 
 /**
+ * Check if pathname is the verify email route
+ */
+function isVerifyEmailRoute(pathname: string): boolean {
+    const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}(?=\/|$)/, "");
+    return pathWithoutLocale === VERIFY_EMAIL_ROUTE || pathWithoutLocale.startsWith(VERIFY_EMAIL_ROUTE + "/");
+}
+
+/**
  * Extract locale from pathname
  */
 function getLocaleFromPath(pathname: string): string {
@@ -33,9 +43,10 @@ function getLocaleFromPath(pathname: string): string {
 }
 
 /**
- * Auth middleware - protects routes based on session state
- * - Logged in users cannot access /auth/* routes
- * - Logged out users cannot access /dashboard/* routes
+ * Auth middleware - protects routes based on session state and email verification
+ * - Logged out users: can access guest routes and verify-email (for pending verification)
+ * - Logged in but NOT verified: can only access verify-email page
+ * - Logged in and verified: can access dashboard, cannot access auth pages
  */
 export async function handleAuth(request: NextRequest): Promise<NextResponse | null> {
     const { pathname } = request.nextUrl;
@@ -43,9 +54,10 @@ export async function handleAuth(request: NextRequest): Promise<NextResponse | n
 
     const isGuestRoute = matchesRoute(pathname, GUEST_ONLY_ROUTES);
     const isProtectedRoute = matchesRoute(pathname, PROTECTED_ROUTES);
+    const isVerifyRoute = isVerifyEmailRoute(pathname);
 
     // Skip if route doesn't need auth check
-    if (!isGuestRoute && !isProtectedRoute) {
+    if (!isGuestRoute && !isProtectedRoute && !isVerifyRoute) {
         return null;
     }
 
@@ -53,15 +65,31 @@ export async function handleAuth(request: NextRequest): Promise<NextResponse | n
         headers: await headers(),
     });
 
-    // Logged in user trying to access guest-only route (login, register, etc.)
-    if (isGuestRoute && session) {
-        return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
-    }
+    const isLoggedIn = !!session;
+    const isVerified = session?.user?.emailVerified ?? false;
 
-    // Logged out user trying to access protected route (dashboard, etc.)
-    if (isProtectedRoute && !session) {
+    // CASE 1: Not logged in
+    if (!isLoggedIn) {
+        // Can access guest routes and verify-email (for pending verification from login)
+        if (isGuestRoute || isVerifyRoute) return null;
+        // Cannot access protected routes
         return NextResponse.redirect(new URL(`/${locale}/auth/login`, request.url));
     }
 
+    // CASE 2: Logged in but NOT verified
+    if (!isVerified) {
+        // Can only access verify-email page
+        if (isVerifyRoute) return null;
+        // Redirect everything else to verify-email
+        return NextResponse.redirect(new URL(`/${locale}/auth/verify-email`, request.url));
+    }
+
+    // CASE 3: Logged in and verified
+    // Cannot access guest routes or verify-email
+    if (isGuestRoute || isVerifyRoute) {
+        return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
+    }
+
+    // Can access protected routes
     return null;
 }

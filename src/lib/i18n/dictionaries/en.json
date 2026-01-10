@@ -68,10 +68,16 @@
         },
         "verifyEmail": {
             "title": "Verify your email",
-            "description": "We've sent a verification link to your email address",
-            "resend": "Resend verification email",
+            "description": "Please verify your email address to continue",
+            "resend": "Send verification email",
             "success": "Email verified successfully",
-            "checking": "Verifying your email..."
+            "checking": "Verifying your email...",
+            "emailSent": "Verification email sent! Check your inbox.",
+            "redirecting": "Redirecting to login...",
+            "useAnotherAccount": "Use another account",
+            "checkSpam": "Don't see the email? Check your spam folder.",
+            "noEmail": "No email address found. Please log in first.",
+            "backToLogin": "Back to login"
         },
         "banned": {
             "title": "Account suspended",
@@ -151,6 +157,34 @@
         "home": {
             "title": "Dashboard",
             "welcome": "Welcome back"
+        },
+        "profile": {
+            "title": "Profile",
+            "description": "Manage your personal information and account settings",
+            "avatar": {
+                "title": "Profile Picture",
+                "description": "Your avatar is visible to other users"
+            },
+            "info": {
+                "title": "Personal Information",
+                "description": "Update your personal details"
+            },
+            "form": {
+                "name": "Full Name",
+                "email": "Email Address",
+                "emailHint": "Email cannot be changed here. Go to Settings to change your email.",
+                "save": "Save Changes"
+            },
+            "success": "Profile updated successfully",
+            "account": {
+                "title": "Account Information",
+                "description": "Details about your account",
+                "id": "Account ID",
+                "createdAt": "Member Since",
+                "emailVerified": "Email Status",
+                "verified": "Verified",
+                "notVerified": "Not Verified"
+            }
         }
     },
     "errors": {

@@ -63,6 +63,13 @@ export default function LoginPage() {
             });
 
             if (response.error) {
+                // Check if error is due to unverified email (403)
+                if (response.error.status === 403) {
+                    // Store email for verify-email page (user is not logged in yet)
+                    sessionStorage.setItem("pendingVerificationEmail", result.data.email);
+                    window.location.href = `/${locale}/auth/verify-email`;
+                    return;
+                }
                 setServerError(response.error.message ?? t("errors.serverError"));
                 return;
             }

@@ -70,7 +70,8 @@ export default function RegisterPage() {
                 return;
             }
 
-            window.location.href = `/${locale}/dashboard`;
+            // Redirect to verify-email page (user must verify before accessing dashboard)
+            window.location.href = `/${locale}/auth/verify-email`;
         } catch {
             setServerError(t("errors.serverError"));
         } finally {

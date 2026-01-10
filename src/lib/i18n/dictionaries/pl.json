@@ -68,10 +68,16 @@
         },
         "verifyEmail": {
             "title": "Zweryfikuj email",
-            "description": "Wysłaliśmy link weryfikacyjny na Twój adres email",
-            "resend": "Wyślij ponownie",
+            "description": "Zweryfikuj swój adres email, aby kontynuować",
+            "resend": "Wyślij email weryfikacyjny",
             "success": "Email został zweryfikowany",
-            "checking": "Weryfikowanie emaila..."
+            "checking": "Weryfikowanie emaila...",
+            "emailSent": "Email weryfikacyjny wysłany! Sprawdź skrzynkę.",
+            "redirecting": "Przekierowywanie do logowania...",
+            "useAnotherAccount": "Użyj innego konta",
+            "checkSpam": "Nie widzisz emaila? Sprawdź folder spam.",
+            "noEmail": "Nie znaleziono adresu email. Zaloguj się najpierw.",
+            "backToLogin": "Powrót do logowania"
         },
         "banned": {
             "title": "Konto zawieszone",
@@ -151,6 +157,34 @@
         "home": {
             "title": "Panel",
             "welcome": "Witaj ponownie"
+        },
+        "profile": {
+            "title": "Profil",
+            "description": "Zarządzaj swoimi danymi osobowymi i ustawieniami konta",
+            "avatar": {
+                "title": "Zdjęcie profilowe",
+                "description": "Twój avatar jest widoczny dla innych użytkowników"
+            },
+            "info": {
+                "title": "Dane osobowe",
+                "description": "Zaktualizuj swoje dane"
+            },
+            "form": {
+                "name": "Imię i nazwisko",
+                "email": "Adres email",
+                "emailHint": "Email nie może być zmieniony tutaj. Przejdź do Ustawień, aby zmienić email.",
+                "save": "Zapisz zmiany"
+            },
+            "success": "Profil został zaktualizowany",
+            "account": {
+                "title": "Informacje o koncie",
+                "description": "Szczegóły dotyczące Twojego konta",
+                "id": "ID konta",
+                "createdAt": "Członek od",
+                "emailVerified": "Status email",
+                "verified": "Zweryfikowany",
+                "notVerified": "Niezweryfikowany"
+            }
         }
     },
     "errors": {
