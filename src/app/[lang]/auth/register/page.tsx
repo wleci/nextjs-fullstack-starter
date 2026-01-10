@@ -6,6 +6,7 @@ import { User, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Turnstile, isTurnstileEnabled } from "@/components/ui/turnstile";
 import { AuthLayout } from "@/components/layout";
 import { useTranslation, useLocale } from "@/lib/i18n";
 import { createSignUpSchema, type SignUpInput } from "@/validation/auth/frontend/sign-up";
@@ -17,12 +18,19 @@ export default function RegisterPage() {
     const [errors, setErrors] = useState<Partial<Record<keyof SignUpInput, string>>>({});
     const [serverError, setServerError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
     const registerSchema = createSignUpSchema(t);
+    const captchaEnabled = isTurnstileEnabled();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setServerError(null);
+
+        if (captchaEnabled && !captchaToken) {
+            setServerError(t("errors.captchaRequired"));
+            return;
+        }
 
         const formData = new FormData(e.currentTarget);
         const data = {
@@ -32,7 +40,6 @@ export default function RegisterPage() {
             confirmPassword: formData.get("confirmPassword") as string,
         };
 
-        // Frontend validation
         const result = registerSchema.safeParse(data);
         if (!result.success) {
             const fieldErrors: typeof errors = {};
@@ -52,6 +59,9 @@ export default function RegisterPage() {
                 name: result.data.name,
                 email: result.data.email,
                 password: result.data.password,
+                fetchOptions: captchaToken
+                    ? { headers: { "x-captcha-response": captchaToken } }
+                    : undefined,
             });
 
             if (response.error) {
@@ -59,7 +69,6 @@ export default function RegisterPage() {
                 return;
             }
 
-            // Success - redirect to dashboard or verification page
             window.location.href = `/${locale}/dashboard`;
         } catch {
             setServerError(t("errors.serverError"));
@@ -158,6 +167,8 @@ export default function RegisterPage() {
                             <p className="text-xs text-destructive">{errors.confirmPassword}</p>
                         )}
                     </div>
+
+                    <Turnstile onSuccess={setCaptchaToken} />
 
                     <Button type="submit" className="w-full" disabled={isLoading}>
                         {isLoading ? (

@@ -6,6 +6,7 @@ import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Turnstile, isTurnstileEnabled } from "@/components/ui/turnstile";
 import { AuthLayout } from "@/components/layout";
 import { useTranslation, useLocale } from "@/lib/i18n";
 import { createSignInEmailSchema, type SignInEmailInput } from "@/validation/auth/frontend/sign-in";
@@ -17,12 +18,19 @@ export default function LoginPage() {
     const [errors, setErrors] = useState<Partial<Record<keyof SignInEmailInput, string>>>({});
     const [serverError, setServerError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
     const loginSchema = createSignInEmailSchema(t);
+    const captchaEnabled = isTurnstileEnabled();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setServerError(null);
+
+        if (captchaEnabled && !captchaToken) {
+            setServerError(t("errors.captchaRequired"));
+            return;
+        }
 
         const formData = new FormData(e.currentTarget);
         const data = {
@@ -30,7 +38,6 @@ export default function LoginPage() {
             password: formData.get("password") as string,
         };
 
-        // Frontend validation
         const result = loginSchema.safeParse(data);
         if (!result.success) {
             const fieldErrors: typeof errors = {};
@@ -49,6 +56,9 @@ export default function LoginPage() {
             const response = await signIn.email({
                 email: result.data.email,
                 password: result.data.password,
+                fetchOptions: captchaToken
+                    ? { headers: { "x-captcha-response": captchaToken } }
+                    : undefined,
             });
 
             if (response.error) {
@@ -56,7 +66,6 @@ export default function LoginPage() {
                 return;
             }
 
-            // Success - redirect to dashboard
             window.location.href = `/${locale}/dashboard`;
         } catch {
             setServerError(t("errors.serverError"));
@@ -125,6 +134,8 @@ export default function LoginPage() {
                             <p className="text-xs text-destructive">{errors.password}</p>
                         )}
                     </div>
+
+                    <Turnstile onSuccess={setCaptchaToken} />
 
                     <Button type="submit" className="w-full" disabled={isLoading}>
                         {isLoading ? (

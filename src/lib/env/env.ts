@@ -31,6 +31,7 @@ export const env = createEnv({
         NEXT_PUBLIC_APP_URL: z.string(),
         NEXT_PUBLIC_DEFAULT_LOCALE: z.string(),
         NEXT_PUBLIC_SUPPORTED_LOCALES: z.string(),
+        NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
     },
     runtimeEnv: {
         DATABASE_URL: process.env.DATABASE_URL,
@@ -49,5 +50,6 @@ export const env = createEnv({
         NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
         NEXT_PUBLIC_DEFAULT_LOCALE: process.env.NEXT_PUBLIC_DEFAULT_LOCALE,
         NEXT_PUBLIC_SUPPORTED_LOCALES: process.env.NEXT_PUBLIC_SUPPORTED_LOCALES,
+        NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
     },
 });

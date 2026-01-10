@@ -157,7 +157,8 @@
         "lost": "Zgubiłeś się?",
         "notFoundDescription": "Strona, której szukasz, nie istnieje lub została przeniesiona.",
         "serverError": "Coś poszło nie tak",
-        "serverErrorDescription": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie lub skontaktuj się z pomocą techniczną, jeśli problem będzie się powtarzał."
+        "serverErrorDescription": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie lub skontaktuj się z pomocą techniczną, jeśli problem będzie się powtarzał.",
+        "captchaRequired": "Proszę ukończyć weryfikację captcha"
     },
     "validation": {
         "name": {

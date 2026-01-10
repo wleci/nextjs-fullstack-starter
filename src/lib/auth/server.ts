@@ -1,7 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { twoFactor, username } from "better-auth/plugins";
+import { twoFactor, username, captcha } from "better-auth/plugins";
 import { localization } from "better-auth-localization";
 import { validator } from "validation-better-auth";
 import { render } from "@react-email/components";
@@ -278,15 +278,17 @@ export const auth = betterAuth({
         }),
 
         /**
-         * Captcha plugin - uncomment when configured
-         * Supports: cloudflare-turnstile, recaptcha, hcaptcha
-         *
-         * import { captcha } from "better-auth/plugins";
-         * captcha({
-         *     provider: "cloudflare-turnstile",
-         *     secretKey: env.TURNSTILE_SECRET_KEY!,
-         * }),
+         * Cloudflare Turnstile captcha - protects auth endpoints
+         * Only enabled when TURNSTILE_SECRET_KEY is configured
          */
+        ...(env.TURNSTILE_SECRET_KEY
+            ? [
+                captcha({
+                    provider: "cloudflare-turnstile",
+                    secretKey: env.TURNSTILE_SECRET_KEY,
+                }),
+            ]
+            : []),
 
         /**
          * Request validation with Zod schemas
