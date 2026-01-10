@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { runMiddleware } from "./middleware";
 
-export function proxy(request: NextRequest): NextResponse {
+export async function proxy(request: NextRequest): Promise<NextResponse> {
     const { pathname } = request.nextUrl;
 
     if (
