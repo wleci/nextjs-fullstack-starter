@@ -1,5 +1,2 @@
-export * from "./login";
-export * from "./register";
-export * from "./forgot-password";
-export * from "./reset-password";
-export * from "./two-factor";
+export * as frontend from "./frontend";
+export * as backend from "./backend";

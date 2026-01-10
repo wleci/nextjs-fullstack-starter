@@ -4,6 +4,23 @@ import { z } from "zod";
 export const env = createEnv({
     server: {
         DATABASE_URL: z.string().default("sqlite.db"),
+
+        // Better Auth
+        BETTER_AUTH_SECRET: z.string().min(32),
+        APP_NAME: z.string().default("My App"),
+
+        // OAuth - Google
+        GOOGLE_CLIENT_ID: z.string().optional(),
+        GOOGLE_CLIENT_SECRET: z.string().optional(),
+
+        // OAuth - Discord
+        DISCORD_CLIENT_ID: z.string().optional(),
+        DISCORD_CLIENT_SECRET: z.string().optional(),
+
+        // Captcha (optional)
+        TURNSTILE_SECRET_KEY: z.string().optional(),
+
+        // Email (SMTP)
         SMTP_HOST: z.string(),
         SMTP_PORT: z.coerce.number().default(587),
         SMTP_USER: z.string(),
@@ -17,6 +34,13 @@ export const env = createEnv({
     },
     runtimeEnv: {
         DATABASE_URL: process.env.DATABASE_URL,
+        BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+        APP_NAME: process.env.APP_NAME,
+        GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+        GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+        DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
+        DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
+        TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
         SMTP_HOST: process.env.SMTP_HOST,
         SMTP_PORT: process.env.SMTP_PORT,
         SMTP_USER: process.env.SMTP_USER,

@@ -1,16 +1,19 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
-export const users = sqliteTable("users", {
-    id: integer("id").primaryKey({ autoIncrement: true }),
-    email: text("email").notNull().unique(),
-    name: text("name"),
-    createdAt: integer("created_at", { mode: "timestamp" })
-        .notNull()
-        .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp" })
-        .notNull()
-        .$defaultFn(() => new Date()),
-});
+// Re-export auth schema tables
+export {
+    user,
+    session,
+    account,
+    verification,
+    twoFactor,
+} from "@/lib/auth/schema";
 
-export type User = typeof users.$inferSelect;
-export type NewUser = typeof users.$inferInsert;
+export type {
+    User,
+    NewUser,
+    Session,
+    Account,
+    Verification,
+    TwoFactor,
+} from "@/lib/auth/schema";
