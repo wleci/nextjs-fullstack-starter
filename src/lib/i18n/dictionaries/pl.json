@@ -184,6 +184,45 @@
                 "emailVerified": "Status email",
                 "verified": "Zweryfikowany",
                 "notVerified": "Niezweryfikowany"
+            },
+            "delete": {
+                "title": "Usuń konto",
+                "description": "Trwale usuń swoje konto i wszystkie powiązane dane. Tej operacji nie można cofnąć.",
+                "button": "Usuń konto",
+                "warning": "To trwale usunie Twoje konto, wszystkie dane, sesje i dostęp do wszystkich usług. Ta operacja jest nieodwracalna.",
+                "confirmLabel": "Wpisz DELETE aby potwierdzić",
+                "cancel": "Anuluj",
+                "confirm": "Usuń moje konto"
+            }
+        },
+        "settings": {
+            "title": "Ustawienia",
+            "description": "Zarządzaj bezpieczeństwem konta i preferencjami",
+            "password": {
+                "title": "Zmień hasło",
+                "description": "Zaktualizuj hasło, aby zabezpieczyć swoje konto",
+                "current": "Obecne hasło",
+                "new": "Nowe hasło",
+                "confirm": "Potwierdź nowe hasło",
+                "submit": "Zmień hasło",
+                "success": "Hasło zostało zmienione"
+            },
+            "email": {
+                "title": "Zmień email",
+                "description": "Zaktualizuj adres email. Link weryfikacyjny zostanie wysłany na nowy adres.",
+                "current": "Obecny email",
+                "new": "Nowy adres email",
+                "submit": "Zmień email",
+                "success": "Email weryfikacyjny wysłany na nowy adres"
+            },
+            "sessions": {
+                "title": "Aktywne sesje",
+                "description": "Zarządzaj aktywnymi sesjami na różnych urządzeniach",
+                "current": "Obecna",
+                "revokeAll": "Wyloguj wszystkie inne urządzenia",
+                "noSessions": "Brak aktywnych sesji",
+                "unknownDevice": "Nieznane urządzenie",
+                "unknownIp": "Nieznane IP"
             }
         }
     },

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { User, Mail, Camera, Loader2, Check } from "lucide-react";
+import { User, Mail, Camera, Loader2, Check, Trash2, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,15 +9,22 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { useTranslation } from "@/lib/i18n";
-import { useSession, updateUser } from "@/lib/auth/client";
+import { useTranslation, useLocale } from "@/lib/i18n";
+import { useSession, updateUser, deleteUser } from "@/lib/auth/client";
 
 export default function ProfilePage() {
     const { t } = useTranslation();
+    const { locale } = useLocale();
     const { data: session } = useSession();
     const [isLoading, setIsLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // Delete account state
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [deleteConfirmText, setDeleteConfirmText] = useState("");
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
 
     const [name, setName] = useState(session?.user?.name ?? "");
 
@@ -51,6 +58,29 @@ export default function ProfilePage() {
             .join("")
             .toUpperCase()
             .slice(0, 2);
+    };
+
+    const handleDeleteAccount = async () => {
+        if (deleteConfirmText !== "DELETE") return;
+
+        setDeleteError(null);
+        setIsDeleting(true);
+
+        try {
+            const response = await deleteUser();
+
+            if (response.error) {
+                setDeleteError(response.error.message ?? t("errors.serverError"));
+                return;
+            }
+
+            // Redirect to home after successful deletion
+            window.location.href = `/${locale}`;
+        } catch {
+            setDeleteError(t("errors.serverError"));
+        } finally {
+            setIsDeleting(false);
+        }
     };
 
     return (
@@ -217,6 +247,87 @@ export default function ProfilePage() {
                                 </dd>
                             </div>
                         </dl>
+                    </CardContent>
+                </Card>
+            </motion.div>
+
+            {/* Delete Account */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.3 }}
+            >
+                <Card className="border-destructive/50">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-destructive">
+                            <AlertTriangle className="h-5 w-5" />
+                            {t("dashboard.profile.delete.title")}
+                        </CardTitle>
+                        <CardDescription>{t("dashboard.profile.delete.description")}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        {!showDeleteConfirm ? (
+                            <Button
+                                variant="destructive"
+                                onClick={() => setShowDeleteConfirm(true)}
+                            >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                {t("dashboard.profile.delete.button")}
+                            </Button>
+                        ) : (
+                            <div className="space-y-4">
+                                <div className="rounded-md bg-destructive/10 p-4">
+                                    <p className="text-sm text-destructive">
+                                        {t("dashboard.profile.delete.warning")}
+                                    </p>
+                                </div>
+
+                                {deleteError && (
+                                    <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                                        {deleteError}
+                                    </div>
+                                )}
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="deleteConfirm">
+                                        {t("dashboard.profile.delete.confirmLabel")}
+                                    </Label>
+                                    <Input
+                                        id="deleteConfirm"
+                                        value={deleteConfirmText}
+                                        onChange={(e) => setDeleteConfirmText(e.target.value)}
+                                        placeholder="DELETE"
+                                        disabled={isDeleting}
+                                    />
+                                </div>
+
+                                <div className="flex gap-2">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                            setShowDeleteConfirm(false);
+                                            setDeleteConfirmText("");
+                                            setDeleteError(null);
+                                        }}
+                                        disabled={isDeleting}
+                                    >
+                                        {t("dashboard.profile.delete.cancel")}
+                                    </Button>
+                                    <Button
+                                        variant="destructive"
+                                        onClick={handleDeleteAccount}
+                                        disabled={deleteConfirmText !== "DELETE" || isDeleting}
+                                    >
+                                        {isDeleting ? (
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        ) : (
+                                            <Trash2 className="mr-2 h-4 w-4" />
+                                        )}
+                                        {t("dashboard.profile.delete.confirm")}
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
             </motion.div>

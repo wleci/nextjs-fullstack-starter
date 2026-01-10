@@ -184,6 +184,45 @@
                 "emailVerified": "Email Status",
                 "verified": "Verified",
                 "notVerified": "Not Verified"
+            },
+            "delete": {
+                "title": "Delete Account",
+                "description": "Permanently delete your account and all associated data. This action cannot be undone.",
+                "button": "Delete Account",
+                "warning": "This will permanently delete your account, all your data, sessions, and remove access to all services. This action is irreversible.",
+                "confirmLabel": "Type DELETE to confirm",
+                "cancel": "Cancel",
+                "confirm": "Delete My Account"
+            }
+        },
+        "settings": {
+            "title": "Settings",
+            "description": "Manage your account security and preferences",
+            "password": {
+                "title": "Change Password",
+                "description": "Update your password to keep your account secure",
+                "current": "Current Password",
+                "new": "New Password",
+                "confirm": "Confirm New Password",
+                "submit": "Update Password",
+                "success": "Password changed successfully"
+            },
+            "email": {
+                "title": "Change Email",
+                "description": "Update your email address. A verification link will be sent to the new address.",
+                "current": "Current email",
+                "new": "New Email Address",
+                "submit": "Change Email",
+                "success": "Verification email sent to your new address"
+            },
+            "sessions": {
+                "title": "Active Sessions",
+                "description": "Manage your active sessions across devices",
+                "current": "Current",
+                "revokeAll": "Sign out all other devices",
+                "noSessions": "No active sessions found",
+                "unknownDevice": "Unknown device",
+                "unknownIp": "Unknown IP"
             }
         }
     },
