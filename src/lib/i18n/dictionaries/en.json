@@ -78,7 +78,8 @@
         "logout": {
             "title": "Logged out",
             "description": "You have been successfully logged out",
-            "login": "Sign in again"
+            "login": "Sign in again",
+            "action": "Log out"
         }
     },
     "cookies": {
@@ -153,6 +154,29 @@
         "notFoundDescription": "The page you're looking for doesn't exist or has been moved.",
         "serverError": "Something went wrong",
         "serverErrorDescription": "An unexpected error occurred. Please try again or contact support if the problem persists."
+    },
+    "validation": {
+        "name": {
+            "min": "Name must be at least 2 characters",
+            "max": "Name must be at most 100 characters"
+        },
+        "email": {
+            "invalid": "Invalid email address"
+        },
+        "password": {
+            "min": "Password must be at least 8 characters",
+            "max": "Password must be at most 128 characters",
+            "required": "Password is required"
+        },
+        "confirmPassword": {
+            "mismatch": "Passwords don't match"
+        },
+        "username": {
+            "min": "Username must be at least 3 characters",
+            "max": "Username must be at most 30 characters",
+            "invalid": "Username can only contain letters, numbers, underscores and hyphens",
+            "required": "Username is required"
+        }
     },
     "legal": {
         "privacy": {

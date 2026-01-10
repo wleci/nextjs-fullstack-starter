@@ -78,7 +78,8 @@
         "logout": {
             "title": "Wylogowano",
             "description": "Zostałeś pomyślnie wylogowany",
-            "login": "Zaloguj się ponownie"
+            "login": "Zaloguj się ponownie",
+            "action": "Wyloguj się"
         }
     },
     "cookies": {
@@ -153,6 +154,29 @@
         "notFoundDescription": "Strona, której szukasz, nie istnieje lub została przeniesiona.",
         "serverError": "Coś poszło nie tak",
         "serverErrorDescription": "Wystąpił nieoczekiwany błąd. Spróbuj ponownie lub skontaktuj się z pomocą techniczną, jeśli problem będzie się powtarzał."
+    },
+    "validation": {
+        "name": {
+            "min": "Imię musi mieć co najmniej 2 znaki",
+            "max": "Imię może mieć maksymalnie 100 znaków"
+        },
+        "email": {
+            "invalid": "Nieprawidłowy adres email"
+        },
+        "password": {
+            "min": "Hasło musi mieć co najmniej 8 znaków",
+            "max": "Hasło może mieć maksymalnie 128 znaków",
+            "required": "Hasło jest wymagane"
+        },
+        "confirmPassword": {
+            "mismatch": "Hasła nie są zgodne"
+        },
+        "username": {
+            "min": "Nazwa użytkownika musi mieć co najmniej 3 znaki",
+            "max": "Nazwa użytkownika może mieć maksymalnie 30 znaków",
+            "invalid": "Nazwa użytkownika może zawierać tylko litery, cyfry, podkreślenia i myślniki",
+            "required": "Nazwa użytkownika jest wymagana"
+        }
     },
     "legal": {
         "privacy": {

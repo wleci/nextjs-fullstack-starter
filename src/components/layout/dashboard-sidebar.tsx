@@ -24,6 +24,7 @@ import {
     SidebarMenuSubButton, SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { useTranslation, useLocale, supportedLocales } from "@/lib/i18n";
+import { authClient } from "@/lib/auth/client";
 
 const MAIN_NAV = [
     { href: "/dashboard", icon: Home, labelKey: "dashboard.nav.home" },
@@ -53,6 +54,10 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
         setLocale(newLocale);
         const path = window.location.pathname.replace(/^\/[a-z]{2}(?=\/|$)/, "") || "/";
         window.location.href = `/${newLocale}${path}`;
+    };
+
+    const handleLogout = () => {
+        authClient.signOut();
     };
 
     const isActive = (href: string) => pathname === `/${locale}${href}`;
@@ -186,8 +191,12 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                                     </DropdownMenuSub>
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem asChild>
-                                    <Link href={`/${locale}/auth/logout`} className="text-destructive"><LogOut /> Log out</Link>
+                                <DropdownMenuItem
+                                    onClick={handleLogout}
+                                    className="text-destructive focus:text-destructive"
+                                >
+                                    <LogOut />
+                                    {t("auth.logout.action")}
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

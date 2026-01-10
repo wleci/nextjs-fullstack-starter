@@ -2,35 +2,40 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, Lock, ArrowRight } from "lucide-react";
+import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthLayout } from "@/components/layout";
 import { useTranslation, useLocale } from "@/lib/i18n";
-import { frontend } from "@/validation/auth";
-
-const { signInEmailSchema: loginSchema } = frontend;
-type LoginInput = frontend.SignInEmailInput;
+import { createSignInEmailSchema, type SignInEmailInput } from "@/validation/auth/frontend/sign-in";
+import { signIn } from "@/lib/auth/client";
 
 export default function LoginPage() {
     const { t } = useTranslation();
     const { locale } = useLocale();
-    const [errors, setErrors] = useState<Partial<Record<keyof LoginInput, string>>>({});
+    const [errors, setErrors] = useState<Partial<Record<keyof SignInEmailInput, string>>>({});
+    const [serverError, setServerError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const loginSchema = createSignInEmailSchema(t);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setServerError(null);
+
         const formData = new FormData(e.currentTarget);
         const data = {
             email: formData.get("email") as string,
             password: formData.get("password") as string,
         };
 
+        // Frontend validation
         const result = loginSchema.safeParse(data);
         if (!result.success) {
             const fieldErrors: typeof errors = {};
             result.error.issues.forEach((err) => {
-                const field = err.path[0] as keyof LoginInput;
+                const field = err.path[0] as keyof SignInEmailInput;
                 fieldErrors[field] = err.message;
             });
             setErrors(fieldErrors);
@@ -38,8 +43,26 @@ export default function LoginPage() {
         }
 
         setErrors({});
-        // TODO: handle login
-        console.log("Login:", result.data);
+        setIsLoading(true);
+
+        try {
+            const response = await signIn.email({
+                email: result.data.email,
+                password: result.data.password,
+            });
+
+            if (response.error) {
+                setServerError(response.error.message ?? t("errors.serverError"));
+                return;
+            }
+
+            // Success - redirect to dashboard
+            window.location.href = `/${locale}/dashboard`;
+        } catch {
+            setServerError(t("errors.serverError"));
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -52,6 +75,12 @@ export default function LoginPage() {
                     </p>
                 </div>
 
+                {serverError && (
+                    <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                        {serverError}
+                    </div>
+                )}
+
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="email">{t("auth.login.email")}</Label>
@@ -63,6 +92,7 @@ export default function LoginPage() {
                                 type="email"
                                 placeholder="name@example.com"
                                 className="pl-10"
+                                disabled={isLoading}
                             />
                         </div>
                         {errors.email && (
@@ -88,6 +118,7 @@ export default function LoginPage() {
                                 type="password"
                                 placeholder="••••••••"
                                 className="pl-10"
+                                disabled={isLoading}
                             />
                         </div>
                         {errors.password && (
@@ -95,9 +126,15 @@ export default function LoginPage() {
                         )}
                     </div>
 
-                    <Button type="submit" className="w-full">
-                        {t("auth.login.submit")}
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                        {isLoading ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                            <>
+                                {t("auth.login.submit")}
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                            </>
+                        )}
                     </Button>
                 </form>
 
