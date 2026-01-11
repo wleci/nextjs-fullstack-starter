@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-    Home, Settings, User, LogOut, ChevronUp, ChevronRight,
+    Home, Settings, User, Users, LogOut, ChevronUp, ChevronRight,
     Sun, Moon, Monitor, Languages, Sparkles, Shield, Crown,
 } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -33,6 +33,7 @@ const MAIN_NAV = [
 
 const ADMIN_NAV = [
     { href: "/admin", icon: Shield, labelKey: "dashboard.nav.admin" },
+    { href: "/admin/users", icon: Users, labelKey: "admin.users.title" },
 ];
 
 const ACCOUNT_NAV = [

@@ -18,6 +18,7 @@ const ROUTE_LABELS: Record<string, string> = {
     profile: "dashboard.nav.profile",
     settings: "dashboard.nav.settings",
     admin: "dashboard.nav.admin",
+    users: "admin.users.title",
 };
 
 export function DashboardHeader() {

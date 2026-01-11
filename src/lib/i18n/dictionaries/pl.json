@@ -345,10 +345,77 @@
         "stats": {
             "users": "Użytkownicy",
             "totalUsers": "Łączna liczba użytkowników",
+            "admins": "Administratorzy",
+            "totalAdmins": "Łączna liczba administratorów",
+            "banned": "Zablokowani",
+            "bannedUsers": "Zablokowani użytkownicy",
             "sessions": "Sesje",
             "activeSessions": "Aktywne sesje",
             "system": "System",
             "systemStatus": "Status systemu"
+        },
+        "cards": {
+            "users": {
+                "title": "Zarządzanie użytkownikami",
+                "description": "Przeglądaj i zarządzaj wszystkimi użytkownikami"
+            }
+        },
+        "users": {
+            "title": "Użytkownicy",
+            "description": "Zarządzaj wszystkimi zarejestrowanymi użytkownikami",
+            "searchPlaceholder": "Szukaj po emailu...",
+            "search": "Szukaj",
+            "noUsers": "Nie znaleziono użytkowników",
+            "table": {
+                "user": "Użytkownik",
+                "role": "Rola",
+                "status": "Status",
+                "joined": "Dołączył"
+            },
+            "active": "Aktywny",
+            "banned": "Zablokowany",
+            "unverified": "Niezweryfikowany",
+            "actions": "Akcje",
+            "changeRole": "Zmień rolę",
+            "ban": "Zablokuj",
+            "unban": "Odblokuj",
+            "showing": "Pokazuję {{from}}-{{to}} z {{total}}",
+            "banDialog": {
+                "title": "Zablokuj użytkownika",
+                "description": "Czy na pewno chcesz zablokować",
+                "reason": "Powód (opcjonalnie)",
+                "reasonPlaceholder": "Podaj powód blokady...",
+                "duration": "Czas trwania",
+                "hour": "godzina",
+                "hours": "godzin",
+                "days": "dni",
+                "permanent": "Permanentnie",
+                "cancel": "Anuluj",
+                "confirm": "Zablokuj"
+            },
+            "roleDialog": {
+                "title": "Zmień rolę",
+                "description": "Zmień rolę dla",
+                "role": "Rola",
+                "cancel": "Anuluj",
+                "confirm": "Zapisz"
+            },
+            "editDialog": {
+                "title": "Edytuj użytkownika",
+                "description": "Zaktualizuj dane użytkownika",
+                "name": "Imię",
+                "email": "Email",
+                "cancel": "Anuluj",
+                "confirm": "Zapisz"
+            },
+            "deleteDialog": {
+                "title": "Usuń użytkownika",
+                "description": "Czy na pewno chcesz trwale usunąć",
+                "cancel": "Anuluj",
+                "confirm": "Usuń"
+            },
+            "edit": "Edytuj",
+            "delete": "Usuń"
         }
     }
 }

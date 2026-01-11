@@ -345,10 +345,77 @@
         "stats": {
             "users": "Users",
             "totalUsers": "Total registered users",
+            "admins": "Admins",
+            "totalAdmins": "Total administrators",
+            "banned": "Banned",
+            "bannedUsers": "Banned users",
             "sessions": "Sessions",
             "activeSessions": "Active sessions",
             "system": "System",
             "systemStatus": "System status"
+        },
+        "cards": {
+            "users": {
+                "title": "User Management",
+                "description": "View and manage all registered users"
+            }
+        },
+        "users": {
+            "title": "Users",
+            "description": "Manage all registered users",
+            "searchPlaceholder": "Search by email...",
+            "search": "Search",
+            "noUsers": "No users found",
+            "table": {
+                "user": "User",
+                "role": "Role",
+                "status": "Status",
+                "joined": "Joined"
+            },
+            "active": "Active",
+            "banned": "Banned",
+            "unverified": "Unverified",
+            "actions": "Actions",
+            "changeRole": "Change role",
+            "ban": "Ban user",
+            "unban": "Unban user",
+            "showing": "Showing {{from}}-{{to}} of {{total}}",
+            "banDialog": {
+                "title": "Ban User",
+                "description": "Are you sure you want to ban",
+                "reason": "Reason (optional)",
+                "reasonPlaceholder": "Enter ban reason...",
+                "duration": "Duration",
+                "hour": "hour",
+                "hours": "hours",
+                "days": "days",
+                "permanent": "Permanent",
+                "cancel": "Cancel",
+                "confirm": "Ban User"
+            },
+            "roleDialog": {
+                "title": "Change Role",
+                "description": "Change role for",
+                "role": "Role",
+                "cancel": "Cancel",
+                "confirm": "Save"
+            },
+            "editDialog": {
+                "title": "Edit User",
+                "description": "Update user information",
+                "name": "Name",
+                "email": "Email",
+                "cancel": "Cancel",
+                "confirm": "Save"
+            },
+            "deleteDialog": {
+                "title": "Delete User",
+                "description": "Are you sure you want to permanently delete",
+                "cancel": "Cancel",
+                "confirm": "Delete"
+            },
+            "edit": "Edit user",
+            "delete": "Delete user"
         }
     }
 }
