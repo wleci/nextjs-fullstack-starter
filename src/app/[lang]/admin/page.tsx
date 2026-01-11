@@ -132,6 +132,16 @@ export default function AdminPage() {
                         <CardDescription>{t("admin.cards.users.description")}</CardDescription>
                     </CardHeader>
                 </Card>
+
+                <Card className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => router.push(`/${locale}/admin/blog`)}>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <TrendingUp className="h-5 w-5" />
+                            {t("admin.blog.title")}
+                        </CardTitle>
+                        <CardDescription>{t("admin.blog.description")}</CardDescription>
+                    </CardHeader>
+                </Card>
             </div>
         </div>
     );

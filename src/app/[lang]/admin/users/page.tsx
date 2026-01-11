@@ -26,6 +26,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { useSession, authClient } from "@/lib/auth/client";
 import { useTranslation, useLocale } from "@/lib/i18n";
+import { updateUserAdmin } from "@/lib/auth/admin-actions";
 
 interface User {
     id: string;
@@ -205,17 +206,9 @@ export default function AdminUsersPage() {
 
         setIsProcessing(true);
         try {
-            // Use admin API to update user
-            const response = await fetch("/api/admin/users/" + selectedUser.id, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: editName, email: editEmail }),
-            });
-
-            if (response.ok) {
-                setEditDialogOpen(false);
-                fetchUsers();
-            }
+            await updateUserAdmin(selectedUser.id, { name: editName, email: editEmail });
+            setEditDialogOpen(false);
+            fetchUsers();
         } catch (error) {
             console.error("Failed to update user:", error);
         } finally {

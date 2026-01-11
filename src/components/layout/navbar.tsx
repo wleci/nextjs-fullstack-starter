@@ -2,14 +2,16 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Github, LogIn } from "lucide-react";
+import { Github, LogIn, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeSwitcher } from "./theme-switcher";
 import { LanguageSwitcher } from "./language-switcher";
 import { useI18n } from "@/lib/i18n";
+import { env } from "@/lib/env";
 
 export function Navbar() {
     const { locale, t } = useI18n();
+    const blogEnabled = env.NEXT_PUBLIC_ENABLE_BLOG;
 
     return (
         <motion.header
@@ -19,9 +21,20 @@ export function Navbar() {
             className="fixed top-0 left-0 right-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-sm"
         >
             <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-                <Link href={`/${locale}`} className="text-xl font-semibold tracking-tight">
-                    nextjs-starter
-                </Link>
+                <div className="flex items-center gap-6">
+                    <Link href={`/${locale}`} className="text-xl font-semibold tracking-tight">
+                        nextjs-starter
+                    </Link>
+                    {blogEnabled && (
+                        <Link
+                            href={`/${locale}/blog`}
+                            className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                        >
+                            <FileText className="h-4 w-4" />
+                            {t("blog.title")}
+                        </Link>
+                    )}
+                </div>
 
                 <div className="flex items-center gap-2">
                     <Button variant="ghost" size="icon" asChild>

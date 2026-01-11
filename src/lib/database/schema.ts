@@ -17,3 +17,17 @@ export type {
     Verification,
     TwoFactor,
 } from "@/lib/auth/schema";
+
+// Re-export blog schema tables
+export {
+    blogPost,
+    blogCategory,
+    blogSettings,
+} from "@/lib/blog/schema";
+
+export type {
+    BlogPost,
+    NewBlogPost,
+    BlogCategory,
+    BlogSettings,
+} from "@/lib/blog/schema";

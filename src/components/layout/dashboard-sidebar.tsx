@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
     Home, Settings, User, Users, LogOut, ChevronUp, ChevronRight,
-    Sun, Moon, Monitor, Languages, Sparkles, Shield, Crown,
+    Sun, Moon, Monitor, Languages, Sparkles, Shield, Crown, FileText,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -34,6 +34,7 @@ const MAIN_NAV = [
 const ADMIN_NAV = [
     { href: "/admin", icon: Shield, labelKey: "dashboard.nav.admin" },
     { href: "/admin/users", icon: Users, labelKey: "admin.users.title" },
+    { href: "/admin/blog", icon: FileText, labelKey: "admin.blog.title" },
 ];
 
 const ACCOUNT_NAV = [
