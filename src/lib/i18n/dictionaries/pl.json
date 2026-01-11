@@ -219,7 +219,8 @@
                 "title": "Aktywne sesje",
                 "description": "Zarządzaj aktywnymi sesjami na różnych urządzeniach",
                 "current": "Obecna",
-                "revokeAll": "Wyloguj wszystkie inne urządzenia",
+                "revokeOther": "Wyloguj inne urządzenia",
+                "revokeAll": "Wyloguj wszędzie",
                 "noSessions": "Brak aktywnych sesji",
                 "unknownDevice": "Nieznane urządzenie",
                 "unknownIp": "Nieznane IP"

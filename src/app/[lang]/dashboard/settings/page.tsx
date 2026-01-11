@@ -18,14 +18,19 @@ import {
     changeEmail,
     listSessions,
     revokeSession,
-    revokeOtherSessions
+    revokeOtherSessions,
+    revokeSessions,
+    signOut
 } from "@/lib/auth/client";
 
 interface Session {
     id: string;
+    token: string;
+    userId: string;
     userAgent?: string | null;
     ipAddress?: string | null;
     createdAt: Date;
+    updatedAt: Date;
     expiresAt: Date;
 }
 
@@ -58,11 +63,12 @@ export default function SettingsPage() {
         const loadSessions = async () => {
             try {
                 const response = await listSessions();
+                console.log("Sessions response:", response);
                 if (response.data) {
                     setSessions(response.data as Session[]);
                 }
-            } catch {
-                // Ignore errors
+            } catch (err) {
+                console.error("Failed to load sessions:", err);
             } finally {
                 setSessionsLoading(false);
             }
@@ -153,7 +159,7 @@ export default function SettingsPage() {
     };
 
     const handleRevokeOtherSessions = async () => {
-        setRevokingSession("all");
+        setRevokingSession("other");
         try {
             await revokeOtherSessions();
             // Keep only current session
@@ -162,6 +168,18 @@ export default function SettingsPage() {
         } catch {
             // Ignore errors
         } finally {
+            setRevokingSession(null);
+        }
+    };
+
+    const handleRevokeAllSessions = async () => {
+        setRevokingSession("all");
+        try {
+            await revokeSessions();
+            // Sign out and redirect to login
+            await signOut();
+            window.location.href = `/${locale}/auth/login`;
+        } catch {
             setRevokingSession(null);
         }
     };
@@ -345,12 +363,27 @@ export default function SettingsPage() {
                                         {t("dashboard.settings.sessions.description")}
                                     </CardDescription>
                                 </div>
-                                {sessions.length > 1 && (
+                                <div className="flex gap-2">
+                                    {sessions.length > 1 && (
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={handleRevokeOtherSessions}
+                                            disabled={revokingSession === "other" || revokingSession === "all"}
+                                        >
+                                            {revokingSession === "other" ? (
+                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                            ) : (
+                                                <LogOut className="mr-2 h-4 w-4" />
+                                            )}
+                                            {t("dashboard.settings.sessions.revokeOther")}
+                                        </Button>
+                                    )}
                                     <Button
-                                        variant="outline"
+                                        variant="destructive"
                                         size="sm"
-                                        onClick={handleRevokeOtherSessions}
-                                        disabled={revokingSession === "all"}
+                                        onClick={handleRevokeAllSessions}
+                                        disabled={revokingSession === "all" || revokingSession === "other"}
                                     >
                                         {revokingSession === "all" ? (
                                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -359,7 +392,7 @@ export default function SettingsPage() {
                                         )}
                                         {t("dashboard.settings.sessions.revokeAll")}
                                     </Button>
-                                )}
+                                </div>
                             </div>
                         </CardHeader>
                         <CardContent>
