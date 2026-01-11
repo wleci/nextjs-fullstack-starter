@@ -164,7 +164,16 @@
             "description": "Zarządzaj swoimi danymi osobowymi i ustawieniami konta",
             "avatar": {
                 "title": "Zdjęcie profilowe",
-                "description": "Twój avatar jest widoczny dla innych użytkowników"
+                "description": "Twój avatar jest widoczny dla innych użytkowników",
+                "uploadTitle": "Zmień avatar",
+                "uploadDescription": "Prześlij nowe zdjęcie profilowe",
+                "upload": "Prześlij",
+                "delete": "Usuń",
+                "dragDrop": "Przeciągnij i upuść lub kliknij",
+                "maxSize": "JPG, PNG, WebP lub GIF (max 2MB)",
+                "uploading": "Przesyłanie...",
+                "success": "Avatar zaktualizowany",
+                "error": "Nie udało się przesłać avatara"
             },
             "info": {
                 "title": "Dane osobowe",

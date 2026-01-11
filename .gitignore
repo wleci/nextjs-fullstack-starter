@@ -44,3 +44,7 @@ next-env.d.ts
 # database
 sqlite.db
 /drizzle
+
+# user uploads
+/public/avatars/*
+!/public/avatars/.gitkeep

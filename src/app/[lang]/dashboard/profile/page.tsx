@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { User, Mail, Camera, Loader2, Check, Trash2, AlertTriangle } from "lucide-react";
+import { User, Mail, Loader2, Check, Trash2, AlertTriangle } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
+import { AvatarUpload } from "@/components/ui/avatar-upload";
 import { useTranslation, useLocale } from "@/lib/i18n";
 import { useSession, updateUser, deleteUser } from "@/lib/auth/client";
 
@@ -26,7 +26,26 @@ export default function ProfilePage() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [deleteError, setDeleteError] = useState<string | null>(null);
 
+    // Avatar state - track locally for immediate UI update
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(session?.user?.image ?? null);
+
     const [name, setName] = useState(session?.user?.name ?? "");
+
+    const avatarTranslations = {
+        title: t("dashboard.profile.avatar.uploadTitle"),
+        description: t("dashboard.profile.avatar.uploadDescription"),
+        upload: t("dashboard.profile.avatar.upload"),
+        delete: t("dashboard.profile.avatar.delete"),
+        dragDrop: t("dashboard.profile.avatar.dragDrop"),
+        maxSize: t("dashboard.profile.avatar.maxSize"),
+        uploading: t("dashboard.profile.avatar.uploading"),
+        success: t("dashboard.profile.avatar.success"),
+        error: t("dashboard.profile.avatar.error"),
+    };
+
+    const handleAvatarChange = (url: string | null) => {
+        setAvatarUrl(url);
+    };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -103,22 +122,12 @@ export default function ProfilePage() {
                             <CardDescription>{t("dashboard.profile.avatar.description")}</CardDescription>
                         </CardHeader>
                         <CardContent className="flex flex-col items-center space-y-4">
-                            <div className="relative">
-                                <Avatar className="h-24 w-24">
-                                    <AvatarImage src={session?.user?.image ?? undefined} />
-                                    <AvatarFallback className="text-2xl">
-                                        {getInitials(session?.user?.name ?? "U")}
-                                    </AvatarFallback>
-                                </Avatar>
-                                <Button
-                                    size="icon"
-                                    variant="outline"
-                                    className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full"
-                                    disabled
-                                >
-                                    <Camera className="h-4 w-4" />
-                                </Button>
-                            </div>
+                            <AvatarUpload
+                                currentImage={avatarUrl}
+                                name={session?.user?.name ?? "User"}
+                                onAvatarChange={handleAvatarChange}
+                                translations={avatarTranslations}
+                            />
                             <div className="text-center">
                                 <p className="font-medium">{session?.user?.name}</p>
                                 <p className="text-sm text-muted-foreground">{session?.user?.email}</p>

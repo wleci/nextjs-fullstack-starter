@@ -164,7 +164,16 @@
             "description": "Manage your personal information and account settings",
             "avatar": {
                 "title": "Profile Picture",
-                "description": "Your avatar is visible to other users"
+                "description": "Your avatar is visible to other users",
+                "uploadTitle": "Change Avatar",
+                "uploadDescription": "Upload a new profile picture",
+                "upload": "Upload",
+                "delete": "Remove",
+                "dragDrop": "Drag & drop or click to upload",
+                "maxSize": "JPG, PNG, WebP or GIF (max 2MB)",
+                "uploading": "Uploading...",
+                "success": "Avatar updated",
+                "error": "Failed to upload avatar"
             },
             "info": {
                 "title": "Personal Information",

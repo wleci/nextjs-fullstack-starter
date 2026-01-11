@@ -34,6 +34,11 @@ const nextConfig: NextConfig = {
   compiler: {
     removeConsole: true,
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "3mb",
+    },
+  },
   headers: async () => [
     {
       source: "/:path*",
