@@ -83,8 +83,10 @@
         "banned": {
             "title": "Account suspended",
             "description": "Your account has been suspended due to a violation of our terms of service.",
+            "reason": "Reason for suspension",
             "contact": "If you believe this is a mistake, please contact support.",
-            "support": "Contact support"
+            "support": "Contact support",
+            "backToLogin": "Back to login"
         },
         "logout": {
             "title": "Logged out",
@@ -153,7 +155,8 @@
             "home": "Dashboard",
             "profile": "Profile",
             "settings": "Settings",
-            "account": "Account"
+            "account": "Account",
+            "admin": "Admin Panel"
         },
         "home": {
             "title": "Dashboard",
@@ -334,6 +337,18 @@
             "button": "Unsubscribe",
             "successTitle": "Unsubscribed",
             "successDescription": "You have been successfully unsubscribed from our newsletter."
+        }
+    },
+    "admin": {
+        "title": "Admin Panel",
+        "description": "Manage your application",
+        "stats": {
+            "users": "Users",
+            "totalUsers": "Total registered users",
+            "sessions": "Sessions",
+            "activeSessions": "Active sessions",
+            "system": "System",
+            "systemStatus": "System status"
         }
     }
 }

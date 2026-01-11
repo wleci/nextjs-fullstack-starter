@@ -4,10 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
     Home, Settings, User, LogOut, ChevronUp, ChevronRight,
-    Sun, Moon, Monitor, Languages, Sparkles,
+    Sun, Moon, Monitor, Languages, Sparkles, Shield, Crown,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import {
     Collapsible, CollapsibleContent, CollapsibleTrigger,
 } from "@/components/ui/collapsible";
@@ -30,6 +31,10 @@ const MAIN_NAV = [
     { href: "/dashboard", icon: Home, labelKey: "dashboard.nav.home" },
 ];
 
+const ADMIN_NAV = [
+    { href: "/admin", icon: Shield, labelKey: "dashboard.nav.admin" },
+];
+
 const ACCOUNT_NAV = [
     { href: "/dashboard/profile", icon: User, labelKey: "dashboard.nav.profile" },
     { href: "/dashboard/settings", icon: Settings, labelKey: "dashboard.nav.settings" },
@@ -38,7 +43,7 @@ const ACCOUNT_NAV = [
 const LANGUAGE_FLAGS: Record<string, string> = { en: "🇬🇧", pl: "🇵🇱" };
 
 interface DashboardSidebarProps {
-    user: { name: string; email: string; avatar?: string };
+    user: { name: string; email: string; avatar?: string; role?: string };
 }
 
 export function DashboardSidebar({ user }: DashboardSidebarProps) {
@@ -62,6 +67,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
 
     const isActive = (href: string) => pathname === `/${locale}${href}`;
     const isAccountActive = ACCOUNT_NAV.some((item) => isActive(item.href));
+    const isAdmin = user.role === "admin";
 
     return (
         <Sidebar>
@@ -89,6 +95,16 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {MAIN_NAV.map((item) => (
+                                <SidebarMenuItem key={item.href}>
+                                    <SidebarMenuButton asChild isActive={isActive(item.href)}>
+                                        <Link href={`/${locale}${item.href}`}>
+                                            <item.icon />
+                                            <span>{t(item.labelKey)}</span>
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            ))}
+                            {isAdmin && ADMIN_NAV.map((item) => (
                                 <SidebarMenuItem key={item.href}>
                                     <SidebarMenuButton asChild isActive={isActive(item.href)}>
                                         <Link href={`/${locale}${item.href}`}>
@@ -149,7 +165,15 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                                         )}
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
-                                        <span className="truncate font-medium">{user.name}</span>
+                                        <div className="flex items-center gap-2">
+                                            <span className="truncate font-medium">{user.name}</span>
+                                            {isAdmin && (
+                                                <Badge variant="default" className="h-5 px-1.5 text-[10px] font-semibold">
+                                                    <Crown className="mr-0.5 h-3 w-3" />
+                                                    Admin
+                                                </Badge>
+                                            )}
+                                        </div>
                                         <span className="truncate text-xs text-muted-foreground">{user.email}</span>
                                     </div>
                                     <ChevronUp className="ml-auto size-4" />
@@ -157,7 +181,15 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent className="w-[--radix-dropdown-menu-trigger-width] min-w-56" side="top" align="end" sideOffset={4}>
                                 <DropdownMenuLabel className="font-normal">
-                                    <p className="text-sm font-medium">{user.name}</p>
+                                    <div className="flex items-center gap-2">
+                                        <p className="text-sm font-medium">{user.name}</p>
+                                        {isAdmin && (
+                                            <Badge variant="default" className="h-5 px-1.5 text-[10px] font-semibold">
+                                                <Crown className="mr-0.5 h-3 w-3" />
+                                                Admin
+                                            </Badge>
+                                        )}
+                                    </div>
                                     <p className="text-xs text-muted-foreground">{user.email}</p>
                                 </DropdownMenuLabel>
                                 <DropdownMenuSeparator />

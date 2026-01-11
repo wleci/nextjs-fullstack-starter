@@ -9,6 +9,10 @@ export const user = sqliteTable("user", {
         .default(false)
         .notNull(),
     image: text("image"),
+    role: text("role").default("user"),
+    banned: integer("banned", { mode: "boolean" }).default(false),
+    banReason: text("ban_reason"),
+    banExpires: integer("ban_expires", { mode: "timestamp_ms" }),
     createdAt: integer("created_at", { mode: "timestamp_ms" })
         .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
         .notNull(),
@@ -16,8 +20,6 @@ export const user = sqliteTable("user", {
         .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
         .$onUpdate(() => /* @__PURE__ */ new Date())
         .notNull(),
-    username: text("username").unique(),
-    displayUsername: text("display_username"),
     twoFactorEnabled: integer("two_factor_enabled", { mode: "boolean" }).default(
         false,
     ),
@@ -27,7 +29,7 @@ export const user = sqliteTable("user", {
     // Newsletter fields
     newsletterSubscribed: integer("newsletter_subscribed", { mode: "boolean" }).default(false),
     newsletterId: text("newsletter_id").unique(),
-});
+}, (table) => [index("user_email_idx").on(table.email)]);
 
 export const session = sqliteTable(
     "session",

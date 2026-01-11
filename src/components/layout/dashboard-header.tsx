@@ -17,6 +17,7 @@ const ROUTE_LABELS: Record<string, string> = {
     dashboard: "dashboard.nav.home",
     profile: "dashboard.nav.profile",
     settings: "dashboard.nav.settings",
+    admin: "dashboard.nav.admin",
 };
 
 export function DashboardHeader() {

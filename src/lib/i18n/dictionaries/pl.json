@@ -83,8 +83,10 @@
         "banned": {
             "title": "Konto zawieszone",
             "description": "Twoje konto zostało zawieszone z powodu naruszenia regulaminu.",
+            "reason": "Powód zawieszenia",
             "contact": "Jeśli uważasz, że to pomyłka, skontaktuj się z pomocą techniczną.",
-            "support": "Kontakt z pomocą"
+            "support": "Kontakt z pomocą",
+            "backToLogin": "Powrót do logowania"
         },
         "logout": {
             "title": "Wylogowano",
@@ -153,7 +155,8 @@
             "home": "Panel",
             "profile": "Profil",
             "settings": "Ustawienia",
-            "account": "Konto"
+            "account": "Konto",
+            "admin": "Panel admina"
         },
         "home": {
             "title": "Panel",
@@ -334,6 +337,18 @@
             "button": "Wypisz się",
             "successTitle": "Wypisano",
             "successDescription": "Zostałeś pomyślnie wypisany z naszego newslettera."
+        }
+    },
+    "admin": {
+        "title": "Panel admina",
+        "description": "Zarządzaj aplikacją",
+        "stats": {
+            "users": "Użytkownicy",
+            "totalUsers": "Łączna liczba użytkowników",
+            "sessions": "Sesje",
+            "activeSessions": "Aktywne sesje",
+            "system": "System",
+            "systemStatus": "Status systemu"
         }
     }
 }

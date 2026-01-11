@@ -92,6 +92,16 @@ export default function LoginPage() {
                     return;
                 }
 
+                // Check if user is banned
+                if (errorCode === "USER_BANNED" ||
+                    errorMessage.toLowerCase().includes("banned") ||
+                    errorMessage.toLowerCase().includes("suspended")) {
+                    // Store ban reason in sessionStorage for banned page
+                    sessionStorage.setItem("banReason", errorMessage);
+                    window.location.href = `/${locale}/auth/banned`;
+                    return;
+                }
+
                 // Check if error is due to unverified email
                 // Better Auth returns 403 with specific message for unverified email
                 if (errorCode === "EMAIL_NOT_VERIFIED" ||

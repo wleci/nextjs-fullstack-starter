@@ -8,7 +8,7 @@ import { DashboardLayout } from "@/components/layout";
 import { useSession } from "@/lib/auth/client";
 import { useLocale } from "@/lib/i18n";
 
-export default function DashboardRootLayout({
+export default function AdminLayout({
     children,
 }: {
     children: React.ReactNode;
@@ -17,11 +17,17 @@ export default function DashboardRootLayout({
     const router = useRouter();
     const { locale } = useLocale();
 
+    const userRole = session?.user?.role;
+
     useEffect(() => {
-        if (!isPending && !session) {
-            router.replace(`/${locale}/auth/login`);
+        if (!isPending) {
+            if (!session) {
+                router.replace(`/${locale}/auth/login`);
+            } else if (userRole !== "admin") {
+                router.replace(`/${locale}/dashboard`);
+            }
         }
-    }, [isPending, session, router, locale]);
+    }, [isPending, session, userRole, router, locale]);
 
     if (isPending) {
         return (
@@ -31,7 +37,7 @@ export default function DashboardRootLayout({
         );
     }
 
-    if (!session) {
+    if (!session || userRole !== "admin") {
         return null;
     }
 
@@ -39,7 +45,7 @@ export default function DashboardRootLayout({
         name: session.user.name ?? "User",
         email: session.user.email,
         avatar: session.user.image ?? undefined,
-        role: session.user.role ?? "user",
+        role: userRole,
     };
 
     return (

@@ -1,7 +1,7 @@
 "use client";
 
 import { createAuthClient } from "better-auth/react";
-import { twoFactorClient, usernameClient } from "better-auth/client/plugins";
+import { twoFactorClient, adminClient, inferAdditionalFields } from "better-auth/client/plugins";
 
 /**
  * Better Auth client instance for React
@@ -10,8 +10,16 @@ import { twoFactorClient, usernameClient } from "better-auth/client/plugins";
 export const authClient = createAuthClient({
     baseURL: process.env.NEXT_PUBLIC_APP_URL,
     plugins: [
-        usernameClient(),
         twoFactorClient(),
+        adminClient(),
+        inferAdditionalFields({
+            user: {
+                role: {
+                    type: "string",
+                    required: false,
+                },
+            },
+        }),
     ],
 });
 

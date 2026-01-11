@@ -2,7 +2,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { createAuthMiddleware, APIError } from "better-auth/api";
-import { twoFactor, username, captcha } from "better-auth/plugins";
+import { twoFactor, captcha, admin } from "better-auth/plugins";
 import { localization } from "better-auth-localization";
 import { validator } from "validation-better-auth";
 import { render } from "@react-email/components";
@@ -339,6 +339,13 @@ export const auth = betterAuth({
     },
 
     user: {
+        additionalFields: {
+            role: {
+                type: "string",
+                defaultValue: "user",
+                input: false,
+            },
+        },
         deleteUser: {
             enabled: true,
         },
@@ -367,7 +374,6 @@ export const auth = betterAuth({
         max: 100,
         customRules: {
             "/sign-in/email": { window: 60, max: 5 },
-            "/sign-in/username": { window: 60, max: 5 },
             "/sign-up/email": { window: 60, max: 3 },
             "/forgot-password": { window: 300, max: 3 },
             "/reset-password": { window: 300, max: 3 },
@@ -388,9 +394,11 @@ export const auth = betterAuth({
         }),
 
         /**
-         * Username plugin - allows login with username
+         * Admin plugin - role-based access control
          */
-        username(),
+        admin({
+            defaultRole: "user",
+        }),
 
         /**
          * Two-factor authentication plugin
