@@ -146,11 +146,11 @@ export default function SettingsPage() {
         }
     };
 
-    const handleRevokeSession = async (sessionId: string) => {
-        setRevokingSession(sessionId);
+    const handleRevokeSession = async (sessionToken: string) => {
+        setRevokingSession(sessionToken);
         try {
-            await revokeSession({ id: sessionId });
-            setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+            await revokeSession({ token: sessionToken });
+            setSessions((prev) => prev.filter((s) => s.token !== sessionToken));
         } catch {
             // Ignore errors
         } finally {
@@ -435,10 +435,10 @@ export default function SettingsPage() {
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"
-                                                        onClick={() => handleRevokeSession(s.id)}
-                                                        disabled={revokingSession === s.id}
+                                                        onClick={() => handleRevokeSession(s.token)}
+                                                        disabled={revokingSession === s.token}
                                                     >
-                                                        {revokingSession === s.id ? (
+                                                        {revokingSession === s.token ? (
                                                             <Loader2 className="h-4 w-4 animate-spin" />
                                                         ) : (
                                                             <LogOut className="h-4 w-4" />

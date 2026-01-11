@@ -197,7 +197,7 @@ export const auth = betterAuth({
         autoSignInAfterVerification: true,
 
         /**
-         * Send email verification
+         * Send email verification (for new account verification)
          */
         sendVerificationEmail: async ({ user, url }) => {
             const html = await render(
@@ -344,7 +344,7 @@ export const auth = betterAuth({
         },
         changeEmail: {
             enabled: true,
-            sendChangeEmailVerification: async ({ user, newEmail, url }) => {
+            sendChangeEmailVerification: async ({ user, newEmail, url, token }) => {
                 const html = await render(
                     VerifyEmail({
                         name: user.name ?? "User",

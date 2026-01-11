@@ -35,7 +35,8 @@
             "submit": "Utwórz konto",
             "hasAccount": "Masz już konto?",
             "login": "Zaloguj się",
-            "terms": "Tworząc konto, akceptujesz nasz"
+            "terms": "Tworząc konto, akceptujesz nasz",
+            "newsletter": "Zapisz się do newslettera"
         },
         "forgotPassword": {
             "title": "Zapomniałeś hasła",
@@ -113,15 +114,15 @@
         "tech": "Next.js 16 • React 19 • TypeScript • Tailwind • shadcn/ui • Drizzle • Better Auth",
         "auth": {
             "title": "Autentykacja",
-            "desc": "Better Auth z logowaniem, rejestracją, 2FA, social login (Google, Discord), weryfikacją email i odzyskiwaniem hasła."
+            "desc": "Better Auth z logowaniem, rejestracją, 2FA, social login, weryfikacją email, odzyskiwaniem hasła, blokadą konta, powiadomieniami o logowaniu i usuwaniem konta."
         },
         "email": {
             "title": "System Email",
-            "desc": "Integracja Nodemailer z pięknymi szablonami React Email gotowymi do użycia."
+            "desc": "Nodemailer z szablonami React Email: powitanie, weryfikacja, 2FA, reset hasła i powiadomienia o logowaniu."
         },
         "dashboard": {
             "title": "Dashboard",
-            "desc": "Nowoczesny dashboard z nawigacją sidebar, breadcrumbs i zarządzaniem użytkownikami."
+            "desc": "Nowoczesny dashboard z sidebar, zarządzaniem profilem, ustawieniami, kontrolą sesji i usuwaniem konta."
         },
         "i18n": {
             "title": "Wielojęzyczność",
@@ -137,7 +138,7 @@
         },
         "security": {
             "title": "Bezpieczeństwo",
-            "desc": "Security headers, zgoda GDPR na cookies, Cloudflare Turnstile captcha i walidacja z Zod."
+            "desc": "Security headers, zgoda GDPR na cookies, Turnstile captcha z auto-resetem, blokada konta po nieudanych próbach i walidacja Zod."
         },
         "performance": {
             "title": "Wydajność",
@@ -315,6 +316,15 @@
                 "title": "Zarządzanie plikami cookie",
                 "content": "Możesz kontrolować pliki cookie w ustawieniach przeglądarki. Pamiętaj, że wyłączenie niektórych plików cookie może wpłynąć na funkcjonalność strony."
             }
+        }
+    },
+    "newsletter": {
+        "unsubscribe": {
+            "title": "Wypisz się z newslettera",
+            "description": "Czy na pewno chcesz wypisać się z naszego newslettera?",
+            "button": "Wypisz się",
+            "successTitle": "Wypisano",
+            "successDescription": "Zostałeś pomyślnie wypisany z naszego newslettera."
         }
     }
 }

@@ -6,6 +6,7 @@ import { User, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Turnstile, isTurnstileEnabled } from "@/components/ui/turnstile";
 import { SocialLogin, isSocialLoginEnabled } from "@/components/ui/social-login";
 import { AuthLayout } from "@/components/layout";
@@ -20,6 +21,7 @@ export default function RegisterPage() {
     const [serverError, setServerError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+    const [newsletter, setNewsletter] = useState(false);
 
     const registerSchema = createSignUpSchema(t);
     const captchaEnabled = isTurnstileEnabled();
@@ -63,11 +65,25 @@ export default function RegisterPage() {
                 fetchOptions: captchaToken
                     ? { headers: { "x-captcha-response": captchaToken } }
                     : undefined,
+                callbackURL: `/${locale}/auth/verify-email`,
             });
 
             if (response.error) {
                 setServerError(response.error.message ?? t("errors.serverError"));
                 return;
+            }
+
+            // If newsletter checked, subscribe user
+            if (newsletter && response.data?.user?.id) {
+                try {
+                    await fetch("/api/newsletter/subscribe", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ userId: response.data.user.id }),
+                    });
+                } catch {
+                    // Ignore newsletter errors
+                }
             }
 
             // Redirect to verify-email page (user must verify before accessing dashboard)
@@ -171,6 +187,21 @@ export default function RegisterPage() {
                     </div>
 
                     <Turnstile onSuccess={setCaptchaToken} />
+
+                    <div className="flex items-center space-x-2">
+                        <Checkbox
+                            id="newsletter"
+                            checked={newsletter}
+                            onCheckedChange={(checked) => setNewsletter(checked === true)}
+                            disabled={isLoading}
+                        />
+                        <Label
+                            htmlFor="newsletter"
+                            className="text-sm font-normal cursor-pointer"
+                        >
+                            {t("auth.register.newsletter")}
+                        </Label>
+                    </div>
 
                     <Button type="submit" className="w-full" disabled={isLoading}>
                         {isLoading ? (

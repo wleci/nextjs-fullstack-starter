@@ -22,17 +22,20 @@
 - **Social Login** - Google & Discord (configurable via env)
 - **Two-Factor Auth** - TOTP with backup codes
 - **Password Recovery** - Forgot password & reset flow
-- **Email Verification** - Verify email on signup
-- **Session Management** - View & revoke sessions
-- **Captcha Protection** - Cloudflare Turnstile (configurable)
+- **Email Verification** - Required before dashboard access
+- **Session Management** - View & revoke sessions across devices
+- **Account Lockout** - Auto-lock after 5 failed login attempts (15 min)
+- **Login Notifications** - Email alerts on new sign-ins
+- **Captcha Protection** - Cloudflare Turnstile with auto-reset
 - **Rate Limiting** - Built-in protection against brute force
 - **Localized Errors** - Error messages in user's language
+- **Account Deletion** - Self-service account removal
 
 ### 📧 Email System
 
 - **Nodemailer Integration** - SMTP email sending
 - **React Email Templates** - Beautiful, responsive emails
-- **Pre-built Templates** - Welcome, verification, 2FA, password reset
+- **Pre-built Templates** - Welcome, verification, 2FA, password reset, login notification
 - **Type-safe** - Full TypeScript support
 
 ### 📊 Dashboard

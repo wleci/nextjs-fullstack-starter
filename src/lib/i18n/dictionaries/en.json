@@ -35,7 +35,8 @@
             "submit": "Create account",
             "hasAccount": "Already have an account?",
             "login": "Sign in",
-            "terms": "By creating an account, you agree to our"
+            "terms": "By creating an account, you agree to our",
+            "newsletter": "Subscribe to our newsletter"
         },
         "forgotPassword": {
             "title": "Forgot password",
@@ -113,15 +114,15 @@
         "tech": "Next.js 16 • React 19 • TypeScript • Tailwind • shadcn/ui • Drizzle • Better Auth",
         "auth": {
             "title": "Authentication",
-            "desc": "Better Auth with login, register, 2FA, social login (Google, Discord), email verification, and password recovery."
+            "desc": "Better Auth with login, register, 2FA, social login, email verification, password recovery, account lockout, login notifications, and account deletion."
         },
         "email": {
             "title": "Email System",
-            "desc": "Nodemailer integration with beautiful React Email templates ready to use."
+            "desc": "Nodemailer with React Email templates: welcome, verification, 2FA, password reset, and login notifications."
         },
         "dashboard": {
             "title": "Dashboard",
-            "desc": "Modern dashboard with sidebar navigation, breadcrumbs, and user management."
+            "desc": "Modern dashboard with sidebar, profile management, settings, session control, and account deletion."
         },
         "i18n": {
             "title": "Internationalization",
@@ -137,7 +138,7 @@
         },
         "security": {
             "title": "Security",
-            "desc": "Security headers, GDPR cookie consent, Cloudflare Turnstile captcha, and input validation with Zod."
+            "desc": "Security headers, GDPR cookie consent, Turnstile captcha with auto-reset, account lockout after failed attempts, and Zod validation."
         },
         "performance": {
             "title": "Performance",
@@ -315,6 +316,15 @@
                 "title": "Managing Cookies",
                 "content": "You can control cookies through your browser settings. Note that disabling certain cookies may affect site functionality."
             }
+        }
+    },
+    "newsletter": {
+        "unsubscribe": {
+            "title": "Unsubscribe from Newsletter",
+            "description": "Are you sure you want to unsubscribe from our newsletter?",
+            "button": "Unsubscribe",
+            "successTitle": "Unsubscribed",
+            "successDescription": "You have been successfully unsubscribed from our newsletter."
         }
     }
 }

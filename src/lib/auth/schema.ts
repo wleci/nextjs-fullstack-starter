@@ -24,6 +24,9 @@ export const user = sqliteTable("user", {
     // Account lockout fields
     failedLoginAttempts: integer("failed_login_attempts").default(0),
     lockedUntil: integer("locked_until", { mode: "timestamp_ms" }),
+    // Newsletter fields
+    newsletterSubscribed: integer("newsletter_subscribed", { mode: "boolean" }).default(false),
+    newsletterId: text("newsletter_id").unique(),
 });
 
 export const session = sqliteTable(
