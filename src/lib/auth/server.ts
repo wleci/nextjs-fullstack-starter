@@ -1,11 +1,12 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { createAuthMiddleware } from "better-auth/api";
+import { createAuthMiddleware, APIError } from "better-auth/api";
 import { twoFactor, username, captcha } from "better-auth/plugins";
 import { localization } from "better-auth-localization";
 import { validator } from "validation-better-auth";
 import { render } from "@react-email/components";
+import { eq } from "drizzle-orm";
 import { db } from "@/lib/database";
 import { env } from "@/lib/env";
 import { sendEmail, ResetPassword, VerifyEmail, LoginNotification } from "@/lib/email";
@@ -20,6 +21,12 @@ import {
     twoFactorVerifySchema,
 } from "@/validation/auth/backend";
 import * as authSchema from "./schema";
+
+/** Account lockout configuration */
+const LOCKOUT_CONFIG = {
+    maxAttempts: 5, // Lock after 5 failed attempts
+    lockoutDuration: 15 * 60 * 1000, // 15 minutes in milliseconds
+};
 
 /** Supported locales by better-auth-localization plugin */
 type LocalizationLocale =
@@ -211,15 +218,52 @@ export const auth = betterAuth({
     socialProviders: buildSocialProviders(),
 
     /**
-     * Auth hooks - send login notification email
+     * Auth hooks - account lockout and login notification
      */
     hooks: {
+        before: createAuthMiddleware(async (ctx) => {
+            // Check account lockout before sign-in
+            if (ctx.path.startsWith("/sign-in")) {
+                const body = ctx.body as { email?: string } | undefined;
+                const email = body?.email;
+
+                if (email) {
+                    const [user] = await db
+                        .select()
+                        .from(authSchema.user)
+                        .where(eq(authSchema.user.email, email))
+                        .limit(1);
+
+                    if (user?.lockedUntil) {
+                        const lockExpiry = new Date(user.lockedUntil);
+                        if (lockExpiry > new Date()) {
+                            const minutesLeft = Math.ceil((lockExpiry.getTime() - Date.now()) / 60000);
+                            throw new APIError("FORBIDDEN", {
+                                message: `Account locked. Try again in ${minutesLeft} minutes.`,
+                            });
+                        } else {
+                            // Lock expired, reset attempts
+                            await db
+                                .update(authSchema.user)
+                                .set({ failedLoginAttempts: 0, lockedUntil: null })
+                                .where(eq(authSchema.user.id, user.id));
+                        }
+                    }
+                }
+            }
+        }),
         after: createAuthMiddleware(async (ctx) => {
-            // Send login notification on successful sign-in
+            // Handle successful sign-in
             if (ctx.path.startsWith("/sign-in") && ctx.context.newSession) {
                 const { user } = ctx.context.newSession;
 
-                // Get request info for email
+                // Reset failed attempts on successful login
+                await db
+                    .update(authSchema.user)
+                    .set({ failedLoginAttempts: 0, lockedUntil: null })
+                    .where(eq(authSchema.user.id, user.id));
+
+                // Send login notification email
                 const ipAddress = ctx.request?.headers.get("x-forwarded-for")
                     ?? ctx.request?.headers.get("x-real-ip")
                     ?? undefined;
@@ -243,6 +287,43 @@ export const auth = betterAuth({
                     subject: "New login to your account",
                     html,
                 });
+            }
+
+            // Handle failed sign-in (no session created and it's a real auth failure)
+            // Don't count email verification failures as failed login attempts
+            if (ctx.path.startsWith("/sign-in") && !ctx.context.newSession) {
+                // Check if this was an email verification error (403) - don't count these
+                const returned = ctx.context.returned as { status?: number } | undefined;
+                if (returned?.status === 403) {
+                    // This is likely an email verification error, not a password failure
+                    return;
+                }
+
+                const body = ctx.body as { email?: string } | undefined;
+                const email = body?.email;
+
+                if (email) {
+                    const [user] = await db
+                        .select()
+                        .from(authSchema.user)
+                        .where(eq(authSchema.user.email, email))
+                        .limit(1);
+
+                    if (user) {
+                        const newAttempts = (user.failedLoginAttempts ?? 0) + 1;
+                        const shouldLock = newAttempts >= LOCKOUT_CONFIG.maxAttempts;
+
+                        await db
+                            .update(authSchema.user)
+                            .set({
+                                failedLoginAttempts: newAttempts,
+                                lockedUntil: shouldLock
+                                    ? new Date(Date.now() + LOCKOUT_CONFIG.lockoutDuration)
+                                    : null,
+                            })
+                            .where(eq(authSchema.user.id, user.id));
+                    }
+                }
             }
         }),
     },

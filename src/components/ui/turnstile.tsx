@@ -2,7 +2,7 @@
 
 import { Turnstile as TurnstileWidget, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { useTheme } from "next-themes";
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useImperativeHandle, forwardRef } from "react";
 import { env } from "@/lib/env";
 
 interface TurnstileProps {
@@ -11,42 +11,54 @@ interface TurnstileProps {
     onExpire?: () => void;
 }
 
+export interface TurnstileRef {
+    reset: () => void;
+}
+
 /**
  * Cloudflare Turnstile captcha component
  * Only renders when captcha is enabled and site key is configured
  */
-export function Turnstile({ onSuccess, onError, onExpire }: TurnstileProps) {
-    const { resolvedTheme } = useTheme();
-    const ref = useRef<TurnstileInstance>(null);
+export const Turnstile = forwardRef<TurnstileRef, TurnstileProps>(
+    function Turnstile({ onSuccess, onError, onExpire }, ref) {
+        const { resolvedTheme } = useTheme();
+        const widgetRef = useRef<TurnstileInstance>(null);
 
-    const handleError = useCallback(() => {
-        onError?.();
-        ref.current?.reset();
-    }, [onError]);
+        useImperativeHandle(ref, () => ({
+            reset: () => {
+                widgetRef.current?.reset();
+            },
+        }));
 
-    const handleExpire = useCallback(() => {
-        onExpire?.();
-        ref.current?.reset();
-    }, [onExpire]);
+        const handleError = useCallback(() => {
+            onError?.();
+            widgetRef.current?.reset();
+        }, [onError]);
 
-    if (!isTurnstileEnabled()) {
-        return null;
+        const handleExpire = useCallback(() => {
+            onExpire?.();
+            widgetRef.current?.reset();
+        }, [onExpire]);
+
+        if (!isTurnstileEnabled()) {
+            return null;
+        }
+
+        return (
+            <TurnstileWidget
+                ref={widgetRef}
+                siteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                onSuccess={onSuccess}
+                onError={handleError}
+                onExpire={handleExpire}
+                options={{
+                    theme: resolvedTheme === "dark" ? "dark" : "light",
+                    size: "flexible",
+                }}
+            />
+        );
     }
-
-    return (
-        <TurnstileWidget
-            ref={ref}
-            siteKey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
-            onSuccess={onSuccess}
-            onError={handleError}
-            onExpire={handleExpire}
-            options={{
-                theme: resolvedTheme === "dark" ? "dark" : "light",
-                size: "flexible",
-            }}
-        />
-    );
-}
+);
 
 /**
  * Check if Turnstile is enabled via env flag and site key exists

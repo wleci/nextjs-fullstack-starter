@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
-import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { Mail, Lock, ArrowRight, Loader2, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Turnstile, isTurnstileEnabled } from "@/components/ui/turnstile";
+import { Turnstile, isTurnstileEnabled, type TurnstileRef } from "@/components/ui/turnstile";
 import { SocialLogin, isSocialLoginEnabled } from "@/components/ui/social-login";
 import { AuthLayout } from "@/components/layout";
 import { useTranslation, useLocale } from "@/lib/i18n";
@@ -18,15 +18,24 @@ export default function LoginPage() {
     const { locale } = useLocale();
     const [errors, setErrors] = useState<Partial<Record<keyof SignInEmailInput, string>>>({});
     const [serverError, setServerError] = useState<string | null>(null);
+    const [isLocked, setIsLocked] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+    const turnstileRef = useRef<TurnstileRef>(null);
 
     const loginSchema = createSignInEmailSchema(t);
     const captchaEnabled = isTurnstileEnabled();
 
+    /** Reset captcha after failed login */
+    const resetCaptcha = () => {
+        setCaptchaToken(null);
+        turnstileRef.current?.reset();
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setServerError(null);
+        setIsLocked(false);
 
         if (captchaEnabled && !captchaToken) {
             setServerError(t("errors.captchaRequired"));
@@ -63,19 +72,43 @@ export default function LoginPage() {
             });
 
             if (response.error) {
-                // Check if error is due to unverified email (403)
-                if (response.error.status === 403) {
-                    // Store email for verify-email page (user is not logged in yet)
+                // Debug: log error details
+                console.log("Login error:", {
+                    status: response.error.status,
+                    code: response.error.code,
+                    message: response.error.message,
+                });
+
+                const errorMessage = response.error.message ?? "";
+                const errorCode = response.error.code ?? "";
+
+                // Reset captcha on any error
+                resetCaptcha();
+
+                // Check if account is locked (check first)
+                if (errorMessage.toLowerCase().includes("locked")) {
+                    setIsLocked(true);
+                    setServerError(errorMessage);
+                    return;
+                }
+
+                // Check if error is due to unverified email
+                // Better Auth returns 403 with specific message for unverified email
+                if (errorCode === "EMAIL_NOT_VERIFIED" ||
+                    errorMessage.toLowerCase().includes("verify your email") ||
+                    errorMessage.toLowerCase().includes("email is not verified")) {
                     sessionStorage.setItem("pendingVerificationEmail", result.data.email);
                     window.location.href = `/${locale}/auth/verify-email`;
                     return;
                 }
-                setServerError(response.error.message ?? t("errors.serverError"));
+
+                setServerError(errorMessage || t("errors.serverError"));
                 return;
             }
 
             window.location.href = `/${locale}/dashboard`;
         } catch {
+            resetCaptcha();
             setServerError(t("errors.serverError"));
         } finally {
             setIsLoading(false);
@@ -93,7 +126,8 @@ export default function LoginPage() {
                 </div>
 
                 {serverError && (
-                    <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                    <div className={`rounded-md p-3 text-sm ${isLocked ? "bg-amber-500/10 text-amber-600 dark:text-amber-400" : "bg-destructive/10 text-destructive"}`}>
+                        {isLocked && <ShieldAlert className="inline-block mr-2 h-4 w-4" />}
                         {serverError}
                     </div>
                 )}
@@ -143,7 +177,7 @@ export default function LoginPage() {
                         )}
                     </div>
 
-                    <Turnstile onSuccess={setCaptchaToken} />
+                    <Turnstile ref={turnstileRef} onSuccess={setCaptchaToken} />
 
                     <Button type="submit" className="w-full" disabled={isLoading}>
                         {isLoading ? (

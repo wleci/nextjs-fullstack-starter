@@ -232,7 +232,9 @@
         "notFoundDescription": "The page you're looking for doesn't exist or has been moved.",
         "serverError": "Something went wrong",
         "serverErrorDescription": "An unexpected error occurred. Please try again or contact support if the problem persists.",
-        "captchaRequired": "Please complete the captcha verification"
+        "captchaRequired": "Please complete the captcha verification",
+        "accountLocked": "Account temporarily locked",
+        "tooManyAttempts": "Too many failed login attempts. Please try again later."
     },
     "validation": {
         "name": {

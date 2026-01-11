@@ -21,6 +21,9 @@ export const user = sqliteTable("user", {
     twoFactorEnabled: integer("two_factor_enabled", { mode: "boolean" }).default(
         false,
     ),
+    // Account lockout fields
+    failedLoginAttempts: integer("failed_login_attempts").default(0),
+    lockedUntil: integer("locked_until", { mode: "timestamp_ms" }),
 });
 
 export const session = sqliteTable(
