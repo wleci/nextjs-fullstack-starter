@@ -14,6 +14,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { uploadAvatar, deleteAvatar, AVATAR_CONFIG } from "@/lib/avatar";
+import { updateUser } from "@/lib/auth/client";
 
 interface AvatarUploadProps {
     /** Current avatar URL */
@@ -89,16 +90,19 @@ export function AvatarUpload({
 
         const result = await uploadAvatar(formData);
 
-        setIsUploading(false);
         URL.revokeObjectURL(preview);
         setPreviewUrl(null);
 
         if (result.success && result.url) {
+            // Update user image via better-auth to sync session across all components
+            await updateUser({ image: result.url });
             onAvatarChange?.(result.url);
             setIsOpen(false);
         } else {
             setError(result.error ?? t.error);
         }
+
+        setIsUploading(false);
     }, [onAvatarChange, t.error]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,14 +138,16 @@ export function AvatarUpload({
 
         const result = await deleteAvatar();
 
-        setIsDeleting(false);
-
         if (result.success) {
+            // Update user image via better-auth to sync session across all components
+            await updateUser({ image: null });
             onAvatarChange?.(null);
             setIsOpen(false);
         } else {
             setError(result.error ?? t.error);
         }
+
+        setIsDeleting(false);
     };
 
     return (

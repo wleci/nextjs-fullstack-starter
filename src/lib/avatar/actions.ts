@@ -119,13 +119,8 @@ export async function uploadAvatar(formData: FormData): Promise<UploadResult> {
 
         await writeFile(filepath, buffer);
 
-        // Update user's image URL in database
+        // Return the URL - session update is handled by client via updateUser
         const imageUrl = `/${AVATAR_CONFIG.directory}/${filename}`;
-
-        await db
-            .update(user)
-            .set({ image: imageUrl })
-            .where(eq(user.id, session.user.id));
 
         return { success: true, url: imageUrl };
     } catch (error) {
@@ -159,12 +154,7 @@ export async function deleteAvatar(): Promise<UploadResult> {
             await deleteOldAvatar(currentUser.image);
         }
 
-        // Clear image URL in database
-        await db
-            .update(user)
-            .set({ image: null })
-            .where(eq(user.id, session.user.id));
-
+        // Session update is handled by client via updateUser
         return { success: true };
     } catch (error) {
         console.error("Avatar delete error:", error);

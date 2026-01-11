@@ -15,7 +15,7 @@ import { useSession, updateUser, deleteUser } from "@/lib/auth/client";
 export default function ProfilePage() {
     const { t } = useTranslation();
     const { locale } = useLocale();
-    const { data: session } = useSession();
+    const { data: session, refetch: refetchSession } = useSession();
     const [isLoading, setIsLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -45,6 +45,8 @@ export default function ProfilePage() {
 
     const handleAvatarChange = (url: string | null) => {
         setAvatarUrl(url);
+        // Odśwież sesję żeby inne komponenty miały aktualne dane
+        refetchSession();
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
