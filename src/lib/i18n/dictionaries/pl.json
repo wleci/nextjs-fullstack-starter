@@ -452,6 +452,12 @@
             "addCategory": "Dodaj kategorię",
             "importSuccess": "Wpis zaimportowany pomyślnie",
             "importError": "Nie udało się zaimportować wpisu"
+        },
+        "newsletter": {
+            "title": "Newsletter"
+        },
+        "email": {
+            "title": "Test Email"
         }
     },
     "blog": {

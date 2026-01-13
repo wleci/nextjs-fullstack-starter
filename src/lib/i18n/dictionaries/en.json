@@ -452,6 +452,12 @@
             "addCategory": "Add category",
             "importSuccess": "Post imported successfully",
             "importError": "Failed to import post"
+        },
+        "newsletter": {
+            "title": "Newsletter"
+        },
+        "email": {
+            "title": "Test Email"
         }
     },
     "blog": {

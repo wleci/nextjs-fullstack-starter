@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
     Home, Settings, User, Users, LogOut, ChevronUp, ChevronRight,
     Sun, Moon, Monitor, Languages, Sparkles, Shield, Crown, FileText,
+    Mail, Send,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -35,6 +36,8 @@ const ADMIN_NAV = [
     { href: "/admin", icon: Shield, labelKey: "dashboard.nav.admin" },
     { href: "/admin/users", icon: Users, labelKey: "admin.users.title" },
     { href: "/admin/blog", icon: FileText, labelKey: "admin.blog.title" },
+    { href: "/admin/newsletter", icon: Send, labelKey: "admin.newsletter.title" },
+    { href: "/admin/email", icon: Mail, labelKey: "admin.email.title" },
 ];
 
 const ACCOUNT_NAV = [
