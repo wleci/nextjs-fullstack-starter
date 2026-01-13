@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Shield, Users, Activity, TrendingUp } from "lucide-react";
+import { Shield, Users, Activity, TrendingUp, Mail } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSession, authClient } from "@/lib/auth/client";
 import { useTranslation, useLocale } from "@/lib/i18n";
@@ -140,6 +140,16 @@ export default function AdminPage() {
                             {t("admin.blog.title")}
                         </CardTitle>
                         <CardDescription>{t("admin.blog.description")}</CardDescription>
+                    </CardHeader>
+                </Card>
+
+                <Card className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => router.push(`/${locale}/admin/email`)}>
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                            <Mail className="h-5 w-5" />
+                            Test Email
+                        </CardTitle>
+                        <CardDescription>Wyślij testowe emaile i sprawdź konfigurację SMTP</CardDescription>
                     </CardHeader>
                 </Card>
             </div>

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {
     Users, Search, MoreHorizontal, Shield, Ban, UserCheck,
     ChevronLeft, ChevronRight, Loader2, Crown, Mail, Pencil,
-    Trash2, CheckCircle, XCircle, Calendar,
+    Trash2, CheckCircle, XCircle, Calendar, KeyRound, Send,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +26,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { useSession, authClient } from "@/lib/auth/client";
 import { useTranslation, useLocale } from "@/lib/i18n";
-import { updateUserAdmin } from "@/lib/auth/admin-actions";
+import { updateUserAdmin, adminSendResetPassword, adminSendVerificationEmail, adminSetUserPassword } from "@/lib/auth/admin-actions";
 
 interface User {
     id: string;
@@ -72,6 +72,13 @@ export default function AdminUsersPage() {
 
     // Delete dialog state
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+    // Password dialog state
+    const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+    const [newPassword, setNewPassword] = useState("");
+
+    // Action result toast
+    const [actionResult, setActionResult] = useState<{ success: boolean; message: string } | null>(null);
 
     const userRole = session?.user?.role;
 
@@ -149,6 +156,53 @@ export default function AdminUsersPage() {
     const openDeleteDialog = (user: User) => {
         setSelectedUser(user);
         setDeleteDialogOpen(true);
+    };
+
+    const openPasswordDialog = (user: User) => {
+        setSelectedUser(user);
+        setNewPassword("");
+        setPasswordDialogOpen(true);
+    };
+
+    const showResult = (success: boolean, message: string) => {
+        setActionResult({ success, message });
+        setTimeout(() => setActionResult(null), 3000);
+    };
+
+    const handleSendResetPassword = async (user: User) => {
+        setIsProcessing(true);
+        const result = await adminSendResetPassword(user.id);
+        if (result.success) {
+            showResult(true, `Email resetowania hasła wysłany do ${user.email}`);
+        } else {
+            showResult(false, result.error || "Błąd wysyłania");
+        }
+        setIsProcessing(false);
+    };
+
+    const handleSendVerificationEmail = async (user: User) => {
+        setIsProcessing(true);
+        const result = await adminSendVerificationEmail(user.id);
+        if (result.success) {
+            showResult(true, `Email weryfikacyjny wysłany do ${user.email}`);
+        } else {
+            showResult(false, result.error || "Błąd wysyłania");
+        }
+        setIsProcessing(false);
+    };
+
+    const handleSetPassword = async () => {
+        if (!selectedUser || !newPassword) return;
+
+        setIsProcessing(true);
+        const result = await adminSetUserPassword(selectedUser.id, newPassword);
+        if (result.success) {
+            showResult(true, `Hasło zmienione dla ${selectedUser.email}`);
+            setPasswordDialogOpen(false);
+        } else {
+            showResult(false, result.error || "Błąd zmiany hasła");
+        }
+        setIsProcessing(false);
     };
 
     const handleBan = async () => {
@@ -384,6 +438,21 @@ export default function AdminUsersPage() {
                                                     {t("admin.users.changeRole")}
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
+                                                <DropdownMenuItem onClick={() => handleSendResetPassword(user)}>
+                                                    <Mail className="mr-2 h-4 w-4" />
+                                                    Wyślij reset hasła
+                                                </DropdownMenuItem>
+                                                {!user.emailVerified && (
+                                                    <DropdownMenuItem onClick={() => handleSendVerificationEmail(user)}>
+                                                        <Send className="mr-2 h-4 w-4" />
+                                                        Wyślij weryfikację
+                                                    </DropdownMenuItem>
+                                                )}
+                                                <DropdownMenuItem onClick={() => openPasswordDialog(user)}>
+                                                    <KeyRound className="mr-2 h-4 w-4" />
+                                                    Ustaw hasło
+                                                </DropdownMenuItem>
+                                                <DropdownMenuSeparator />
                                                 {user.banned ? (
                                                     <DropdownMenuItem onClick={() => handleUnban(user.id)}>
                                                         <UserCheck className="mr-2 h-4 w-4" />
@@ -579,6 +648,53 @@ export default function AdminUsersPage() {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* Password Dialog */}
+            <Dialog open={passwordDialogOpen} onOpenChange={setPasswordDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Ustaw nowe hasło</DialogTitle>
+                        <DialogDescription>
+                            Ustaw nowe hasło dla użytkownika {selectedUser?.name}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <Label>Nowe hasło</Label>
+                            <Input
+                                type="password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                placeholder="Minimum 8 znaków"
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setPasswordDialogOpen(false)}>
+                            Anuluj
+                        </Button>
+                        <Button onClick={handleSetPassword} disabled={isProcessing || newPassword.length < 8}>
+                            {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Ustaw hasło
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Action Result Toast */}
+            {actionResult && (
+                <div className={`fixed bottom-4 right-4 flex items-center gap-2 px-4 py-3 rounded-lg shadow-lg z-50 ${actionResult.success
+                        ? "bg-green-500 text-white"
+                        : "bg-red-500 text-white"
+                    }`}>
+                    {actionResult.success ? (
+                        <CheckCircle className="h-5 w-5" />
+                    ) : (
+                        <XCircle className="h-5 w-5" />
+                    )}
+                    <span>{actionResult.message}</span>
+                </div>
+            )}
         </div>
     );
 }
