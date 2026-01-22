@@ -48,6 +48,24 @@ export async function updateBlogSettings(data: {
 export async function upsertBlogPost(json: BlogPostJSON) {
     const session = await requireAdmin();
 
+    // Validate categories exist in database
+    if (json.translations.some(t => t.categories && t.categories.length > 0)) {
+        const allCategories = await db.select().from(blogCategory).all();
+        const validSlugs = new Set(allCategories.map(c => c.slug));
+
+        for (const translation of json.translations) {
+            if (translation.categories) {
+                const invalidCategories = translation.categories.filter(cat => !validSlugs.has(cat));
+                if (invalidCategories.length > 0) {
+                    throw new Error(
+                        `Invalid categories: ${invalidCategories.join(", ")}. ` +
+                        `Please create these categories first in the Categories tab.`
+                    );
+                }
+            }
+        }
+    }
+
     for (const translation of json.translations) {
         const id = `${json.postId}_${translation.locale}`;
         const contentString = JSON.stringify(translation.content);

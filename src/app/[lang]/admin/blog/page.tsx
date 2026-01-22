@@ -45,9 +45,6 @@ import {
     deleteBlogPost,
     togglePostPublished,
     togglePostFeatured,
-    updateBlogSettings,
-    createCategory,
-    deleteCategory,
 } from "@/lib/blog/actions";
 import { WysiwygEditor } from "@/components/editor/wysiwyg-editor";
 import { htmlToContentBlocks } from "@/lib/blog/html-converter";
@@ -103,18 +100,6 @@ export default function AdminBlogPage() {
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
 
-    // Category dialog
-    const [categoryDialogOpen, setCategoryDialogOpen] = useState(false);
-    const [newCategorySlug, setNewCategorySlug] = useState("");
-    const [newCategoryNameEn, setNewCategoryNameEn] = useState("");
-    const [newCategoryNamePl, setNewCategoryNamePl] = useState("");
-    const [newCategoryColor, setNewCategoryColor] = useState("#6366f1");
-
-    // Settings
-    const [blogEnabled, setBlogEnabled] = useState(true);
-    const [postsPerPage, setPostsPerPage] = useState(12);
-    const [showFeatured, setShowFeatured] = useState(true);
-
     const userRole = session?.user?.role;
 
     // Group posts by postId
@@ -167,9 +152,6 @@ export default function AdminBlogPage() {
             setTotal(postsData.total);
             setSettings(settingsData);
             setCategories(categoriesData);
-            setBlogEnabled(settingsData.enabled ?? true);
-            setPostsPerPage(settingsData.postsPerPage ?? 12);
-            setShowFeatured(settingsData.showFeatured ?? true);
         } catch (error) {
             console.error("Failed to fetch data:", error);
         } finally {
@@ -236,7 +218,17 @@ export default function AdminBlogPage() {
             resetEditorState();
             fetchData();
         } catch (error) {
-            setImportError(t("admin.blog.importError"));
+            if (error instanceof Error) {
+                if (error.message.includes("Invalid categories")) {
+                    setImportError(error.message);
+                } else if (error.message.includes("JSON")) {
+                    setImportError("Nieprawidłowy format JSON. Sprawdź składnię.");
+                } else {
+                    setImportError(error.message || t("admin.blog.importError"));
+                }
+            } else {
+                setImportError(t("admin.blog.importError"));
+            }
         } finally {
             setIsProcessing(false);
         }
@@ -325,57 +317,6 @@ export default function AdminBlogPage() {
         }
     };
 
-    const handleSaveSettings = async () => {
-        setIsProcessing(true);
-        try {
-            await updateBlogSettings({
-                enabled: blogEnabled,
-                postsPerPage,
-                showFeatured,
-            });
-        } catch (error) {
-            console.error("Failed to save settings:", error);
-        } finally {
-            setIsProcessing(false);
-        }
-    };
-
-    const handleAddCategory = async () => {
-        if (!newCategorySlug || !newCategoryNameEn || !newCategoryNamePl) return;
-
-        setIsProcessing(true);
-        try {
-            await createCategory({
-                slug: newCategorySlug,
-                nameEn: newCategoryNameEn,
-                namePl: newCategoryNamePl,
-                color: newCategoryColor,
-            });
-            setCategoryDialogOpen(false);
-            setNewCategorySlug("");
-            setNewCategoryNameEn("");
-            setNewCategoryNamePl("");
-            setNewCategoryColor("#6366f1");
-            fetchData();
-        } catch (error) {
-            console.error("Failed to add category:", error);
-        } finally {
-            setIsProcessing(false);
-        }
-    };
-
-    const handleDeleteCategory = async (id: string) => {
-        setIsProcessing(true);
-        try {
-            await deleteCategory(id);
-            fetchData();
-        } catch (error) {
-            console.error("Failed to delete category:", error);
-        } finally {
-            setIsProcessing(false);
-        }
-    };
-
     const getLanguageColor = (loc: string) => {
         const colors: Record<string, string> = {
             pl: "#dc2626",
@@ -405,295 +346,215 @@ export default function AdminBlogPage() {
                         <p className="text-sm text-muted-foreground">{t("admin.blog.description")}</p>
                     </div>
                 </div>
-                <Button onClick={() => setImportDialogOpen(true)} className="w-full sm:w-auto">
-                    <Plus className="h-4 w-4 mr-2" />
-                    {t("admin.blog.createPost")}
-                </Button>
+                <div className="flex flex-col sm:flex-row gap-2">
+                    <Button
+                        variant="outline"
+                        onClick={() => router.push(`/${locale}/admin/blog/categories`)}
+                        className="w-full sm:w-auto"
+                    >
+                        <Tag className="h-4 w-4 mr-2" />
+                        Kategorie
+                    </Button>
+                    <Button
+                        variant="outline"
+                        onClick={() => router.push(`/${locale}/admin/blog/settings`)}
+                        className="w-full sm:w-auto"
+                    >
+                        <Settings className="h-4 w-4 mr-2" />
+                        Ustawienia
+                    </Button>
+                    <Button onClick={() => setImportDialogOpen(true)} className="w-full sm:w-auto">
+                        <Plus className="h-4 w-4 mr-2" />
+                        {t("admin.blog.createPost")}
+                    </Button>
+                </div>
             </div>
 
-            <Tabs defaultValue="posts">
-                <TabsList className="w-full sm:w-auto grid grid-cols-3 sm:flex">
-                    <TabsTrigger value="posts" className="gap-2">
-                        <FileText className="h-4 w-4" />
-                        {t("admin.blog.posts")}
-                    </TabsTrigger>
-                    <TabsTrigger value="categories" className="gap-2">
-                        <Tag className="h-4 w-4" />
-                        {t("admin.blog.categories")}
-                    </TabsTrigger>
-                    <TabsTrigger value="settings" className="gap-2">
-                        <Settings className="h-4 w-4" />
-                        {t("admin.blog.settings")}
-                    </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="posts" className="space-y-4">
-                    <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
-                        <div className="relative flex-1 sm:max-w-sm">
-                            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                            <Input
-                                placeholder={t("admin.users.searchPlaceholder")}
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                className="pl-10"
-                            />
-                        </div>
-                        <Button type="submit" variant="secondary">
-                            {t("admin.users.search")}
-                        </Button>
-                    </form>
-
-                    <div className="border rounded-lg overflow-x-auto">
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="min-w-[200px]">Title</TableHead>
-                                    <TableHead className="w-[140px]">
-                                        <div className="flex items-center gap-1.5">
-                                            <Languages className="h-4 w-4" />
-                                            {t("admin.blog.locale")}
-                                        </div>
-                                    </TableHead>
-                                    <TableHead className="w-[120px]">{t("admin.blog.status")}</TableHead>
-                                    <TableHead className="w-[80px]">{t("admin.blog.featured")}</TableHead>
-                                    <TableHead className="w-[80px] text-right">{t("admin.blog.actions")}</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {isLoading ? (
-                                    <TableRow>
-                                        <TableCell colSpan={5} className="h-32 text-center">
-                                            <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
-                                        </TableCell>
-                                    </TableRow>
-                                ) : groupedPosts.length === 0 ? (
-                                    <TableRow>
-                                        <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
-                                            {t("admin.blog.noPostsFound")}
-                                        </TableCell>
-                                    </TableRow>
-                                ) : (
-                                    groupedPosts.map((group) => (
-                                        <TableRow key={group.postId}>
-                                            <TableCell>
-                                                <div className="font-medium truncate max-w-[280px]">
-                                                    {group.title}
-                                                </div>
-                                                <div className="text-xs text-muted-foreground">
-                                                    ID: {group.postId}
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                <div className="flex flex-wrap gap-1">
-                                                    {group.translations.map((tr) => (
-                                                        <Badge
-                                                            key={tr.id}
-                                                            variant="outline"
-                                                            className="text-xs cursor-default"
-                                                            style={{
-                                                                borderColor: getLanguageColor(tr.locale),
-                                                                color: getLanguageColor(tr.locale),
-                                                            }}
-                                                            title={tr.title + " (/" + tr.slug + ")"}
-                                                        >
-                                                            {tr.locale.toUpperCase()}
-                                                            {tr.published ? (
-                                                                <Eye className="h-3 w-3 ml-1" />
-                                                            ) : (
-                                                                <EyeOff className="h-3 w-3 ml-1 opacity-50" />
-                                                            )}
-                                                        </Badge>
-                                                    ))}
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                {group.published ? (
-                                                    <Badge className="gap-1 bg-green-100 text-green-700 hover:bg-green-100">
-                                                        <Eye className="h-3 w-3" />
-                                                        {t("admin.blog.published")}
-                                                    </Badge>
-                                                ) : (
-                                                    <Badge variant="secondary" className="gap-1">
-                                                        <EyeOff className="h-3 w-3" />
-                                                        {t("admin.blog.draft")}
-                                                    </Badge>
-                                                )}
-                                            </TableCell>
-                                            <TableCell>
-                                                {group.featured && (
-                                                    <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
-                                                )}
-                                            </TableCell>
-                                            <TableCell className="text-right">
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="icon">
-                                                            <MoreHorizontal className="h-4 w-4" />
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuLabel>{t("admin.blog.actions")}</DropdownMenuLabel>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem
-                                                            onClick={() => handleEditJson(group)}
-                                                        >
-                                                            <Code2 className="mr-2 h-4 w-4" />
-                                                            Edytuj JSON
-                                                        </DropdownMenuItem>
-                                                        <DropdownMenuSeparator />
-                                                        {group.translations.map((tr) => (
-                                                            <DropdownMenuItem
-                                                                key={tr.id}
-                                                                onClick={() => handleTogglePublished(tr.id)}
-                                                            >
-                                                                {tr.published ? (
-                                                                    <EyeOff className="mr-2 h-4 w-4" />
-                                                                ) : (
-                                                                    <Eye className="mr-2 h-4 w-4" />
-                                                                )}
-                                                                {t("admin.blog.togglePublish")} ({tr.locale.toUpperCase()})
-                                                            </DropdownMenuItem>
-                                                        ))}
-                                                        <DropdownMenuSeparator />
-                                                        {group.translations.map((tr) => (
-                                                            <DropdownMenuItem
-                                                                key={tr.id + "-featured"}
-                                                                onClick={() => handleToggleFeatured(tr.id)}
-                                                            >
-                                                                <Star className="mr-2 h-4 w-4" />
-                                                                {t("admin.blog.toggleFeatured")} ({tr.locale.toUpperCase()})
-                                                            </DropdownMenuItem>
-                                                        ))}
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem
-                                                            onClick={() => {
-                                                                setSelectedPostId(group.postId);
-                                                                setDeleteDialogOpen(true);
-                                                            }}
-                                                            className="text-destructive focus:text-destructive"
-                                                        >
-                                                            <Trash2 className="mr-2 h-4 w-4" />
-                                                            {t("admin.blog.delete")} (wszystkie wersje)
-                                                        </DropdownMenuItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                )}
-                            </TableBody>
-                        </Table>
+            <div className="space-y-4">
+                <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-2">
+                    <div className="relative flex-1 sm:max-w-sm">
+                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            placeholder={t("admin.users.searchPlaceholder")}
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="pl-10"
+                        />
                     </div>
+                    <Button type="submit" variant="secondary">
+                        {t("admin.users.search")}
+                    </Button>
+                </form>
 
-                    {totalPages > 1 && (
-                        <div className="flex items-center justify-between">
-                            <p className="text-sm text-muted-foreground">
-                                {(page - 1) * PAGE_SIZE + 1}-{Math.min(page * PAGE_SIZE, total)} / {total}
-                            </p>
-                            <div className="flex items-center gap-2">
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                                    disabled={page === 1}
-                                >
-                                    <ChevronLeft className="h-4 w-4" />
-                                </Button>
-                                <span className="text-sm">{page} / {totalPages}</span>
-                                <Button
-                                    variant="outline"
-                                    size="icon"
-                                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                                    disabled={page === totalPages}
-                                >
-                                    <ChevronRight className="h-4 w-4" />
-                                </Button>
-                            </div>
-                        </div>
-                    )}
-                </TabsContent>
-
-                <TabsContent value="categories" className="space-y-4">
-                    <div className="flex justify-end">
-                        <Button onClick={() => setCategoryDialogOpen(true)}>
-                            <Plus className="h-4 w-4 mr-2" />
-                            {t("admin.blog.addCategory")}
-                        </Button>
-                    </div>
-
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                        {categories.map((cat) => (
-                            <Card key={cat.id}>
-                                <CardHeader className="pb-3">
-                                    <div className="flex items-center justify-between">
-                                        <Badge style={{ backgroundColor: (cat.color ?? "#6366f1") + "20", color: cat.color ?? "#6366f1" }}>
-                                            {cat.name}
-                                        </Badge>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() => handleDeleteCategory(cat.id)}
-                                        >
-                                            <Trash2 className="h-4 w-4 text-destructive" />
-                                        </Button>
+                <div className="border rounded-lg overflow-x-auto">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="min-w-[200px]">Title</TableHead>
+                                <TableHead className="w-[140px]">
+                                    <div className="flex items-center gap-1.5">
+                                        <Languages className="h-4 w-4" />
+                                        {t("admin.blog.locale")}
                                     </div>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-sm text-muted-foreground">
-                                        Slug: {cat.slug}
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">
-                                        EN: {cat.nameEn} | PL: {cat.namePl}
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
-                </TabsContent>
+                                </TableHead>
+                                <TableHead className="w-[120px]">{t("admin.blog.status")}</TableHead>
+                                <TableHead className="w-[80px]">{t("admin.blog.featured")}</TableHead>
+                                <TableHead className="w-[80px] text-right">{t("admin.blog.actions")}</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {isLoading ? (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="h-32 text-center">
+                                        <Loader2 className="h-6 w-6 animate-spin mx-auto text-muted-foreground" />
+                                    </TableCell>
+                                </TableRow>
+                            ) : groupedPosts.length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="h-32 text-center text-muted-foreground">
+                                        {t("admin.blog.noPostsFound")}
+                                    </TableCell>
+                                </TableRow>
+                            ) : (
+                                groupedPosts.map((group) => (
+                                    <TableRow key={group.postId}>
+                                        <TableCell>
+                                            <div className="font-medium truncate max-w-[280px]">
+                                                {group.title}
+                                            </div>
+                                            <div className="text-xs text-muted-foreground">
+                                                ID: {group.postId}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="flex flex-wrap gap-1">
+                                                {group.translations.map((tr) => (
+                                                    <Badge
+                                                        key={tr.id}
+                                                        variant="outline"
+                                                        className="text-xs cursor-default"
+                                                        style={{
+                                                            borderColor: getLanguageColor(tr.locale),
+                                                            color: getLanguageColor(tr.locale),
+                                                        }}
+                                                        title={tr.title + " (/" + tr.slug + ")"}
+                                                    >
+                                                        {tr.locale.toUpperCase()}
+                                                        {tr.published ? (
+                                                            <Eye className="h-3 w-3 ml-1" />
+                                                        ) : (
+                                                            <EyeOff className="h-3 w-3 ml-1 opacity-50" />
+                                                        )}
+                                                    </Badge>
+                                                ))}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell>
+                                            {group.published ? (
+                                                <Badge className="gap-1 bg-green-100 text-green-700 hover:bg-green-100">
+                                                    <Eye className="h-3 w-3" />
+                                                    {t("admin.blog.published")}
+                                                </Badge>
+                                            ) : (
+                                                <Badge variant="secondary" className="gap-1">
+                                                    <EyeOff className="h-3 w-3" />
+                                                    {t("admin.blog.draft")}
+                                                </Badge>
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            {group.featured && (
+                                                <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                                            )}
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon">
+                                                        <MoreHorizontal className="h-4 w-4" />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuLabel>{t("admin.blog.actions")}</DropdownMenuLabel>
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuItem
+                                                        onClick={() => handleEditJson(group)}
+                                                    >
+                                                        <Code2 className="mr-2 h-4 w-4" />
+                                                        Edytuj JSON
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuSeparator />
+                                                    {group.translations.map((tr) => (
+                                                        <DropdownMenuItem
+                                                            key={tr.id}
+                                                            onClick={() => handleTogglePublished(tr.id)}
+                                                        >
+                                                            {tr.published ? (
+                                                                <EyeOff className="mr-2 h-4 w-4" />
+                                                            ) : (
+                                                                <Eye className="mr-2 h-4 w-4" />
+                                                            )}
+                                                            {t("admin.blog.togglePublish")} ({tr.locale.toUpperCase()})
+                                                        </DropdownMenuItem>
+                                                    ))}
+                                                    <DropdownMenuSeparator />
+                                                    {group.translations.map((tr) => (
+                                                        <DropdownMenuItem
+                                                            key={tr.id + "-featured"}
+                                                            onClick={() => handleToggleFeatured(tr.id)}
+                                                        >
+                                                            <Star className="mr-2 h-4 w-4" />
+                                                            {t("admin.blog.toggleFeatured")} ({tr.locale.toUpperCase()})
+                                                        </DropdownMenuItem>
+                                                    ))}
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuItem
+                                                        onClick={() => {
+                                                            setSelectedPostId(group.postId);
+                                                            setDeleteDialogOpen(true);
+                                                        }}
+                                                        className="text-destructive focus:text-destructive"
+                                                    >
+                                                        <Trash2 className="mr-2 h-4 w-4" />
+                                                        {t("admin.blog.delete")} (wszystkie wersje)
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
 
-                <TabsContent value="settings">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>{t("admin.blog.settingsTitle")}</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-6">
-                            <div className="flex items-center space-x-2">
-                                <Checkbox
-                                    id="blogEnabled"
-                                    checked={blogEnabled}
-                                    onCheckedChange={(checked) => setBlogEnabled(checked === true)}
-                                />
-                                <Label htmlFor="blogEnabled">{t("admin.blog.enableBlog")}</Label>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="postsPerPage">{t("admin.blog.postsPerPage")}</Label>
-                                <Input
-                                    id="postsPerPage"
-                                    type="number"
-                                    value={postsPerPage}
-                                    onChange={(e) => setPostsPerPage(parseInt(e.target.value, 10))}
-                                    className="max-w-[100px]"
-                                />
-                            </div>
-
-                            <div className="flex items-center space-x-2">
-                                <Checkbox
-                                    id="showFeatured"
-                                    checked={showFeatured}
-                                    onCheckedChange={(checked) => setShowFeatured(checked === true)}
-                                />
-                                <Label htmlFor="showFeatured">{t("admin.blog.showFeatured")}</Label>
-                            </div>
-
-                            <Button onClick={handleSaveSettings} disabled={isProcessing}>
-                                {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                {t("admin.blog.save")}
+                {totalPages > 1 && (
+                    <div className="flex items-center justify-between">
+                        <p className="text-sm text-muted-foreground">
+                            {(page - 1) * PAGE_SIZE + 1}-{Math.min(page * PAGE_SIZE, total)} / {total}
+                        </p>
+                        <div className="flex items-center gap-2">
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                                disabled={page === 1}
+                            >
+                                <ChevronLeft className="h-4 w-4" />
                             </Button>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
-            </Tabs>
+                            <span className="text-sm">{page} / {totalPages}</span>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                                disabled={page === totalPages}
+                            >
+                                <ChevronRight className="h-4 w-4" />
+                            </Button>
+                        </div>
+                    </div>
+                )}
+            </div>
 
             {/* Import Dialog */}
             <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
@@ -798,13 +659,60 @@ export default function AdminBlogPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <Label htmlFor="visual-categories">Kategorie (oddziel przecinkami)</Label>
-                                <Input
-                                    id="visual-categories"
-                                    value={visualCategories.join(", ")}
-                                    onChange={(e) => setVisualCategories(e.target.value.split(",").map(c => c.trim()).filter(Boolean))}
-                                    placeholder="tutorial, dokumentacja"
-                                />
+                                <div className="flex items-center justify-between">
+                                    <Label>Kategorie</Label>
+                                    {categories.length === 0 && (
+                                        <Button
+                                            type="button"
+                                            variant="link"
+                                            size="sm"
+                                            className="h-auto p-0 text-xs"
+                                            onClick={() => {
+                                                router.push(`/${locale}/admin/blog/categories`);
+                                            }}
+                                        >
+                                            <Plus className="h-3 w-3 mr-1" />
+                                            Utwórz pierwszą kategorię
+                                        </Button>
+                                    )}
+                                </div>
+                                {categories.length === 0 ? (
+                                    <p className="text-sm text-muted-foreground">
+                                        Brak kategorii. Utwórz kategorie w zakładce "Kategorie".
+                                    </p>
+                                ) : (
+                                    <div className="border rounded-md p-3 space-y-2 max-h-[200px] overflow-y-auto">
+                                        {categories.map((cat) => (
+                                            <div key={cat.id} className="flex items-center space-x-2">
+                                                <Checkbox
+                                                    id={`cat-${cat.id}`}
+                                                    checked={visualCategories.includes(cat.slug)}
+                                                    onCheckedChange={(checked) => {
+                                                        if (checked) {
+                                                            setVisualCategories([...visualCategories, cat.slug]);
+                                                        } else {
+                                                            setVisualCategories(visualCategories.filter(c => c !== cat.slug));
+                                                        }
+                                                    }}
+                                                />
+                                                <Label
+                                                    htmlFor={`cat-${cat.id}`}
+                                                    className="cursor-pointer flex items-center gap-2"
+                                                >
+                                                    <Badge
+                                                        style={{
+                                                            backgroundColor: (cat.color ?? "#6366f1") + "20",
+                                                            color: cat.color ?? "#6366f1"
+                                                        }}
+                                                    >
+                                                        {cat.name}
+                                                    </Badge>
+                                                    <span className="text-xs text-muted-foreground">({cat.slug})</span>
+                                                </Label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex gap-4">
@@ -837,6 +745,14 @@ export default function AdminBlogPage() {
                         </TabsContent>
 
                         <TabsContent value="json" className="flex-1 overflow-hidden flex flex-col gap-4 mt-4">
+                            <div className="bg-muted/50 p-3 rounded-lg text-sm space-y-2">
+                                <p className="font-medium">💡 Wskazówki:</p>
+                                <ul className="text-muted-foreground space-y-1 list-disc list-inside">
+                                    <li>Kategorie muszą być najpierw utworzone w zakładce "Kategorie"</li>
+                                    <li>W polu "categories" używaj slugów kategorii (np. ["tutorial", "dokumentacja"])</li>
+                                    <li>Kliknij "Kopiuj przykład" aby zobaczyć format JSON</li>
+                                </ul>
+                            </div>
                             <div className="flex gap-2">
                                 <Button variant="outline" size="sm" onClick={handleCopyExample}>
                                     <Copy className="h-4 w-4 mr-2" />
@@ -900,59 +816,6 @@ export default function AdminBlogPage() {
                         <Button variant="destructive" onClick={handleDelete} disabled={isProcessing}>
                             {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             {t("admin.blog.delete")}
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
-
-            {/* Category Dialog */}
-            <Dialog open={categoryDialogOpen} onOpenChange={setCategoryDialogOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>{t("admin.blog.addCategory")}</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                        <div className="space-y-2">
-                            <Label>{t("admin.blog.categorySlug")}</Label>
-                            <Input
-                                value={newCategorySlug}
-                                onChange={(e) => setNewCategorySlug(e.target.value)}
-                                placeholder="tutorial"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>{t("admin.blog.categoryName")} (EN)</Label>
-                            <Input
-                                value={newCategoryNameEn}
-                                onChange={(e) => setNewCategoryNameEn(e.target.value)}
-                                placeholder="Tutorial"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>{t("admin.blog.categoryName")} (PL)</Label>
-                            <Input
-                                value={newCategoryNamePl}
-                                onChange={(e) => setNewCategoryNamePl(e.target.value)}
-                                placeholder="Poradnik"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>{t("admin.blog.categoryColor")}</Label>
-                            <Input
-                                type="color"
-                                value={newCategoryColor}
-                                onChange={(e) => setNewCategoryColor(e.target.value)}
-                                className="h-10 w-20"
-                            />
-                        </div>
-                    </div>
-                    <DialogFooter>
-                        <Button variant="outline" onClick={() => setCategoryDialogOpen(false)}>
-                            Cancel
-                        </Button>
-                        <Button onClick={handleAddCategory} disabled={isProcessing}>
-                            {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {t("admin.blog.addCategory")}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
