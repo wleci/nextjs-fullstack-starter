@@ -307,14 +307,15 @@ export async function getAllBlogPosts(options: {
 }
 
 /**
- * Get related posts (same category, different post)
+ * Get related/recommended posts based on current post
+ * Smart algorithm: matches categories, recent posts, featured posts
  * Falls back to latest posts if no category matches
  */
 export async function getRelatedPosts(
     postId: string,
     locale: string,
     categories: string[],
-    limit = 3
+    limit = 6
 ): Promise<ParsedBlogPost[]> {
     // Get other posts in the same locale
     const posts = await db
@@ -328,34 +329,49 @@ export async function getRelatedPosts(
             )
         )
         .orderBy(desc(blogPost.publishedAt))
-        .limit(limit * 3)
+        .limit(limit * 4) // Get more for better scoring
         .all();
 
     if (posts.length === 0) {
         return [];
     }
 
-    // If we have categories, prioritize posts with matching categories
-    if (categories.length > 0) {
-        const withMatchingCategories = posts.filter((post) => {
-            const postCategories = parseCategories(post.categories);
-            return postCategories.some((cat) => categories.includes(cat));
-        });
+    // Score-based recommendation system
+    const scoredPosts = posts.map((post) => {
+        let score = 0;
+        const postCategories = parseCategories(post.categories);
 
-        if (withMatchingCategories.length >= limit) {
-            return withMatchingCategories.slice(0, limit).map(parseBlogPost);
+        // +3 points for each matching category
+        const matchingCategories = postCategories.filter((cat) => categories.includes(cat)).length;
+        score += matchingCategories * 3;
+
+        // +2 points if featured
+        if (post.featured) {
+            score += 2;
         }
 
-        // Fill remaining slots with other posts
-        const otherPosts = posts.filter(
-            (post) => !withMatchingCategories.includes(post)
-        );
-        const combined = [...withMatchingCategories, ...otherPosts].slice(0, limit);
-        return combined.map(parseBlogPost);
-    }
+        // +1 point if published in last 30 days
+        const daysSincePublished = post.publishedAt
+            ? (Date.now() - new Date(post.publishedAt).getTime()) / (1000 * 60 * 60 * 24)
+            : 999;
+        if (daysSincePublished < 30) {
+            score += 1;
+        }
 
-    // No categories - just return latest posts
-    return posts.slice(0, limit).map(parseBlogPost);
+        return { post, score };
+    });
+
+    // Sort by score (highest first), then by date
+    scoredPosts.sort((a, b) => {
+        if (b.score !== a.score) {
+            return b.score - a.score;
+        }
+        const dateA = a.post.publishedAt ? new Date(a.post.publishedAt).getTime() : 0;
+        const dateB = b.post.publishedAt ? new Date(b.post.publishedAt).getTime() : 0;
+        return dateB - dateA;
+    });
+
+    return scoredPosts.slice(0, limit).map(({ post }) => parseBlogPost(post));
 }
 
 /**
@@ -364,6 +380,26 @@ export async function getRelatedPosts(
 export async function getAllPublishedSlugs(): Promise<{ slug: string; locale: string }[]> {
     const posts = await db
         .select({ slug: blogPost.slug, locale: blogPost.locale })
+        .from(blogPost)
+        .where(eq(blogPost.published, true))
+        .all();
+
+    return posts;
+}
+
+/**
+ * Get all published posts with metadata for sitemap
+ */
+export async function getAllPublishedPosts() {
+    const posts = await db
+        .select({
+            id: blogPost.id,
+            postId: blogPost.postId,
+            slug: blogPost.slug,
+            locale: blogPost.locale,
+            featured: blogPost.featured,
+            updatedAt: blogPost.updatedAt,
+        })
         .from(blogPost)
         .where(eq(blogPost.published, true))
         .all();

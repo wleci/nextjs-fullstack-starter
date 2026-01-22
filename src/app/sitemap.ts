@@ -5,24 +5,31 @@ const BASE_URL = env.NEXT_PUBLIC_APP_URL;
 const SUPPORTED_LANGS = env.NEXT_PUBLIC_SUPPORTED_LOCALES.split(",").map((l) => l.trim());
 
 /**
- * Generates sitemap for all pages and languages
- * Dynamically includes blog posts when blog is enabled
+ * Generates dynamic sitemap for all pages and languages
+ * Automatically includes blog posts when blog is enabled
+ * Updates on every request with fresh data
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const staticRoutes = [""];
     const entries: MetadataRoute.Sitemap = [];
+    const now = new Date();
 
-    // Add static routes
+    // Static routes with priorities
+    const staticRoutes = [
+        { path: "", priority: 1.0, changeFrequency: "weekly" as const },
+        { path: "/dashboard", priority: 0.8, changeFrequency: "daily" as const },
+    ];
+
+    // Add static routes for all languages
     for (const route of staticRoutes) {
         for (const lang of SUPPORTED_LANGS) {
             entries.push({
-                url: `${BASE_URL}/${lang}${route}`,
-                lastModified: new Date(),
-                changeFrequency: "weekly",
-                priority: route === "" ? 1 : 0.8,
+                url: `${BASE_URL}/${lang}${route.path}`,
+                lastModified: now,
+                changeFrequency: route.changeFrequency,
+                priority: route.priority,
                 alternates: {
                     languages: Object.fromEntries(
-                        SUPPORTED_LANGS.map((l) => [l, `${BASE_URL}/${l}${route}`])
+                        SUPPORTED_LANGS.map((l) => [l, `${BASE_URL}/${l}${route.path}`])
                     ),
                 },
             });
@@ -31,51 +38,73 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Add blog routes if enabled
     if (env.NEXT_PUBLIC_ENABLE_BLOG) {
-        const { getAllPublishedSlugs, isBlogEnabled } = await import("@/lib/blog/queries");
+        try {
+            const { getAllPublishedPosts, isBlogEnabled } = await import("@/lib/blog/queries");
 
-        const blogEnabled = await isBlogEnabled();
-        if (blogEnabled) {
-            // Add blog index page
-            for (const lang of SUPPORTED_LANGS) {
-                entries.push({
-                    url: `${BASE_URL}/${lang}/blog`,
-                    lastModified: new Date(),
-                    changeFrequency: "daily",
-                    priority: 0.9,
-                    alternates: {
-                        languages: Object.fromEntries(
-                            SUPPORTED_LANGS.map((l) => [l, `${BASE_URL}/${l}/blog`])
-                        ),
-                    },
-                });
+            const blogEnabled = await isBlogEnabled();
+            if (blogEnabled) {
+                // Add blog index page
+                for (const lang of SUPPORTED_LANGS) {
+                    entries.push({
+                        url: `${BASE_URL}/${lang}/blog`,
+                        lastModified: now,
+                        changeFrequency: "daily",
+                        priority: 0.9,
+                        alternates: {
+                            languages: Object.fromEntries(
+                                SUPPORTED_LANGS.map((l) => [l, `${BASE_URL}/${l}/blog`])
+                            ),
+                        },
+                    });
+                }
+
+                // Get all published posts with metadata
+                const posts = await getAllPublishedPosts();
+
+                // Group posts by postId to handle translations
+                const postGroups = new Map<string, typeof posts>();
+                for (const post of posts) {
+                    const existing = postGroups.get(post.postId) || [];
+                    existing.push(post);
+                    postGroups.set(post.postId, existing);
+                }
+
+                // Add individual blog posts with proper alternates
+                for (const [postId, translations] of postGroups) {
+                    // Find the most recent update across all translations
+                    const lastModified = translations.reduce((latest, post) => {
+                        const postDate = new Date(post.updatedAt);
+                        return postDate > latest ? postDate : latest;
+                    }, new Date(0));
+
+                    for (const post of translations) {
+                        // Build alternates map with actual slugs for each language
+                        const alternates: Record<string, string> = {};
+                        for (const translation of translations) {
+                            alternates[translation.locale] = `${BASE_URL}/${translation.locale}/blog/${translation.slug}`;
+                        }
+
+                        entries.push({
+                            url: `${BASE_URL}/${post.locale}/blog/${post.slug}`,
+                            lastModified,
+                            changeFrequency: "weekly",
+                            priority: post.featured ? 0.8 : 0.7,
+                            alternates: {
+                                languages: alternates,
+                            },
+                        });
+                    }
+                }
             }
-
-            // Add individual blog posts
-            const slugs = await getAllPublishedSlugs();
-
-            // Group slugs by postId to create proper alternates
-            const postsBySlug = new Map<string, { locale: string; slug: string }[]>();
-            for (const { slug, locale } of slugs) {
-                const existing = postsBySlug.get(slug) || [];
-                existing.push({ locale, slug });
-                postsBySlug.set(slug, existing);
-            }
-
-            for (const { slug, locale } of slugs) {
-                entries.push({
-                    url: `${BASE_URL}/${locale}/blog/${slug}`,
-                    lastModified: new Date(),
-                    changeFrequency: "weekly",
-                    priority: 0.7,
-                    alternates: {
-                        languages: Object.fromEntries(
-                            SUPPORTED_LANGS.map((l) => [l, `${BASE_URL}/${l}/blog/${slug}`])
-                        ),
-                    },
-                });
-            }
+        } catch (error) {
+            console.error("Failed to generate blog sitemap:", error);
         }
     }
 
     return entries;
 }
+
+/**
+ * Revalidate sitemap every hour
+ */
+export const revalidate = 3600;

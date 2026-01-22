@@ -90,7 +90,7 @@ export default async function BlogPostPage({ params }: Props) {
     }
 
     const [relatedPosts, categories, translations] = await Promise.all([
-        getRelatedPosts(post.postId, lang, post.categories, 3),
+        getRelatedPosts(post.postId, lang, post.categories, 6),
         getCategories(lang),
         getPostTranslations(post.postId),
     ]);

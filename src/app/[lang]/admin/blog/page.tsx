@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {
     FileText, Search, MoreHorizontal, Plus, Settings, Tag,
     ChevronLeft, ChevronRight, Loader2, Eye, EyeOff, Star,
-    Trash2, Copy, Upload, Globe, Languages,
+    Trash2, Copy, Upload, Globe, Languages, Code2, Edit3,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,6 +49,9 @@ import {
     createCategory,
     deleteCategory,
 } from "@/lib/blog/actions";
+import { WysiwygEditor } from "@/components/editor/wysiwyg-editor";
+import { htmlToContentBlocks } from "@/lib/blog/html-converter";
+import { nanoid } from "nanoid";
 
 const PAGE_SIZE = 20;
 
@@ -81,6 +84,20 @@ export default function AdminBlogPage() {
     const [importDialogOpen, setImportDialogOpen] = useState(false);
     const [jsonInput, setJsonInput] = useState("");
     const [importError, setImportError] = useState("");
+    const [editorMode, setEditorMode] = useState<"visual" | "json">("visual");
+    const [editingPostId, setEditingPostId] = useState<string | null>(null);
+
+    // Visual editor state
+    const [visualPostId, setVisualPostId] = useState("");
+    const [visualSlug, setVisualSlug] = useState("");
+    const [visualTitle, setVisualTitle] = useState("");
+    const [visualExcerpt, setVisualExcerpt] = useState("");
+    const [visualContent, setVisualContent] = useState("");
+    const [visualLocale, setVisualLocale] = useState("pl");
+    const [visualCategories, setVisualCategories] = useState<string[]>([]);
+    const [visualCoverImage, setVisualCoverImage] = useState("");
+    const [visualFeatured, setVisualFeatured] = useState(false);
+    const [visualPublished, setVisualPublished] = useState(false);
 
     // Delete dialog
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -187,16 +204,80 @@ export default function AdminBlogPage() {
         setIsProcessing(true);
 
         try {
-            const json = JSON.parse(jsonInput) as BlogPostJSON;
+            let json: BlogPostJSON;
+
+            if (editorMode === "visual") {
+                // Convert visual editor data to JSON
+                const contentBlocks = htmlToContentBlocks(visualContent);
+
+                json = {
+                    postId: visualPostId || nanoid(8),
+                    translations: [
+                        {
+                            locale: visualLocale,
+                            slug: visualSlug,
+                            title: visualTitle,
+                            excerpt: visualExcerpt || undefined,
+                            content: contentBlocks,
+                            categories: visualCategories.length > 0 ? visualCategories : undefined,
+                        },
+                    ],
+                    coverImage: visualCoverImage || undefined,
+                    featured: visualFeatured,
+                    published: visualPublished,
+                };
+            } else {
+                // Parse JSON input
+                json = JSON.parse(jsonInput) as BlogPostJSON;
+            }
+
             await upsertBlogPost(json);
             setImportDialogOpen(false);
-            setJsonInput("");
+            resetEditorState();
             fetchData();
         } catch (error) {
             setImportError(t("admin.blog.importError"));
         } finally {
             setIsProcessing(false);
         }
+    };
+
+    const resetEditorState = () => {
+        setJsonInput("");
+        setVisualPostId("");
+        setVisualSlug("");
+        setVisualTitle("");
+        setVisualExcerpt("");
+        setVisualContent("");
+        setVisualLocale("pl");
+        setVisualCategories([]);
+        setVisualCoverImage("");
+        setVisualFeatured(false);
+        setVisualPublished(false);
+        setEditingPostId(null);
+    };
+
+    const handleEditJson = (group: GroupedPost) => {
+        // Convert grouped post to JSON format
+        const json: BlogPostJSON = {
+            postId: group.postId,
+            translations: group.translations.map((tr) => ({
+                locale: tr.locale,
+                slug: tr.slug,
+                title: tr.title,
+                excerpt: tr.excerpt || undefined,
+                content: tr.content,
+                categories: tr.categories || undefined,
+            })),
+            coverImage: group.translations[0]?.coverImage || undefined,
+            featured: group.featured,
+            published: group.published,
+        };
+
+        setJsonInput(JSON.stringify(json, null, 2));
+        setEditorMode("json");
+        setEditingPostId(group.postId);
+        setImportDialogOpen(true);
     };
 
     const handleCopyExample = () => {
@@ -453,6 +534,13 @@ export default function AdminBlogPage() {
                                                     <DropdownMenuContent align="end">
                                                         <DropdownMenuLabel>{t("admin.blog.actions")}</DropdownMenuLabel>
                                                         <DropdownMenuSeparator />
+                                                        <DropdownMenuItem
+                                                            onClick={() => handleEditJson(group)}
+                                                        >
+                                                            <Code2 className="mr-2 h-4 w-4" />
+                                                            Edytuj JSON
+                                                        </DropdownMenuItem>
+                                                        <DropdownMenuSeparator />
                                                         {group.translations.map((tr) => (
                                                             <DropdownMenuItem
                                                                 key={tr.id}
@@ -609,40 +697,188 @@ export default function AdminBlogPage() {
 
             {/* Import Dialog */}
             <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
-                <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+                <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
                     <DialogHeader>
-                        <DialogTitle>{t("admin.blog.importJson")}</DialogTitle>
+                        <DialogTitle>
+                            {editingPostId ? "Edytuj wpis" : t("admin.blog.createPost")}
+                        </DialogTitle>
                         <DialogDescription>
-                            {t("admin.blog.description")}
+                            {editingPostId
+                                ? "Edytuj istniejący wpis używając edytora wizualnego lub JSON"
+                                : "Utwórz nowy wpis używając edytora wizualnego lub importuj JSON"
+                            }
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="flex-1 overflow-hidden flex flex-col gap-4">
-                        <div className="flex gap-2">
-                            <Button variant="outline" size="sm" onClick={handleCopyExample}>
-                                <Copy className="h-4 w-4 mr-2" />
-                                {t("admin.blog.copyExample")}
-                            </Button>
-                        </div>
-                        <div className="flex-1 min-h-0">
-                            <Textarea
-                                value={jsonInput}
-                                onChange={(e) => setJsonInput(e.target.value)}
-                                placeholder={t("admin.blog.jsonPlaceholder")}
-                                className="font-mono text-xs h-[50vh] resize-none"
-                            />
-                        </div>
-                        {importError && (
-                            <p className="text-sm text-destructive">{importError}</p>
-                        )}
-                    </div>
+
+                    <Tabs value={editorMode} onValueChange={(v) => setEditorMode(v as "visual" | "json")} className="flex-1 overflow-hidden flex flex-col">
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="visual" className="gap-2">
+                                <Edit3 className="h-4 w-4" />
+                                Edytor wizualny
+                            </TabsTrigger>
+                            <TabsTrigger value="json" className="gap-2">
+                                <Code2 className="h-4 w-4" />
+                                Import JSON
+                            </TabsTrigger>
+                        </TabsList>
+
+                        <TabsContent value="visual" className="flex-1 overflow-y-auto space-y-4 mt-4">
+                            <div className="bg-muted/50 p-3 rounded-lg text-sm">
+                                <p className="font-medium mb-1">💡 Edytor wizualny</p>
+                                <p className="text-muted-foreground">
+                                    Edytor obsługuje podstawowe bloki: paragrafy, nagłówki, listy, cytaty, kod, obrazki.
+                                    Dla zaawansowanych bloków (tabele, quizy, schematy, matematyka) użyj trybu JSON.
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="visual-title">Tytuł *</Label>
+                                    <Input
+                                        id="visual-title"
+                                        value={visualTitle}
+                                        onChange={(e) => setVisualTitle(e.target.value)}
+                                        placeholder="Tytuł wpisu"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="visual-slug">Slug *</Label>
+                                    <Input
+                                        id="visual-slug"
+                                        value={visualSlug}
+                                        onChange={(e) => setVisualSlug(e.target.value)}
+                                        placeholder="slug-wpisu"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-2">
+                                    <Label htmlFor="visual-locale">Język</Label>
+                                    <select
+                                        id="visual-locale"
+                                        value={visualLocale}
+                                        onChange={(e) => setVisualLocale(e.target.value)}
+                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                                    >
+                                        <option value="pl">Polski (PL)</option>
+                                        <option value="en">English (EN)</option>
+                                    </select>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="visual-postid">Post ID (opcjonalnie)</Label>
+                                    <Input
+                                        id="visual-postid"
+                                        value={visualPostId}
+                                        onChange={(e) => setVisualPostId(e.target.value)}
+                                        placeholder="Zostaw puste dla auto-generowania"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="visual-excerpt">Excerpt (opcjonalnie)</Label>
+                                <Textarea
+                                    id="visual-excerpt"
+                                    value={visualExcerpt}
+                                    onChange={(e) => setVisualExcerpt(e.target.value)}
+                                    placeholder="Krótki opis wpisu..."
+                                    rows={2}
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="visual-cover">Cover Image URL (opcjonalnie)</Label>
+                                <Input
+                                    id="visual-cover"
+                                    value={visualCoverImage}
+                                    onChange={(e) => setVisualCoverImage(e.target.value)}
+                                    placeholder="https://example.com/image.jpg"
+                                />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="visual-categories">Kategorie (oddziel przecinkami)</Label>
+                                <Input
+                                    id="visual-categories"
+                                    value={visualCategories.join(", ")}
+                                    onChange={(e) => setVisualCategories(e.target.value.split(",").map(c => c.trim()).filter(Boolean))}
+                                    placeholder="tutorial, dokumentacja"
+                                />
+                            </div>
+
+                            <div className="flex gap-4">
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id="visual-published"
+                                        checked={visualPublished}
+                                        onCheckedChange={(checked) => setVisualPublished(checked === true)}
+                                    />
+                                    <Label htmlFor="visual-published">Opublikowany</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id="visual-featured"
+                                        checked={visualFeatured}
+                                        onCheckedChange={(checked) => setVisualFeatured(checked === true)}
+                                    />
+                                    <Label htmlFor="visual-featured">Wyróżniony</Label>
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label>Treść wpisu *</Label>
+                                <WysiwygEditor
+                                    content={visualContent}
+                                    onChange={setVisualContent}
+                                    placeholder="Zacznij pisać treść wpisu..."
+                                />
+                            </div>
+                        </TabsContent>
+
+                        <TabsContent value="json" className="flex-1 overflow-hidden flex flex-col gap-4 mt-4">
+                            <div className="flex gap-2">
+                                <Button variant="outline" size="sm" onClick={handleCopyExample}>
+                                    <Copy className="h-4 w-4 mr-2" />
+                                    {t("admin.blog.copyExample")}
+                                </Button>
+                            </div>
+                            <div className="flex-1 min-h-0">
+                                <Textarea
+                                    value={jsonInput}
+                                    onChange={(e) => setJsonInput(e.target.value)}
+                                    placeholder={t("admin.blog.jsonPlaceholder")}
+                                    className="font-mono text-xs h-[50vh] resize-none"
+                                />
+                            </div>
+                        </TabsContent>
+                    </Tabs>
+
+                    {importError && (
+                        <p className="text-sm text-destructive">{importError}</p>
+                    )}
+
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setImportDialogOpen(false)}>
-                            Cancel
+                        <Button variant="outline" onClick={() => {
+                            setImportDialogOpen(false);
+                            resetEditorState();
+                        }}>
+                            Anuluj
                         </Button>
-                        <Button onClick={handleImport} disabled={isProcessing || !jsonInput}>
+                        <Button
+                            onClick={handleImport}
+                            disabled={
+                                isProcessing ||
+                                (editorMode === "json" && !jsonInput) ||
+                                (editorMode === "visual" && (!visualTitle || !visualSlug || !visualContent))
+                            }
+                        >
                             {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             <Upload className="h-4 w-4 mr-2" />
-                            {t("admin.blog.importJson")}
+                            {editingPostId
+                                ? (editorMode === "visual" ? "Zaktualizuj wpis" : "Zaktualizuj z JSON")
+                                : (editorMode === "visual" ? "Utwórz wpis" : t("admin.blog.importJson"))
+                            }
                         </Button>
                     </DialogFooter>
                 </DialogContent>

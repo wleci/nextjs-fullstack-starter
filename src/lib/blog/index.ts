@@ -31,6 +31,9 @@ export type {
 // Utils (client-safe)
 export { generateExampleJSON } from "./utils";
 
+// HTML Converter
+export { htmlToContentBlocks, contentBlocksToHtml } from "./html-converter";
+
 // Blocks
 export { BlockRenderer } from "./blocks";
 
