@@ -37,6 +37,7 @@ export function WysiwygEditor({ content, onChange, placeholder }: WysiwygEditorP
     const [imageAlt, setImageAlt] = useState("");
 
     const editor = useEditor({
+        immediatelyRender: false, // Fix SSR hydration mismatch
         extensions: [
             StarterKit.configure({
                 codeBlock: false,

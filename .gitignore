@@ -48,3 +48,6 @@ sqlite.db
 # user uploads
 /public/avatars/*
 !/public/avatars/.gitkeep
+
+# blog json files
+/blog_json
