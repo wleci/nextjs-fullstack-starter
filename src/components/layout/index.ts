@@ -10,3 +10,4 @@ export { DashboardLayout } from "./dashboard-layout";
 export { DashboardSidebar } from "./dashboard-sidebar";
 export { DashboardHeader } from "./dashboard-header";
 export { AdminSidebar } from "./admin-sidebar";
+export { AdminLayoutClient } from "./admin-layout-client";

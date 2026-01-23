@@ -1,30 +1,28 @@
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { DashboardHeader } from "@/components/layout";
-import { AdminSidebar } from "@/components/layout/admin-sidebar";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { AdminLayoutClient } from "@/components/layout/admin-layout-client";
 
-// Mock admin user - w przyszłości pobierany z sesji
-const mockAdminUser = {
-    name: "Admin User",
-    email: "admin@example.com",
-    role: "admin",
-};
-
-export default function AdminLayout({
+export default async function AdminLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    return (
-        <SidebarProvider>
-            <div className="flex min-h-screen w-full">
-                <AdminSidebar user={mockAdminUser} />
-                <div className="flex flex-1 flex-col">
-                    <DashboardHeader />
-                    <main className="flex-1 overflow-auto">
-                        {children}
-                    </main>
-                </div>
-            </div>
-        </SidebarProvider>
-    );
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+
+    const user = session?.user
+        ? {
+            name: session.user.name,
+            email: session.user.email,
+            avatar: session.user.image,
+            role: session.user.role,
+        }
+        : {
+            name: "Admin User",
+            email: "admin@example.com",
+            role: "admin",
+        };
+
+    return <AdminLayoutClient user={user}>{children}</AdminLayoutClient>;
 }
