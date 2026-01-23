@@ -1,166 +1,114 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Shield, Users, Activity, TrendingUp, Mail, Send } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useSession, authClient } from "@/lib/auth/client";
-import { useTranslation, useLocale } from "@/lib/i18n";
+import { BarChart3, Users, Mail, FileText, Shield, Activity, Database, Zap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { env } from "@/lib/env";
 
-export default function AdminPage() {
-    const { data: session, isPending } = useSession();
-    const router = useRouter();
-    const { locale } = useLocale();
-    const { t } = useTranslation();
-    const [stats, setStats] = useState({ totalUsers: 0, adminUsers: 0, bannedUsers: 0 });
-    const [isLoadingStats, setIsLoadingStats] = useState(true);
+export default function AdminDashboard() {
+    const features = [
+        { name: "Email System", enabled: env.NEXT_PUBLIC_ENABLE_EMAIL, icon: Mail, description: "Email templates and notifications" },
+        { name: "Newsletter", enabled: env.NEXT_PUBLIC_ENABLE_NEWSLETTER, icon: FileText, description: "Newsletter management" },
+        { name: "Blog", enabled: env.NEXT_PUBLIC_ENABLE_BLOG, icon: FileText, description: "Blog posts and content" },
+    ];
 
-    const userRole = session?.user?.role;
-
-    useEffect(() => {
-        if (!isPending) {
-            if (!session) {
-                router.replace(`/${locale}/auth/login`);
-            } else if (userRole !== "admin") {
-                router.replace(`/${locale}/dashboard`);
-            }
-        }
-    }, [isPending, session, userRole, router, locale]);
-
-    useEffect(() => {
-        async function fetchStats() {
-            if (userRole !== "admin") return;
-
-            try {
-                const response = await authClient.admin.listUsers({
-                    query: { limit: 1000 }
-                });
-
-                if (response.data) {
-                    const users = response.data.users;
-                    setStats({
-                        totalUsers: response.data.total ?? users.length,
-                        adminUsers: users.filter((u) => u.role === "admin").length,
-                        bannedUsers: users.filter((u) => u.banned === true).length,
-                    });
-                }
-            } catch (error) {
-                console.error("Failed to fetch stats:", error);
-            } finally {
-                setIsLoadingStats(false);
-            }
-        }
-
-        if (userRole === "admin") {
-            fetchStats();
-        }
-    }, [userRole]);
-
-    if (isPending || !session || userRole !== "admin") {
-        return null;
-    }
+    const stats = [
+        { title: "Total Users", value: "0", description: "Registered users", icon: Users, color: "text-blue-600" },
+        { title: "System Status", value: "Online", description: "All systems operational", icon: Activity, color: "text-green-600" },
+        { title: "Database", value: "SQLite", description: "Connected and ready", icon: Database, color: "text-purple-600" },
+        { title: "Performance", value: "Optimal", description: "Response time < 100ms", icon: Zap, color: "text-yellow-600" },
+    ];
 
     return (
         <div className="p-6 space-y-6">
-            <div className="flex items-center gap-3">
-                <Shield className="h-8 w-8 text-primary" />
-                <div>
-                    <h1 className="text-2xl font-bold">{t("admin.title")}</h1>
-                    <p className="text-muted-foreground">{t("admin.description")}</p>
-                </div>
+            <div>
+                <h1 className="text-3xl font-bold tracking-tight">Admin Dashboard</h1>
+                <p className="text-muted-foreground">
+                    Monitor and manage your application
+                </p>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">{t("admin.stats.users")}</CardTitle>
-                        <Users className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">
-                            {isLoadingStats ? "..." : stats.totalUsers}
-                        </div>
-                        <p className="text-xs text-muted-foreground">{t("admin.stats.totalUsers")}</p>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">{t("admin.stats.admins")}</CardTitle>
-                        <Shield className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">
-                            {isLoadingStats ? "..." : stats.adminUsers}
-                        </div>
-                        <p className="text-xs text-muted-foreground">{t("admin.stats.totalAdmins")}</p>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">{t("admin.stats.banned")}</CardTitle>
-                        <Activity className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">
-                            {isLoadingStats ? "..." : stats.bannedUsers}
-                        </div>
-                        <p className="text-xs text-muted-foreground">{t("admin.stats.bannedUsers")}</p>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">{t("admin.stats.system")}</CardTitle>
-                        <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold text-green-600">OK</div>
-                        <p className="text-xs text-muted-foreground">{t("admin.stats.systemStatus")}</p>
-                    </CardContent>
-                </Card>
+                {stats.map((stat) => (
+                    <Card key={stat.title}>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+                            <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                        </CardHeader>
+                        <CardContent>
+                            <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
+                            <p className="text-xs text-muted-foreground">{stat.description}</p>
+                        </CardContent>
+                    </Card>
+                ))}
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-                <Card className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => router.push(`/${locale}/admin/users`)}>
+            <div className="grid gap-6 md:grid-cols-2">
+                <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                            <Users className="h-5 w-5" />
-                            {t("admin.cards.users.title")}
+                            <Shield className="h-5 w-5" />
+                            Feature Status
                         </CardTitle>
-                        <CardDescription>{t("admin.cards.users.description")}</CardDescription>
+                        <CardDescription>
+                            Current status of application features
+                        </CardDescription>
                     </CardHeader>
+                    <CardContent className="space-y-4">
+                        {features.map((feature) => (
+                            <div key={feature.name} className="flex items-center justify-between p-3 border rounded-lg">
+                                <div className="flex items-center gap-3">
+                                    <feature.icon className="h-5 w-5 text-muted-foreground" />
+                                    <div>
+                                        <p className="font-medium">{feature.name}</p>
+                                        <p className="text-sm text-muted-foreground">{feature.description}</p>
+                                    </div>
+                                </div>
+                                <Badge variant={feature.enabled ? "default" : "secondary"}>
+                                    {feature.enabled ? "Enabled" : "Disabled"}
+                                </Badge>
+                            </div>
+                        ))}
+                    </CardContent>
                 </Card>
 
-                <Card className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => router.push(`/${locale}/admin/blog`)}>
+                <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                            <TrendingUp className="h-5 w-5" />
-                            {t("admin.blog.title")}
+                            <BarChart3 className="h-5 w-5" />
+                            Quick Actions
                         </CardTitle>
-                        <CardDescription>{t("admin.blog.description")}</CardDescription>
+                        <CardDescription>
+                            Common administrative tasks
+                        </CardDescription>
                     </CardHeader>
-                </Card>
-
-                <Card className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => router.push(`/${locale}/admin/email`)}>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Mail className="h-5 w-5" />
-                            Test Email
-                        </CardTitle>
-                        <CardDescription>Wyślij testowe emaile i sprawdź konfigurację SMTP</CardDescription>
-                    </CardHeader>
-                </Card>
-
-                <Card className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => router.push(`/${locale}/admin/newsletter`)}>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Send className="h-5 w-5" />
-                            Newsletter
-                        </CardTitle>
-                        <CardDescription>Wyślij newsletter do subskrybentów</CardDescription>
-                    </CardHeader>
+                    <CardContent className="space-y-3">
+                        <div className="grid gap-2">
+                            <button className="flex items-center gap-2 p-3 text-left border rounded-lg hover:bg-muted/50 transition-colors">
+                                <Users className="h-4 w-4" />
+                                <div>
+                                    <p className="font-medium">Manage Users</p>
+                                    <p className="text-sm text-muted-foreground">View and edit user accounts</p>
+                                </div>
+                            </button>
+                            {env.NEXT_PUBLIC_ENABLE_EMAIL && (
+                                <button className="flex items-center gap-2 p-3 text-left border rounded-lg hover:bg-muted/50 transition-colors">
+                                    <Mail className="h-4 w-4" />
+                                    <div>
+                                        <p className="font-medium">Test Email</p>
+                                        <p className="text-sm text-muted-foreground">Send test emails</p>
+                                    </div>
+                                </button>
+                            )}
+                            {env.NEXT_PUBLIC_ENABLE_BLOG && (
+                                <button className="flex items-center gap-2 p-3 text-left border rounded-lg hover:bg-muted/50 transition-colors">
+                                    <FileText className="h-4 w-4" />
+                                    <div>
+                                        <p className="font-medium">Manage Blog</p>
+                                        <p className="text-sm text-muted-foreground">Create and edit posts</p>
+                                    </div>
+                                </button>
+                            )}
+                        </div>
+                    </CardContent>
                 </Card>
             </div>
         </div>

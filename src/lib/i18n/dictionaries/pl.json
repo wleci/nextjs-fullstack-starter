@@ -342,6 +342,12 @@
     "admin": {
         "title": "Panel admina",
         "description": "Zarządzaj aplikacją",
+        "dashboard": {
+            "title": "Panel"
+        },
+        "analytics": {
+            "title": "Analityka"
+        },
         "stats": {
             "users": "Użytkownicy",
             "totalUsers": "Łączna liczba użytkowników",

@@ -43,8 +43,10 @@ export const env = createEnv({
         NEXT_PUBLIC_ENABLE_CAPTCHA: booleanString,
         NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
 
-        // Blog feature flag
+        // Feature flags
         NEXT_PUBLIC_ENABLE_BLOG: booleanString,
+        NEXT_PUBLIC_ENABLE_EMAIL: booleanString,
+        NEXT_PUBLIC_ENABLE_NEWSLETTER: booleanString,
     },
     runtimeEnv: {
         DATABASE_URL: process.env.DATABASE_URL,
@@ -68,5 +70,7 @@ export const env = createEnv({
         NEXT_PUBLIC_ENABLE_CAPTCHA: process.env.NEXT_PUBLIC_ENABLE_CAPTCHA,
         NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
         NEXT_PUBLIC_ENABLE_BLOG: process.env.NEXT_PUBLIC_ENABLE_BLOG,
+        NEXT_PUBLIC_ENABLE_EMAIL: process.env.NEXT_PUBLIC_ENABLE_EMAIL,
+        NEXT_PUBLIC_ENABLE_NEWSLETTER: process.env.NEXT_PUBLIC_ENABLE_NEWSLETTER,
     },
 });

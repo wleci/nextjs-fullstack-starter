@@ -342,6 +342,12 @@
     "admin": {
         "title": "Admin Panel",
         "description": "Manage your application",
+        "dashboard": {
+            "title": "Dashboard"
+        },
+        "analytics": {
+            "title": "Analytics"
+        },
         "stats": {
             "users": "Users",
             "totalUsers": "Total registered users",

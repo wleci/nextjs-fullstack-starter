@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-    Home, Settings, User, LogOut, ChevronUp,
-    Sun, Moon, Monitor, Languages, Sparkles, Shield, Crown,
+    Home, Users, Mail, FileText, Newspaper, ChevronUp, LogOut,
+    Sun, Moon, Monitor, Languages, Crown,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -20,25 +20,35 @@ import {
     SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu,
     SidebarMenuButton, SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useTranslation, useLocale, supportedLocales } from "@/lib/i18n";
+import { env } from "@/lib/env";
+import { useLocale, useTranslation, supportedLocales } from "@/lib/i18n";
 import { authClient } from "@/lib/auth/client";
 
-const MAIN_NAV = [
-    { href: "/dashboard", icon: Home, labelKey: "dashboard.nav.home" },
-    { href: "/dashboard/profile", icon: User, labelKey: "dashboard.nav.profile" },
-    { href: "/dashboard/settings", icon: Settings, labelKey: "dashboard.nav.settings" },
+interface NavItem {
+    href: string;
+    icon: React.ElementType;
+    labelKey: string;
+    enabled?: boolean;
+}
+
+const ADMIN_NAV: NavItem[] = [
+    { href: "/admin", icon: Home, labelKey: "admin.dashboard.title" },
+    { href: "/admin/users", icon: Users, labelKey: "admin.users.title" },
+    { href: "/admin/email", icon: Mail, labelKey: "admin.email.title", enabled: env.NEXT_PUBLIC_ENABLE_EMAIL },
+    { href: "/admin/newsletter", icon: Newspaper, labelKey: "admin.newsletter.title", enabled: env.NEXT_PUBLIC_ENABLE_NEWSLETTER },
+    { href: "/admin/blog", icon: FileText, labelKey: "admin.blog.title", enabled: env.NEXT_PUBLIC_ENABLE_BLOG },
 ];
 
 const LANGUAGE_FLAGS: Record<string, string> = { en: "🇬🇧", pl: "🇵🇱" };
 
-interface DashboardSidebarProps {
+interface AdminSidebarProps {
     user: { name: string; email: string; avatar?: string; role?: string };
 }
 
-export function DashboardSidebar({ user }: DashboardSidebarProps) {
+export function AdminSidebar({ user }: AdminSidebarProps) {
     const pathname = usePathname();
-    const { t } = useTranslation();
     const { locale, setLocale } = useLocale();
+    const { t } = useTranslation();
     const { theme, setTheme } = useTheme();
 
     const getInitials = (name: string) =>
@@ -54,7 +64,12 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
         authClient.signOut();
     };
 
-    const isActive = (href: string) => pathname === `/${locale}${href}`;
+    const isActive = (href: string) => {
+        const fullPath = `/${locale}${href}`;
+        return pathname === fullPath || pathname.startsWith(fullPath + "/");
+    };
+
+    const enabledItems = ADMIN_NAV.filter(item => item.enabled !== false);
     const isAdmin = user.role === "admin";
 
     return (
@@ -63,13 +78,13 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={`/${locale}`}>
+                            <Link href={`/${locale}/admin`}>
                                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                                    <Sparkles className="size-4" />
+                                    <Users className="size-4" />
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none">
-                                    <span className="font-semibold">Starter</span>
-                                    <span className="text-xs text-muted-foreground">v1.0.0</span>
+                                    <span className="font-semibold">Admin Panel</span>
+                                    <span className="text-xs text-muted-foreground">Management</span>
                                 </div>
                             </Link>
                         </SidebarMenuButton>
@@ -79,10 +94,10 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
 
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Menu</SidebarGroupLabel>
+                    <SidebarGroupLabel>Administration</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {MAIN_NAV.map((item) => (
+                            {enabledItems.map((item) => (
                                 <SidebarMenuItem key={item.href}>
                                     <SidebarMenuButton asChild isActive={isActive(item.href)}>
                                         <Link href={`/${locale}${item.href}`}>
@@ -92,16 +107,6 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
-                            {isAdmin && (
-                                <SidebarMenuItem>
-                                    <SidebarMenuButton asChild isActive={pathname.startsWith(`/${locale}/admin`)}>
-                                        <Link href={`/${locale}/admin`}>
-                                            <Shield />
-                                            <span>{t("dashboard.nav.admin")}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            )}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
