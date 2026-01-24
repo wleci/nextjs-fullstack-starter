@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { DashboardLayout } from "@/components/layout";
+import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { useSession } from "@/lib/auth/client";
 import { useLocale } from "@/lib/i18n";
 

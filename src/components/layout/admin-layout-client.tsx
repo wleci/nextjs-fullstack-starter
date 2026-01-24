@@ -1,7 +1,7 @@
 "use client";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { DashboardHeader } from "@/components/layout";
+import { DashboardHeader } from "@/components/layout/dashboard-header";
 import { AdminSidebar } from "@/components/layout/admin-sidebar";
 
 interface AdminLayoutClientProps {

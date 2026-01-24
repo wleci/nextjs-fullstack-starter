@@ -7,6 +7,7 @@ import {
     Sun, Moon, Monitor, Languages, Sparkles, Shield, Crown,
 } from "lucide-react";
 import { useTheme } from "next-themes";
+import { GB, PL } from 'country-flag-icons/react/3x2';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -29,6 +30,11 @@ const MAIN_NAV = [
     { href: "/dashboard/profile", icon: User, labelKey: "dashboard.nav.profile" },
     { href: "/dashboard/settings", icon: Settings, labelKey: "dashboard.nav.settings" },
 ];
+
+const FLAGS: Record<string, React.ComponentType<{ className?: string }>> = {
+    en: GB,
+    pl: PL,
+};
 
 const LANGUAGE_NAMES: Record<string, string> = { 
     en: "English", 
@@ -154,15 +160,24 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                                 <DropdownMenuGroup>
                                     <DropdownMenuSub>
                                         <DropdownMenuSubTrigger>
-                                            <Languages /> {LANGUAGE_NAMES[locale]}
+                                            <Languages className="mr-2 h-4 w-4" />
+                                            {(() => {
+                                                const Flag = FLAGS[locale];
+                                                return Flag ? <Flag className="mr-2 h-4 w-5 rounded-sm border border-border/50" /> : null;
+                                            })()}
+                                            {LANGUAGE_NAMES[locale]}
                                         </DropdownMenuSubTrigger>
                                         <DropdownMenuPortal>
                                             <DropdownMenuSubContent>
-                                                {supportedLocales.map((loc) => (
-                                                    <DropdownMenuItem key={loc} onClick={() => handleLanguageChange(loc)} className={locale === loc ? "bg-accent" : ""}>
-                                                        {LANGUAGE_NAMES[loc]}
-                                                    </DropdownMenuItem>
-                                                ))}
+                                                {supportedLocales.map((loc) => {
+                                                    const Flag = FLAGS[loc];
+                                                    return (
+                                                        <DropdownMenuItem key={loc} onClick={() => handleLanguageChange(loc)} className={locale === loc ? "bg-accent" : ""}>
+                                                            {Flag && <Flag className="mr-2 h-4 w-6 rounded-sm border border-border/50" />}
+                                                            {LANGUAGE_NAMES[loc]}
+                                                        </DropdownMenuItem>
+                                                    );
+                                                })}
                                             </DropdownMenuSubContent>
                                         </DropdownMenuPortal>
                                     </DropdownMenuSub>

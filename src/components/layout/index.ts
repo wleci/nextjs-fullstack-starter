@@ -6,8 +6,3 @@ export { LanguageSwitcher } from "./language-switcher";
 export { Footer } from "./footer";
 export { CookieBanner } from "./cookie-banner";
 export { AuthLayout } from "./auth-layout";
-export { DashboardLayout } from "./dashboard-layout";
-export { DashboardSidebar } from "./dashboard-sidebar";
-export { DashboardHeader } from "./dashboard-header";
-export { AdminSidebar } from "./admin-sidebar";
-export { AdminLayoutClient } from "./admin-layout-client";
