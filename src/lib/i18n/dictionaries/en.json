@@ -6,6 +6,7 @@
         "system": "System",
         "home": "Home",
         "goBack": "Go back",
+        "backToDashboard": "Back to Dashboard",
         "tryAgain": "Try again",
         "privacy": "Privacy Policy",
         "terms": "Terms of Service",
@@ -463,6 +464,9 @@
         },
         "email": {
             "title": "Test Email"
+        },
+        "database": {
+            "title": "Database"
         }
     },
     "blog": {

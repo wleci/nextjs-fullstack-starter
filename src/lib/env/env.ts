@@ -48,6 +48,7 @@ export const env = createEnv({
         NEXT_PUBLIC_ENABLE_BLOG: booleanString,
         NEXT_PUBLIC_ENABLE_EMAIL: booleanString,
         NEXT_PUBLIC_ENABLE_NEWSLETTER: booleanString,
+        NEXT_PUBLIC_ENABLE_DATABASE_MANAGEMENT: booleanString,
     },
     runtimeEnv: {
         DATABASE_URL: process.env.DATABASE_URL,
@@ -74,5 +75,6 @@ export const env = createEnv({
         NEXT_PUBLIC_ENABLE_BLOG: process.env.NEXT_PUBLIC_ENABLE_BLOG,
         NEXT_PUBLIC_ENABLE_EMAIL: process.env.NEXT_PUBLIC_ENABLE_EMAIL,
         NEXT_PUBLIC_ENABLE_NEWSLETTER: process.env.NEXT_PUBLIC_ENABLE_NEWSLETTER,
+        NEXT_PUBLIC_ENABLE_DATABASE_MANAGEMENT: process.env.NEXT_PUBLIC_ENABLE_DATABASE_MANAGEMENT,
     },
 });

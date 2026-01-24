@@ -6,6 +6,7 @@
         "system": "Systemowy",
         "home": "Strona główna",
         "goBack": "Wróć",
+        "backToDashboard": "Powrót do Dashboard",
         "tryAgain": "Spróbuj ponownie",
         "privacy": "Polityka prywatności",
         "terms": "Regulamin",
@@ -463,6 +464,9 @@
         },
         "email": {
             "title": "Test Email"
+        },
+        "database": {
+            "title": "Baza danych"
         }
     },
     "blog": {

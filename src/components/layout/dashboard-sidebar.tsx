@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
     Home, Settings, User, LogOut, ChevronUp,
-    Sun, Moon, Monitor, Languages, Sparkles, Shield, Crown,
+    Sun, Moon, Monitor, Languages, LayoutDashboard, Shield, Crown,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { GB, PL } from 'country-flag-icons/react/3x2';
@@ -36,9 +36,9 @@ const FLAGS: Record<string, React.ComponentType<{ className?: string }>> = {
     pl: PL,
 };
 
-const LANGUAGE_NAMES: Record<string, string> = { 
-    en: "English", 
-    pl: "Polski" 
+const LANGUAGE_NAMES: Record<string, string> = {
+    en: "English",
+    pl: "Polski"
 };
 
 interface DashboardSidebarProps {
@@ -68,14 +68,14 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
     const isAdmin = user.role === "admin";
 
     return (
-        <Sidebar>
+        <Sidebar collapsible="icon">
             <SidebarHeader className="border-b border-sidebar-border">
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild className="hover:bg-sidebar-accent/50">
+                        <SidebarMenuButton size="lg" asChild className="hover:bg-sidebar-accent/50" tooltip={env.NEXT_PUBLIC_APP_NAME}>
                             <Link href={`/${locale}`}>
                                 <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-md">
-                                    <Sparkles className="size-5" />
+                                    <LayoutDashboard className="size-5" />
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none">
                                     <span className="font-bold text-base">{env.NEXT_PUBLIC_APP_NAME}</span>
@@ -94,7 +94,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                         <SidebarMenu>
                             {MAIN_NAV.map((item) => (
                                 <SidebarMenuItem key={item.href}>
-                                    <SidebarMenuButton asChild isActive={isActive(item.href)}>
+                                    <SidebarMenuButton asChild isActive={isActive(item.href)} tooltip={t(item.labelKey)}>
                                         <Link href={`/${locale}${item.href}`}>
                                             <item.icon />
                                             <span>{t(item.labelKey)}</span>
@@ -104,7 +104,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                             ))}
                             {isAdmin && (
                                 <SidebarMenuItem>
-                                    <SidebarMenuButton asChild isActive={pathname.startsWith(`/${locale}/admin`)}>
+                                    <SidebarMenuButton asChild isActive={pathname.startsWith(`/${locale}/admin`)} tooltip={t("dashboard.nav.admin")}>
                                         <Link href={`/${locale}/admin`}>
                                             <Shield />
                                             <span>{t("dashboard.nav.admin")}</span>

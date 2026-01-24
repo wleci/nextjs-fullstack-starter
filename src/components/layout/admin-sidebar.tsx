@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
     Home, Users, Mail, FileText, Newspaper, ChevronUp, LogOut,
-    Sun, Moon, Monitor, Languages, Crown,
+    Sun, Moon, Monitor, Languages, Crown, ArrowLeft, Database,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { GB, PL } from 'country-flag-icons/react/3x2';
@@ -38,6 +38,7 @@ const ADMIN_NAV: NavItem[] = [
     { href: "/admin/email", icon: Mail, labelKey: "admin.email.title", enabled: env.NEXT_PUBLIC_ENABLE_EMAIL },
     { href: "/admin/newsletter", icon: Newspaper, labelKey: "admin.newsletter.title", enabled: env.NEXT_PUBLIC_ENABLE_NEWSLETTER },
     { href: "/admin/blog", icon: FileText, labelKey: "admin.blog.title", enabled: env.NEXT_PUBLIC_ENABLE_BLOG },
+    { href: "/admin/database", icon: Database, labelKey: "admin.database.title", enabled: env.NEXT_PUBLIC_ENABLE_DATABASE_MANAGEMENT },
 ];
 
 const FLAGS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -45,9 +46,9 @@ const FLAGS: Record<string, React.ComponentType<{ className?: string }>> = {
     pl: PL,
 };
 
-const LANGUAGE_NAMES: Record<string, string> = { 
-    en: "English", 
-    pl: "Polski" 
+const LANGUAGE_NAMES: Record<string, string> = {
+    en: "English",
+    pl: "Polski"
 };
 
 interface AdminSidebarProps {
@@ -82,11 +83,11 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
     const isAdmin = user.role === "admin";
 
     return (
-        <Sidebar>
+        <Sidebar collapsible="icon">
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
+                        <SidebarMenuButton size="lg" asChild tooltip="Admin Panel">
                             <Link href={`/${locale}/admin`}>
                                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                                     <Users className="size-4" />
@@ -106,9 +107,19 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
                     <SidebarGroupLabel>Administration</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
+                            {/* Back to Dashboard Link */}
+                            <SidebarMenuItem>
+                                <SidebarMenuButton asChild tooltip={t("common.backToDashboard")}>
+                                    <Link href={`/${locale}/dashboard`}>
+                                        <ArrowLeft />
+                                        <span>{t("common.backToDashboard")}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+
                             {enabledItems.map((item) => (
                                 <SidebarMenuItem key={item.href}>
-                                    <SidebarMenuButton asChild isActive={isActive(item.href)}>
+                                    <SidebarMenuButton asChild isActive={isActive(item.href)} tooltip={t(item.labelKey)}>
                                         <Link href={`/${locale}${item.href}`}>
                                             <item.icon />
                                             <span>{t(item.labelKey)}</span>
