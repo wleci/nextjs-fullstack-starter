@@ -22,6 +22,7 @@ export const blogPost = sqliteTable("blog_post", {
     publishedAt: integer("published_at", { mode: "timestamp_ms" }),
     authorId: text("author_id"),
     authorName: text("author_name"),
+    views: integer("views").default(0).notNull(),
     createdAt: integer("created_at", { mode: "timestamp_ms" })
         .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
         .notNull(),

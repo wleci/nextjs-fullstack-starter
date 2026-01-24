@@ -2,8 +2,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { BarChart3, Users, Mail, FileText, Shield, Activity, Database, Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { env } from "@/lib/env";
+import { MostViewedPosts } from "@/components/blog/most-viewed-posts";
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
     const features = [
         { name: "Email System", enabled: env.NEXT_PUBLIC_ENABLE_EMAIL, icon: Mail, description: "Email templates and notifications" },
         { name: "Newsletter", enabled: env.NEXT_PUBLIC_ENABLE_NEWSLETTER, icon: FileText, description: "Newsletter management" },
@@ -111,6 +112,11 @@ export default function AdminDashboard() {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Most Viewed Posts */}
+            {env.NEXT_PUBLIC_ENABLE_BLOG && (
+                <MostViewedPosts locale="en" limit={5} />
+            )}
         </div>
     );
 }

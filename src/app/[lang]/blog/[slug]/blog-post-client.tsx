@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Calendar, User, ArrowLeft, Share2, ArrowRight, BookOpen, Clock, Globe } from "lucide-react";
+import { Calendar, User, ArrowLeft, Share2, ArrowRight, BookOpen, Clock, Globe, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { BlockRenderer } from "@/lib/blog/blocks";
+import { ViewTracker } from "@/components/blog/view-tracker";
 import type { ParsedBlogPost, LocalizedCategory } from "@/lib/blog";
 
 interface Props {
@@ -97,6 +98,9 @@ export function BlogPostClient({
 
     return (
         <div className="min-h-screen bg-background">
+            {/* View Tracker - invisible component that tracks views every 1 minute */}
+            <ViewTracker postId={post.id} />
+            
             {/* Hero */}
             <div className="relative overflow-hidden">
                 {post.coverImage ? (
@@ -194,6 +198,12 @@ export function BlogPostClient({
                                 <Clock className="h-4 w-4" />
                                 {readTime} {t.readTime}
                             </span>
+                            {post.views > 0 && (
+                                <span className="flex items-center gap-2">
+                                    <Eye className="h-4 w-4" />
+                                    {post.views.toLocaleString(locale)}
+                                </span>
+                            )}
                             <Button
                                 variant="ghost"
                                 size="sm"
