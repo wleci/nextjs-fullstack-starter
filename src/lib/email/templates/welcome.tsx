@@ -1,5 +1,6 @@
 import { Button, Heading, Text } from "@react-email/components";
 import { BaseEmail } from "./base";
+import { env } from "@/lib/env";
 
 interface WelcomeProps {
     name: string;
@@ -8,8 +9,8 @@ interface WelcomeProps {
 
 export function Welcome({ name, loginUrl }: WelcomeProps) {
     return (
-        <BaseEmail preview="Welcome to Starter!">
-            <Heading style={heading}>Welcome to Starter!</Heading>
+        <BaseEmail preview={`Welcome to ${env.NEXT_PUBLIC_APP_NAME}!`}>
+            <Heading style={heading}>Welcome to {env.NEXT_PUBLIC_APP_NAME}!</Heading>
             <Text style={paragraph}>Hi {name},</Text>
             <Text style={paragraph}>
                 Thanks for joining us! Your account is now ready. You can start using

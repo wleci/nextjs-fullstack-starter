@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const APP_NAME = "Next.js Starter";
-const APP_DESCRIPTION = "Production-ready fullstack starter template with Next.js, TypeScript, and Tailwind CSS";
+const APP_NAME = env.NEXT_PUBLIC_APP_NAME;
+const APP_DESCRIPTION = "Production-ready fullstack panel template with Next.js, TypeScript, and Tailwind CSS";
 
 export const metadata: Metadata = {
   title: {

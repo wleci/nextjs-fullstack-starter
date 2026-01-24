@@ -39,7 +39,10 @@ const ADMIN_NAV: NavItem[] = [
     { href: "/admin/blog", icon: FileText, labelKey: "admin.blog.title", enabled: env.NEXT_PUBLIC_ENABLE_BLOG },
 ];
 
-const LANGUAGE_FLAGS: Record<string, string> = { en: "🇬🇧", pl: "🇵🇱" };
+const LANGUAGE_NAMES: Record<string, string> = { 
+    en: "English", 
+    pl: "Polski" 
+};
 
 interface AdminSidebarProps {
     user: { name: string; email: string; avatar?: string; role?: string };
@@ -155,13 +158,13 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
                                 <DropdownMenuGroup>
                                     <DropdownMenuSub>
                                         <DropdownMenuSubTrigger>
-                                            <Languages /> {LANGUAGE_FLAGS[locale]} Language
+                                            <Languages /> {LANGUAGE_NAMES[locale]}
                                         </DropdownMenuSubTrigger>
                                         <DropdownMenuPortal>
                                             <DropdownMenuSubContent>
                                                 {supportedLocales.map((loc) => (
                                                     <DropdownMenuItem key={loc} onClick={() => handleLanguageChange(loc)} className={locale === loc ? "bg-accent" : ""}>
-                                                        {LANGUAGE_FLAGS[loc]} {loc.toUpperCase()}
+                                                        {LANGUAGE_NAMES[loc]}
                                                     </DropdownMenuItem>
                                                 ))}
                                             </DropdownMenuSubContent>

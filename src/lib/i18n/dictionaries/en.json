@@ -1,7 +1,6 @@
 {
     "common": {
         "getStarted": "Get Started",
-        "documentation": "Documentation",
         "light": "Light",
         "dark": "Dark",
         "system": "System",
@@ -107,7 +106,7 @@
         "badge": "Next.js 16 + React 19 + TypeScript",
         "title": "Build faster with",
         "titleHighlight": "modern stack",
-        "description": "Production-ready starter with authentication, email, dashboard, i18n, dark mode, and everything you need to ship fast."
+        "description": "Production-ready panel with authentication, email, dashboard, i18n, dark mode, and everything you need to ship fast."
     },
     "features": {
         "badge": "Everything you need",

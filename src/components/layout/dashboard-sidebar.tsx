@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useTranslation, useLocale, supportedLocales } from "@/lib/i18n";
 import { authClient } from "@/lib/auth/client";
+import { env } from "@/lib/env";
 
 const MAIN_NAV = [
     { href: "/dashboard", icon: Home, labelKey: "dashboard.nav.home" },
@@ -29,7 +30,10 @@ const MAIN_NAV = [
     { href: "/dashboard/settings", icon: Settings, labelKey: "dashboard.nav.settings" },
 ];
 
-const LANGUAGE_FLAGS: Record<string, string> = { en: "🇬🇧", pl: "🇵🇱" };
+const LANGUAGE_NAMES: Record<string, string> = { 
+    en: "English", 
+    pl: "Polski" 
+};
 
 interface DashboardSidebarProps {
     user: { name: string; email: string; avatar?: string; role?: string };
@@ -59,17 +63,17 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
 
     return (
         <Sidebar>
-            <SidebarHeader>
+            <SidebarHeader className="border-b border-sidebar-border">
                 <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton size="lg" asChild>
+                        <SidebarMenuButton size="lg" asChild className="hover:bg-sidebar-accent/50">
                             <Link href={`/${locale}`}>
-                                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                                    <Sparkles className="size-4" />
+                                <div className="flex aspect-square size-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-md">
+                                    <Sparkles className="size-5" />
                                 </div>
                                 <div className="flex flex-col gap-0.5 leading-none">
-                                    <span className="font-semibold">Starter</span>
-                                    <span className="text-xs text-muted-foreground">v1.0.0</span>
+                                    <span className="font-bold text-base">{env.NEXT_PUBLIC_APP_NAME}</span>
+                                    <span className="text-[10px] text-muted-foreground font-medium">v1.0.0</span>
                                 </div>
                             </Link>
                         </SidebarMenuButton>
@@ -150,13 +154,13 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                                 <DropdownMenuGroup>
                                     <DropdownMenuSub>
                                         <DropdownMenuSubTrigger>
-                                            <Languages /> {LANGUAGE_FLAGS[locale]} Language
+                                            <Languages /> {LANGUAGE_NAMES[locale]}
                                         </DropdownMenuSubTrigger>
                                         <DropdownMenuPortal>
                                             <DropdownMenuSubContent>
                                                 {supportedLocales.map((loc) => (
                                                     <DropdownMenuItem key={loc} onClick={() => handleLanguageChange(loc)} className={locale === loc ? "bg-accent" : ""}>
-                                                        {LANGUAGE_FLAGS[loc]} {loc.toUpperCase()}
+                                                        {LANGUAGE_NAMES[loc]}
                                                     </DropdownMenuItem>
                                                 ))}
                                             </DropdownMenuSubContent>

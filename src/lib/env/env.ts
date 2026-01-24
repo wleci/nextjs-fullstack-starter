@@ -34,6 +34,7 @@ export const env = createEnv({
     },
     client: {
         NEXT_PUBLIC_APP_URL: z.string(),
+        NEXT_PUBLIC_APP_NAME: z.string().default("Wleci Panel"),
         NEXT_PUBLIC_DEFAULT_LOCALE: z.string(),
         NEXT_PUBLIC_SUPPORTED_LOCALES: z.string(),
 
@@ -63,6 +64,7 @@ export const env = createEnv({
         SMTP_PASSWORD: process.env.SMTP_PASSWORD,
         SMTP_FROM: process.env.SMTP_FROM,
         NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+        NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
         NEXT_PUBLIC_DEFAULT_LOCALE: process.env.NEXT_PUBLIC_DEFAULT_LOCALE,
         NEXT_PUBLIC_SUPPORTED_LOCALES: process.env.NEXT_PUBLIC_SUPPORTED_LOCALES,
         NEXT_PUBLIC_ENABLE_GOOGLE: process.env.NEXT_PUBLIC_ENABLE_GOOGLE,

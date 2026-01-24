@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
+import { env } from "@/lib/env";
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: "Next.js Starter",
-        short_name: "Starter",
-        description: "Production-ready fullstack starter template with Next.js, TypeScript, and Tailwind CSS",
+        name: env.NEXT_PUBLIC_APP_NAME,
+        short_name: env.NEXT_PUBLIC_APP_NAME,
+        description: "Production-ready fullstack panel template with Next.js, TypeScript, and Tailwind CSS",
         start_url: "/",
         display: "standalone",
         background_color: "#ffffff",

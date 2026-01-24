@@ -250,13 +250,13 @@ export default function CategoriesPage() {
                                                 <div className="flex flex-wrap gap-2">
                                                     {category.nameEn && (
                                                         <div className="flex items-center gap-1.5 text-sm">
-                                                            <span className="text-xs font-medium text-muted-foreground">🇬🇧</span>
+                                                            <span className="text-xs font-semibold text-muted-foreground">EN</span>
                                                             <span>{category.nameEn}</span>
                                                         </div>
                                                     )}
                                                     {category.namePl && (
                                                         <div className="flex items-center gap-1.5 text-sm">
-                                                            <span className="text-xs font-medium text-muted-foreground">🇵🇱</span>
+                                                            <span className="text-xs font-semibold text-muted-foreground">PL</span>
                                                             <span>{category.namePl}</span>
                                                         </div>
                                                     )}

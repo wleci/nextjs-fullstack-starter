@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { ThemeSwitcher } from "./theme-switcher";
 import { LanguageSwitcher } from "./language-switcher";
 import { useLocale, useTranslation } from "@/lib/i18n";
+import { env } from "@/lib/env";
 
 interface AuthLayoutProps {
     children: React.ReactNode;
@@ -52,10 +53,10 @@ export function AuthLayout({ children }: AuthLayoutProps) {
                 </div>
                 <div className="flex h-full flex-col items-center justify-center px-12">
                     <Link href={`/${locale}`} className="mb-8 text-3xl font-bold">
-                        Starter
+                        {env.NEXT_PUBLIC_APP_NAME}
                     </Link>
                     <p className="max-w-md text-center text-muted-foreground">
-                        Production-ready Next.js starter with authentication, i18n, and modern tooling.
+                        Production-ready Next.js panel with authentication, i18n, and modern tooling.
                     </p>
                 </div>
             </div>

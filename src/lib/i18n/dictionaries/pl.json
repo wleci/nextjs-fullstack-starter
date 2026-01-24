@@ -1,7 +1,6 @@
 {
     "common": {
         "getStarted": "Rozpocznij",
-        "documentation": "Dokumentacja",
         "light": "Jasny",
         "dark": "Ciemny",
         "system": "Systemowy",
@@ -107,7 +106,7 @@
         "badge": "Next.js 16 + React 19 + TypeScript",
         "title": "Buduj szybciej z",
         "titleHighlight": "nowoczesnym stackiem",
-        "description": "Gotowy do produkcji starter z autentykacją, emailami, dashboardem, i18n, dark mode i wszystkim czego potrzebujesz do szybkiego wdrożenia."
+        "description": "Gotowy do produkcji panel z autentykacją, emailami, dashboardem, i18n, dark mode i wszystkim czego potrzebujesz do szybkiego wdrożenia."
     },
     "features": {
         "badge": "Wszystko czego potrzebujesz",

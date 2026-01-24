@@ -1,155 +1,136 @@
 <div align="center">
 
-# 🚀 Next.js Fullstack Starter
+# 🚀 Wleci Panel
 
-**Production-ready starter with Better Auth, email, dashboard, and everything you need to ship fast.**
+### Next.js Fullstack Starter
 
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat&logo=next.js)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19-blue?style=flat&logo=react)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat&logo=typescript)](https://www.typescriptlang.org/)
-[![Better Auth](https://img.shields.io/badge/Better_Auth-1.x-purple?style=flat)](https://better-auth.com/)
-[![License](https://img.shields.io/badge/license-MIT-green?style=flat)](LICENSE)
+Production-ready fullstack template with stunning UI, authentication, blog system, and everything you need to ship fast.
+
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)](LICENSE)
 
 </div>
 
----
+<br/>
+
+<div align="center">
+  <img src=".github/image.png" alt="Wleci Panel Preview" width="100%" style="border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);" />
+</div>
+
+<br/>
 
 ## ✨ Features
 
-### 🔐 Authentication (Better Auth)
-
-- **Email/Password** - Login, Register with validation
-- **Social Login** - Google & Discord (configurable via env)
-- **Two-Factor Auth** - TOTP with backup codes
-- **Password Recovery** - Forgot password & reset flow
-- **Email Verification** - Required before dashboard access
-- **Session Management** - View & revoke sessions across devices
-- **Account Lockout** - Auto-lock after 5 failed login attempts (15 min)
-- **Login Notifications** - Email alerts on new sign-ins
-- **Captcha Protection** - Cloudflare Turnstile with auto-reset
-- **Rate Limiting** - Built-in protection against brute force
-- **Localized Errors** - Error messages in user's language
-- **Account Deletion** - Self-service account removal
+### 🔐 Authentication System
+- Email/Password with validation
+- Social Login (Google, Discord)
+- Two-Factor Authentication (TOTP)
+- Password recovery flow
+- Email verification
+- Session management
+- Account lockout protection
+- Login notifications
+- Cloudflare Turnstile captcha
 
 ### 📧 Email System
+- Nodemailer SMTP integration
+- React Email templates
+- Welcome emails
+- Verification emails
+- 2FA codes
+- Password reset
+- Login notifications
+- Type-safe templates
 
-- **Nodemailer Integration** - SMTP email sending
-- **React Email Templates** - Beautiful, responsive emails
-- **Pre-built Templates** - Welcome, verification, 2FA, password reset, login notification
-- **Type-safe** - Full TypeScript support
+### 📝 Blog System
+- WYSIWYG editor (TipTap)
+- Multi-language posts
+- Categories & tags
+- Featured posts
+- Draft/publish workflow
+- SEO optimization
+- View tracking
+- Admin panel
 
 ### 📊 Dashboard
-
-- **Modern Sidebar** - Collapsible navigation with icons
-- **User Menu** - Avatar dropdown with settings
-- **Session Protection** - Auto-redirect for unauthenticated users
-- **Responsive** - Mobile-friendly design
+- Modern sidebar navigation
+- User profile management
+- Avatar upload
+- Session control
+- Settings panel
+- Admin panel
+- Responsive design
+- Dark mode support
 
 ### 🌍 Internationalization
+- Multi-language (EN, PL)
+- Client & server i18n
+- Cookie-based persistence
+- SEO-friendly routes
+- Localized metadata
+- Easy to extend
 
-- **Multi-language** - English & Polish (easily extensible)
-- **Client & Server** - i18n on both sides
-- **Cookie-based** - Persistent language selection
-- **SEO-friendly** - Localized routes & metadata
-
-### 🎨 UI & Design
-
-- **shadcn/ui** - Beautiful, accessible components
-- **Tailwind CSS 4** - Modern styling
-- **Dark Mode** - Theme switcher with system detection
-- **Framer Motion** - Smooth animations
-
-### 🗄️ Database
-
-- **Drizzle ORM** - Type-safe database queries
-- **SQLite** - Lightweight, embedded database
-- **Auto-generated Schema** - Better Auth CLI generates tables
-
-### 🔒 Security
-
-- **Security Headers** - CSP, HSTS, X-Frame-Options
-- **Cookie Consent** - GDPR-ready banner
-- **Cloudflare Turnstile** - Bot protection
-- **Input Validation** - Zod schemas everywhere
-
----
+### 🎨 Modern UI
+- shadcn/ui components
+- Tailwind CSS 4
+- Framer Motion animations
+- Dark/Light mode
+- Responsive design
+- Aceternity UI effects
+- Gradient backgrounds
+- Smooth transitions
 
 ## 🏗️ Tech Stack
 
-| Category       | Technologies                             |
-| -------------- | ---------------------------------------- |
-| **Framework**  | Next.js 16, React 19, TypeScript 5       |
-| **Auth**       | Better Auth with plugins                 |
-| **Styling**    | Tailwind CSS 4, shadcn/ui, Framer Motion |
-| **Database**   | Drizzle ORM, SQLite                      |
-| **Email**      | Nodemailer, React Email                  |
-| **Validation** | Zod, t3-env                              |
-| **Captcha**    | Cloudflare Turnstile                     |
-
----
+**Frontend:** Next.js 16 • React 19 • TypeScript 5  
+**Styling:** Tailwind CSS 4 • shadcn/ui • Framer Motion  
+**Backend:** Better Auth • Drizzle ORM • SQLite  
+**Email:** Nodemailer • React Email  
+**Validation:** Zod • t3-env  
+**Security:** Cloudflare Turnstile • Security Headers
 
 ## 🚀 Quick Start
 
-### Prerequisites
-
-- Node.js 18+ or Bun
-- npm, pnpm, or bun
-
-### Installation
+**Prerequisites:** Node.js 18+ or Bun
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/nextjs-fullstack-starter.git
+# 1. Clone the repository
+git clone https://github.com/wleci/nextjs-fullstack-starter.git
 cd nextjs-fullstack-starter
 
-# Install dependencies
+# 2. Install dependencies
 npm install
 
-# Copy environment variables
+# 3. Set up environment variables
 cp .env.example .env
+# Edit .env with your configuration
 
-# Push database schema
+# 4. Initialize database
 npm run db:push
 
-# Start development server
+# 5. Start development server
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) 🎉
 
----
+## 🔧 Configuration
 
-## 🔧 Environment Variables
+### Essential Environment Variables
 
 ```env
-# App
+# App Configuration
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-NEXT_PUBLIC_DEFAULT_LOCALE=en
-NEXT_PUBLIC_SUPPORTED_LOCALES=en,pl
-
-# Feature Flags
-NEXT_PUBLIC_ENABLE_GOOGLE=false
-NEXT_PUBLIC_ENABLE_DISCORD=false
-NEXT_PUBLIC_ENABLE_CAPTCHA=false
+NEXT_PUBLIC_APP_NAME=Wleci Panel
 
 # Database
 DATABASE_URL=sqlite.db
 
-# Better Auth
+# Authentication
 BETTER_AUTH_SECRET=your-secret-key-min-32-characters-long
-APP_NAME=My App
-
-# OAuth - Google (optional)
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-
-# OAuth - Discord (optional)
-DISCORD_CLIENT_ID=
-DISCORD_CLIENT_SECRET=
-
-# Captcha - Cloudflare Turnstile (optional)
-TURNSTILE_SECRET_KEY=
-NEXT_PUBLIC_TURNSTILE_SITE_KEY=
 
 # Email (SMTP)
 SMTP_HOST=smtp.example.com
@@ -159,23 +140,45 @@ SMTP_PASSWORD=your-password
 SMTP_FROM=noreply@example.com
 ```
 
+### Optional Features
+
+```env
+# Social Login
+NEXT_PUBLIC_ENABLE_GOOGLE=true
+GOOGLE_CLIENT_ID=your-client-id
+GOOGLE_CLIENT_SECRET=your-client-secret
+
+# Captcha Protection
+NEXT_PUBLIC_ENABLE_CAPTCHA=true
+TURNSTILE_SECRET_KEY=your-secret-key
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=your-site-key
+
+# Features
+NEXT_PUBLIC_ENABLE_BLOG=true
+NEXT_PUBLIC_ENABLE_EMAIL=true
+NEXT_PUBLIC_ENABLE_NEWSLETTER=true
+```
+
 ---
 
-## 📦 Scripts
+## 📦 Available Scripts
 
 ```bash
 # Development
-npm run dev              # Start dev server
-npm run lint             # Lint code
+npm run dev              # Start development server
+npm run lint             # Run ESLint
 
 # Database
 npm run db:push          # Push schema to database
+npm run db:generate      # Generate migrations
+npm run db:migrate       # Run migrations
 npm run db:studio        # Open Drizzle Studio
 
 # Production
 npm run build            # Build for production
 npm run build:prod       # Standalone build (Docker-ready)
 npm run start            # Start production server
+npm run start:prod       # Start standalone server
 ```
 
 ---
@@ -185,58 +188,26 @@ npm run start            # Start production server
 ```
 src/
 ├── app/
-│   ├── [lang]/              # Localized routes
-│   │   ├── auth/            # Login, Register, Forgot Password
-│   │   ├── dashboard/       # Protected dashboard
-│   │   └── ...
-│   └── api/auth/            # Better Auth API handler
+│   ├── [lang]/                    # Localized routes
+│   │   ├── auth/                  # Authentication pages
+│   │   ├── dashboard/             # User dashboard
+│   │   ├── admin/                 # Admin panel
+│   │   └── blog/                  # Blog pages
+│   ├── api/                       # API routes
+│   └── globals.css                # Global styles
 ├── components/
-│   ├── layout/              # Navbar, Footer, Sidebar
-│   └── ui/                  # shadcn/ui + Turnstile, SocialLogin
+│   ├── layout/                    # Layout components
+│   ├── ui/                        # UI components (shadcn/ui)
+│   └── blog/                      # Blog components
 ├── lib/
-│   ├── auth/                # Better Auth config & client
-│   ├── database/            # Drizzle ORM setup
-│   ├── email/               # Email client & templates
-│   ├── env/                 # Environment validation
-│   └── i18n/                # Internationalization
-├── middleware/              # Auth, i18n, security middleware
-└── validation/              # Zod schemas (frontend/backend)
+│   ├── auth/                      # Authentication logic
+│   ├── database/                  # Database setup
+│   ├── email/                     # Email templates
+│   ├── blog/                      # Blog logic
+│   ├── i18n/                      # Internationalization
+│   └── env/                       # Environment validation
+└── middleware/                    # Next.js middleware
 ```
-
----
-
-## 🔐 Authentication Features
-
-### Enable Social Login
-
-Set in `.env`:
-
-```env
-NEXT_PUBLIC_ENABLE_GOOGLE=true
-GOOGLE_CLIENT_ID=your-client-id
-GOOGLE_CLIENT_SECRET=your-client-secret
-
-NEXT_PUBLIC_ENABLE_DISCORD=true
-DISCORD_CLIENT_ID=your-client-id
-DISCORD_CLIENT_SECRET=your-client-secret
-```
-
-### Enable Captcha
-
-Set in `.env`:
-
-```env
-NEXT_PUBLIC_ENABLE_CAPTCHA=true
-TURNSTILE_SECRET_KEY=your-secret-key
-NEXT_PUBLIC_TURNSTILE_SITE_KEY=your-site-key
-```
-
-### Protected Routes
-
-Routes are protected via proxy middleware:
-
-- `/auth/*` - Only for unauthenticated users
-- `/dashboard/*` - Only for authenticated users
 
 ---
 
@@ -244,26 +215,60 @@ Routes are protected via proxy middleware:
 
 ### Add New Language
 
-1. Create `src/lib/i18n/dictionaries/de.json`
-2. Update `NEXT_PUBLIC_SUPPORTED_LOCALES=en,pl,de`
-3. Add flag in language switcher
+1. Create translation file:
+```bash
+src/lib/i18n/dictionaries/de.json
+```
 
-### Add Dashboard Page
+2. Update environment:
+```env
+NEXT_PUBLIC_SUPPORTED_LOCALES=en,pl,de
+```
 
-1. Create `src/app/[lang]/dashboard/my-page/page.tsx`
-2. Add route to `dashboard-sidebar.tsx`
-3. Add translations
+3. Add flag icon in `language-switcher.tsx`
+
+### Customize Theme
+
+Edit `src/app/globals.css` to change colors:
+
+```css
+:root {
+  --primary: oklch(0.21 0.006 285.885);
+  --background: oklch(1 0 0);
+  /* ... */
+}
+```
 
 ---
 
+## 🔒 Security Features
+
+✅ Security headers (CSP, HSTS, X-Frame-Options)  
+✅ GDPR-compliant cookie consent  
+✅ Rate limiting on authentication  
+✅ Account lockout after failed attempts  
+✅ Cloudflare Turnstile bot protection  
+✅ Input validation with Zod  
+✅ SQL injection protection (Drizzle ORM)  
+✅ XSS protection  
+✅ CSRF protection
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
 ## 📄 License
 
-MIT License - see [LICENSE](LICENSE) file.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
 <div align="center">
 
-**Built with ❤️ using Next.js 16, React 19 & Better Auth**
+### Built with ❤️ using modern web technologies
+
+**[Next.js](https://nextjs.org/)** • **[React](https://react.dev/)** • **[TypeScript](https://www.typescriptlang.org/)** • **[Tailwind CSS](https://tailwindcss.com/)** • **[Better Auth](https://better-auth.com/)**
+
+⭐ Star this repo if you find it helpful!
 
 </div>

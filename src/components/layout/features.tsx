@@ -75,8 +75,11 @@ export function Features() {
     const { t } = useTranslation();
 
     return (
-        <section className="border-t bg-muted/30 px-6 py-20">
-            <div className="mx-auto max-w-7xl">
+        <section className="relative bg-background px-6 py-20">
+            {/* Top gradient blend */}
+            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-background to-transparent pointer-events-none" />
+            
+            <div className="mx-auto max-w-7xl relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}

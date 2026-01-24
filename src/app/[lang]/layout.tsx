@@ -21,10 +21,10 @@ export async function generateMetadata({
 
     return {
         title: {
-            default: "Next.js Starter",
-            template: "%s | Next.js Starter",
+            default: env.NEXT_PUBLIC_APP_NAME,
+            template: `%s | ${env.NEXT_PUBLIC_APP_NAME}`,
         },
-        description: hero?.description || "Production-ready starter template",
+        description: hero?.description || "Production-ready panel template",
         alternates: {
             canonical: canonicalUrl,
             languages: Object.fromEntries(
@@ -35,9 +35,9 @@ export async function generateMetadata({
             type: "website",
             locale: lang,
             url: canonicalUrl,
-            title: "Next.js Starter",
-            description: hero?.description || "Production-ready starter template",
-            siteName: "Next.js Starter",
+            title: env.NEXT_PUBLIC_APP_NAME,
+            description: hero?.description || "Production-ready panel template",
+            siteName: env.NEXT_PUBLIC_APP_NAME,
         },
     };
 }

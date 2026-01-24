@@ -44,6 +44,80 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+  
+  --animate-spotlight: spotlight 2s ease 0.75s 1 forwards;
+  --animate-meteor: meteor 5s linear infinite;
+  --animate-grid: grid 15s linear infinite;
+}
+
+@keyframes spotlight {
+  0% {
+    opacity: 0;
+    transform: translate(-72%, -62%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -40%) scale(1);
+  }
+}
+
+@keyframes meteor {
+  0% {
+    transform: rotate(215deg) translateX(0);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(215deg) translateX(-500px);
+    opacity: 0;
+  }
+}
+
+@keyframes grid {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes aurora {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(10%, 10%) rotate(90deg);
+  }
+  50% {
+    transform: translate(0, 20%) rotate(180deg);
+  }
+  75% {
+    transform: translate(-10%, 10%) rotate(270deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 :root {

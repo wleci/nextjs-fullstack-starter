@@ -7,6 +7,7 @@ import {
     Section,
     Text,
 } from "@react-email/components";
+import { env } from "@/lib/env";
 
 interface BaseEmailProps {
     preview: string;
@@ -22,7 +23,7 @@ export function BaseEmail({ preview, children }: BaseEmailProps) {
                 <Container style={container}>
                     <Section style={content}>{children}</Section>
                     <Text style={footer}>
-                        © {new Date().getFullYear()} Starter. All rights reserved.
+                        © {new Date().getFullYear()} {env.NEXT_PUBLIC_APP_NAME}. All rights reserved.
                     </Text>
                 </Container>
             </Body>
