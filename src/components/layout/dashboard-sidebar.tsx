@@ -89,14 +89,14 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
 
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Menu</SidebarGroupLabel>
+                    <SidebarGroupLabel className="text-xs uppercase tracking-wide">Menu</SidebarGroupLabel>
                     <SidebarGroupContent>
-                        <SidebarMenu>
+                        <SidebarMenu className="gap-0.5">
                             {MAIN_NAV.map((item) => (
                                 <SidebarMenuItem key={item.href}>
                                     <SidebarMenuButton asChild isActive={isActive(item.href)} tooltip={t(item.labelKey)}>
                                         <Link href={`/${locale}${item.href}`}>
-                                            <item.icon />
+                                            <item.icon className="size-4" />
                                             <span>{t(item.labelKey)}</span>
                                         </Link>
                                     </SidebarMenuButton>
@@ -106,7 +106,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                                 <SidebarMenuItem>
                                     <SidebarMenuButton asChild isActive={pathname.startsWith(`/${locale}/admin`)} tooltip={t("dashboard.nav.admin")}>
                                         <Link href={`/${locale}/admin`}>
-                                            <Shield />
+                                            <Shield className="size-4" />
                                             <span>{t("dashboard.nav.admin")}</span>
                                         </Link>
                                     </SidebarMenuButton>

@@ -31,3 +31,13 @@ export type {
     BlogCategory,
     BlogSettings,
 } from "@/lib/blog/schema";
+
+// Re-export feature flags schema
+export {
+    featureFlags,
+} from "@/lib/features/schema";
+
+export type {
+    FeatureFlag,
+    NewFeatureFlag,
+} from "@/lib/features/schema";

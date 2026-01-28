@@ -467,6 +467,9 @@
         },
         "database": {
             "title": "Baza danych"
+        },
+        "features": {
+            "title": "Funkcje systemu"
         }
     },
     "blog": {

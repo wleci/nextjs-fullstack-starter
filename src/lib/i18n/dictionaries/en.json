@@ -467,6 +467,9 @@
         },
         "database": {
             "title": "Database"
+        },
+        "features": {
+            "title": "System Features"
         }
     },
     "blog": {

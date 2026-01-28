@@ -10,6 +10,7 @@ import {
     blogPost,
     blogCategory,
     blogSettings,
+    featureFlags,
 } from "./schema";
 import type { DatabaseExport } from "./export";
 
@@ -42,6 +43,7 @@ function validateDatabaseExport(data: unknown): data is DatabaseExport {
         "blogPosts",
         "blogCategories",
         "blogSettings",
+        "featureFlags",
     ];
 
     for (const tableName of requiredTables) {
@@ -66,6 +68,7 @@ async function clearDatabase() {
     await db.delete(blogPost).run();
     await db.delete(blogCategory).run();
     await db.delete(blogSettings).run();
+    await db.delete(featureFlags).run();
 }
 
 /**
@@ -172,6 +175,18 @@ export async function importDatabase(
             imported.blogSettings = tables.blogSettings.length;
         }
 
+        // 9. Feature flags (no dependencies)
+        if (tables.featureFlags.length > 0) {
+            for (const flagData of tables.featureFlags) {
+                await db
+                    .insert(featureFlags)
+                    .values(flagData)
+                    .onConflictDoNothing()
+                    .run();
+            }
+            imported.featureFlags = tables.featureFlags.length;
+        }
+
         return {
             success: true,
             message: "Baza danych została pomyślnie zaimportowana",
@@ -217,6 +232,7 @@ export async function validateImportFile(
             blogPosts: data.tables.blogPosts.length,
             blogCategories: data.tables.blogCategories.length,
             blogSettings: data.tables.blogSettings.length,
+            featureFlags: data.tables.featureFlags.length,
         };
 
         return {

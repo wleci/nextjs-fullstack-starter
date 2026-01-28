@@ -411,9 +411,9 @@ export const auth = betterAuth({
 
         /**
          * Cloudflare Turnstile captcha - protects auth endpoints
-         * Only enabled when TURNSTILE_SECRET_KEY is configured
+         * Only enabled when both TURNSTILE_SECRET_KEY is configured AND NEXT_PUBLIC_ENABLE_CAPTCHA is true
          */
-        ...(env.TURNSTILE_SECRET_KEY
+        ...(env.TURNSTILE_SECRET_KEY && env.NEXT_PUBLIC_ENABLE_CAPTCHA
             ? [
                 captcha({
                     provider: "cloudflare-turnstile",

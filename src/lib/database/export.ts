@@ -10,6 +10,7 @@ import {
     blogPost,
     blogCategory,
     blogSettings,
+    featureFlags,
 } from "./schema";
 
 /**
@@ -27,6 +28,7 @@ export interface DatabaseExport {
         blogPosts: typeof blogPost.$inferSelect[];
         blogCategories: typeof blogCategory.$inferSelect[];
         blogSettings: typeof blogSettings.$inferSelect[];
+        featureFlags: typeof featureFlags.$inferSelect[];
     };
 }
 
@@ -44,6 +46,7 @@ export async function exportDatabase(): Promise<DatabaseExport> {
             blogPosts,
             blogCategories,
             blogSettingsData,
+            featureFlagsData,
         ] = await Promise.all([
             db.select().from(user).all(),
             db.select().from(session).all(),
@@ -53,6 +56,7 @@ export async function exportDatabase(): Promise<DatabaseExport> {
             db.select().from(blogPost).all(),
             db.select().from(blogCategory).all(),
             db.select().from(blogSettings).all(),
+            db.select().from(featureFlags).all(),
         ]);
 
         return {
@@ -67,6 +71,7 @@ export async function exportDatabase(): Promise<DatabaseExport> {
                 blogPosts,
                 blogCategories,
                 blogSettings: blogSettingsData,
+                featureFlags: featureFlagsData,
             },
         };
     } catch (error) {
@@ -96,6 +101,7 @@ export async function getDatabaseStats() {
             twoFactors,
             blogPosts,
             blogCategories,
+            featureFlagsData,
         ] = await Promise.all([
             db.select().from(user).all(),
             db.select().from(session).all(),
@@ -104,6 +110,7 @@ export async function getDatabaseStats() {
             db.select().from(twoFactor).all(),
             db.select().from(blogPost).all(),
             db.select().from(blogCategory).all(),
+            db.select().from(featureFlags).all(),
         ]);
 
         return {
@@ -114,6 +121,7 @@ export async function getDatabaseStats() {
             twoFactors: twoFactors.length,
             blogPosts: blogPosts.length,
             blogCategories: blogCategories.length,
+            featureFlags: featureFlagsData.length,
         };
     } catch (error) {
         console.error("Database stats error:", error);

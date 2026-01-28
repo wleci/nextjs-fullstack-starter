@@ -104,14 +104,14 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
 
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Administration</SidebarGroupLabel>
+                    <SidebarGroupLabel className="text-xs uppercase tracking-wide">Administration</SidebarGroupLabel>
                     <SidebarGroupContent>
-                        <SidebarMenu>
+                        <SidebarMenu className="gap-0.5">
                             {/* Back to Dashboard Link */}
                             <SidebarMenuItem>
                                 <SidebarMenuButton asChild tooltip={t("common.backToDashboard")}>
                                     <Link href={`/${locale}/dashboard`}>
-                                        <ArrowLeft />
+                                        <ArrowLeft className="size-4" />
                                         <span>{t("common.backToDashboard")}</span>
                                     </Link>
                                 </SidebarMenuButton>
@@ -121,7 +121,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
                                 <SidebarMenuItem key={item.href}>
                                     <SidebarMenuButton asChild isActive={isActive(item.href)} tooltip={t(item.labelKey)}>
                                         <Link href={`/${locale}${item.href}`}>
-                                            <item.icon />
+                                            <item.icon className="size-4" />
                                             <span>{t(item.labelKey)}</span>
                                         </Link>
                                     </SidebarMenuButton>
